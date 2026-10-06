@@ -554,7 +554,7 @@ jobs:
           echo "pytest suites: ${suites[*]}"
           pytest "${suites[@]}" \
             --cov=src/harness --cov-report=term-missing \
-            --cov-fail-under=90 -q
+            --cov-fail-under=90 --cov-precision=2 -q
 
       - name: no-skip-no-xfail
         # 試験のSkip／XFail追加によるGreen化を検出する

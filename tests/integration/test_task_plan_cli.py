@@ -1073,3 +1073,74 @@ def test_workflow_plan_content_is_independent_of_run_ids(local_workflow_cli):
     second = invoke("create", *args, "--run-id", "a-different-run")
     assert first["plan_content_hash"] == second["plan_content_hash"]
     assert first["execution_plan_hash"] != second["execution_plan_hash"]
+
+
+def test_offline_workflow_uses_the_real_cli_entry_in_process(local_workflow_cli, capsys):
+    """Exercise CLI composition and output, in addition to the existing subprocess checks."""
+    from harness.domain.hashing import hash_bytes
+    from harness.presentation.cli import main
+
+    workspace, _ = local_workflow_cli
+    base = [
+        "--database",
+        str(workspace.parent / "workflow.db"),
+        "--artifact-root",
+        str(workspace.parent / "cas"),
+        "--workspace",
+        str(workspace),
+        "--repo-root",
+        str(REPO_ROOT),
+        "--run-id",
+        "workflow-in-process",
+    ]
+
+    def invoke(operation, *args, expected=0):
+        rc = main(["workflow", operation, *base, *args])
+        output = capsys.readouterr()
+        assert rc == expected, output.out + output.err
+        return json.loads(output.out)
+
+    create_args = (
+        "--task-path",
+        "docs/task.md",
+        "--declaration-path",
+        "docs/declaration.json",
+        "--scope",
+        "docs",
+    )
+    assert invoke("create", *create_args, "--ttl-seconds", "0", expected=2)["error_code"] == (
+        "INPUT_OR_STORAGE_ERROR"
+    )
+    created = invoke("create", *create_args)
+    assert created["state"] == "PLANNED"
+    assert (workspace / "docs/out.md").read_text() == "before\n"
+    assert invoke("run", expected=2)["error_code"] == "APPROVAL_REQUIRED"
+    assert (
+        invoke(
+            "approve",
+            "--plan-hash",
+            created["execution_plan_hash"],
+            "--auth-session",
+            "local-uid:" + str(os.getuid()),
+        )["state"]
+        == "APPROVED"
+    )
+    result = invoke("run")
+    assert result["state"] == "AWAITING_RELEASE"
+    payload = (workspace / "docs/out.md").read_bytes()
+    assert str(hash_bytes(payload)) == result["proposed_artifact_hash"]
+    assert json.loads(payload)["network"] == "NONE"
+    evaluated = invoke("evaluate")
+    assert evaluated["evaluation_hash"]
+    assert (
+        invoke(
+            "release",
+            "--evaluation-hash",
+            evaluated["evaluation_hash"],
+            "--auth-session",
+            "local-uid:" + str(os.getuid()),
+        )["state"]
+        == "COMPLETED"
+    )
+    assert invoke("inspect")["state"] == "COMPLETED"
+    assert invoke("run", expected=2)["error_code"] == "APPROVAL_REQUIRED"

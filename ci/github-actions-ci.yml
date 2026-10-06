@@ -464,7 +464,7 @@ jobs:
           echo "pytest suites: ${suites[*]}"
           pytest "${suites[@]}" \
             --cov=src/harness --cov-report=term-missing \
-            --cov-fail-under=90 -q
+            --cov-fail-under=90 --cov-precision=2 -q
 
       - name: integration
         if: ${{ hashFiles('src/harness/**/*.py') != '' }}
