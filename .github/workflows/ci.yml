@@ -141,7 +141,7 @@ jobs:
           cache-dependency-path: requirements-dev.txt
       - name: install-hash-locked-runtime-and-dev-tools
         run: |
-          pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --require-hashes -r requirements-dev.txt
 
       - name: fetch-protected-branch
         # 署名はCommitの出所を保証しない。未レビューBranchのCommitでも
@@ -259,8 +259,8 @@ jobs:
       - name: install-hash-locked-runtime-and-dev-tools
         if: steps.scope.outputs.skip != 'true'
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
 
       - name: registry-snapshot-sync
         if: steps.scope.outputs.skip != 'true'
@@ -591,8 +591,8 @@ jobs:
       - name: install-hash-locked-runtime-and-dev-tools
         if: steps.scope.outputs.skip != 'true'
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
       - name: dependency-audit (pip-audit / cyclonedx-py)
         if: steps.scope.outputs.skip != 'true'
         # 一つの固定Commit/LockにLicense・脆弱性・SBOMの結果を束縛する。
@@ -642,8 +642,8 @@ jobs:
       - name: install-hash-locked-runtime-and-dev-tools
         if: steps.scope.outputs.skip != 'true'
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
       - name: deep-suites
         if: steps.scope.outputs.skip != 'true'
         run: |

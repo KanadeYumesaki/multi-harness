@@ -108,6 +108,8 @@ python -m pip install --require-hashes -r requirements-dev.txt
 # 両方渡すと `--require-hashes` 下で二重指定になる。CIと同じ1本にする。
 python -m pip install --no-deps -e .
 
+# 選択したPythonからpip Moduleを呼ぶ。コピーしたExecutableのShebangは元の導入先を保持し得る。
+
 python --version
 
 # 出力先は §2.2 で定義済みの $EVIDENCE_DIR（Repository外）。

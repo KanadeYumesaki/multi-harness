@@ -89,11 +89,9 @@ def test_runbook_install_matches_ci() -> None:
     """RunbookとCIが同じ導入方法であること。
 
     2箇所で違うと、Evidenceを見ても**どちらで作った環境か判別できない**。
+    Executableだけのpipは別PythonへのShebangを保持し得るため同一視しない。
     """
-    runbook_installs = {
-        re.sub(r"\s+", " ", line).replace("python -m pip", "pip")
-        for line in _pip_install_lines(_runbook())
-    }
+    runbook_installs = {re.sub(r"\s+", " ", line) for line in _pip_install_lines(_runbook())}
     for workflow in WORKFLOWS:
         text = workflow.read_text(encoding="utf-8")
         ci_installs = {re.sub(r"\s+", " ", line) for line in _pip_install_lines(text)}
@@ -131,3 +129,28 @@ def test_mount_crossing_test_is_not_allowed_to_be_skipped() -> None:
     """
     text = _runbook()
     assert "SKIPPED" in text and "PASSではありません" in text
+
+
+def test_runbook_and_ci_accept_the_same_selected_interpreter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    command = "python -m pip install --require-hashes -r requirements-dev.txt"
+    workflow = tmp_path / "workflow.yml"
+    workflow.write_text(f"run: |\n  {command}\n", encoding="utf-8")
+    monkeypatch.setattr(f"{__name__}._runbook", lambda: command)
+    monkeypatch.setattr(f"{__name__}.WORKFLOWS", (workflow,))
+    test_runbook_install_matches_ci()
+
+
+def test_runbook_and_ci_refuse_a_bare_entrypoint_for_another_interpreter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    command = "python -m pip install --require-hashes -r requirements-dev.txt"
+    workflow = tmp_path / "workflow.yml"
+    workflow.write_text(
+        "run: |\n  pip install --require-hashes -r requirements-dev.txt\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(f"{__name__}._runbook", lambda: command)
+    monkeypatch.setattr(f"{__name__}.WORKFLOWS", (workflow,))
+    with pytest.raises(AssertionError, match="Runbook"):
+        test_runbook_install_matches_ci()
