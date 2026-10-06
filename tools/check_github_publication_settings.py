@@ -38,7 +38,9 @@ def _digest(path: Path) -> str:
 def _git(repo: Path, *args: str) -> str:
     try:
         result = subprocess.run(  # noqa: S603 — 固定Git読取り、Shell無し。
-            ["/usr/bin/git", *args],
+            # Read original objects and ancestry: local replacements/grafts are not
+            # evidence that the remotely published commit descends from the public root.
+            ["/usr/bin/git", "--no-replace-objects", *args],
             cwd=repo,
             capture_output=True,
             timeout=30,
@@ -48,6 +50,7 @@ def _git(repo: Path, *args: str) -> str:
                 "HOME": "/nonexistent",
                 "GIT_CONFIG_NOSYSTEM": "1",
                 "GIT_CONFIG_GLOBAL": "/dev/null",
+                "GIT_GRAFT_FILE": "/dev/null",
             },
         )
     except (OSError, subprocess.SubprocessError) as exc:
