@@ -77,3 +77,7 @@ quality Jobでは選択済みのPythonを、一時Runnerの /usr/local 以下の
 依存はそのRuntimeへHash固定で導入します。Productionの許可Pathや環境変数の除去規則は保持します。
 Loaderの背景は [setup-pythonの公式Issue](https://github.com/actions/setup-python/issues/871) で確認できます。
 この配置処理はCI専用です。利用者のMachineへSystem設定を加える操作ではありません。
+
+quality Jobの全試験はカバレッジ計測付きです。実Runnerで旧時間上限に達したため、有限の時間枠を見直しています。
+試験対象と90%のカバレッジ基準は維持します。設定の読取り成功・書込み拒否も起動前に実プロセスで確認します。
+境界Probeは固定のOS PathへPythonがあると仮定せず、選択された実行体を使います。

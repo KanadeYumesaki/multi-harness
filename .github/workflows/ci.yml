@@ -411,7 +411,8 @@ jobs:
     needs: [plan]
     # The real rootless mount/PID tests require an image permitting namespace capabilities.
     runs-on: ubuntu-22.04
-    timeout-minutes: 25
+    # Full coverage reached the previous 25-minute cap; retain a finite job budget.
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -528,6 +529,7 @@ jobs:
           cli_profiles._run_probe = observe_probe
           raise SystemExit(pytest.main([
               "tests/integration/workbench/test_workbench_service.py::test_launch_spec_carries_the_pre_execution_restrictions",
+              "tests/integration/workbench/test_generation_enablement.py::test_gemini_management_settings_are_readable_but_not_writable_in_boundary",
               "-q",
           ]))
           PY
