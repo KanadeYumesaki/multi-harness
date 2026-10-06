@@ -365,6 +365,28 @@ jobs:
           # 依存は hash 固定なので、Cache が古くて困ることが無い。
           cache: 'pip'
           cache-dependency-path: requirements-dev.txt
+      - name: install-ci-python-in-system-runtime-tree
+        # The sandbox allows system runtime trees; setup-python's /opt libraries are outside them.
+        # Install the selected interpreter unchanged, rather than widening the production policy.
+        run: |
+          set -euo pipefail
+          ci_py_source="$(python -I -c 'import sys; print(sys.base_prefix)')"
+          ci_py_minor="$(python -I -c 'import sys; print(str(sys.version_info.major)+"."+str(sys.version_info.minor))')"
+          case "$ci_py_minor" in 3.11|3.12) ;; *) exit 2 ;; esac
+          case "$ci_py_source" in /opt/hostedtoolcache/Python/*/x64) ;; *) exit 2 ;; esac
+          ci_py_root="/usr/local/multi-harness-ci-python-$ci_py_minor"
+          ci_ldconf="/etc/ld.so.conf.d/multi-harness-ci-python-$ci_py_minor.conf"
+          test ! -e "$ci_py_root"
+          test ! -e "$ci_ldconf"
+          sudo cp -a -- "$ci_py_source" "$ci_py_root"
+          test -f "$ci_py_root/lib/libpython$ci_py_minor.so.1.0"
+          printf '%s\n' "$ci_py_root/lib" | sudo tee "$ci_ldconf" >/dev/null
+          sudo ldconfig
+          cmp -- "$ci_py_source/bin/python$ci_py_minor" "$ci_py_root/bin/python$ci_py_minor"
+          cmp -- "$ci_py_source/lib/libpython$ci_py_minor.so.1.0" "$ci_py_root/lib/libpython$ci_py_minor.so.1.0"
+          env -u LD_LIBRARY_PATH "$ci_py_root/bin/python" -I -c 'import sys; print(sys.version)'
+          printf '%s\n' "$ci_py_root/bin" >> "$GITHUB_PATH"
+
       - name: install-hash-locked-runtime-and-dev-tools
         run: |
           pip install --require-hashes -r requirements-dev.txt

@@ -69,3 +69,11 @@ Ubuntu 24.04以降の標準AppArmor Policyは、非特権User Namespace内のCap
 利用可能なRunnerと移行情報は [GitHubのRunner Images](https://github.com/actions/runner-images) で確認します。
 固定したRunnerの廃止時は、隔離操作が実測で成立する環境へ移行してから全検査を採り直します。
 Productionの起動Gate、Landlock、Namespace、Approvalは引き続き適用されます。
+
+
+GitHubの実診断では、setup-pythonの共有ライブラリー読込みが終了値127で失敗することを両Python版で確認しました。
+quality Jobでは選択済みのPythonを、一時Runnerの /usr/local 以下の専用System Runtimeへ同じBytesで配置します。
+共有ライブラリーは標準のLoaderへ登録し、RuntimeのBinaryとLibraryが元のBytesと一致することを確認します。
+依存はそのRuntimeへHash固定で導入します。Productionの許可Pathや環境変数の除去規則は保持します。
+Loaderの背景は [setup-pythonの公式Issue](https://github.com/actions/setup-python/issues/871) で確認できます。
+この配置処理はCI専用です。利用者のMachineへSystem設定を加える操作ではありません。
