@@ -1,0 +1,32 @@
+# Development and supply-chain tool inputs.
+# Generate the fully resolved, hash-locked requirements-dev.txt with:
+# uv pip compile --universal --generate-hashes \
+#   --output-file requirements-dev.txt requirements-dev.in
+#
+# Version の与え方は2種類ある。
+#
+#   ==  こちらが挙動を固定したいTool（型検査・整形・SBOM形式）
+#   >=  Securityの下限だけを課し、解決器へ委ねるもの
+#
+# 後者を `==` で固定すると、脆弱性修正のたびに連鎖するPinを人手で
+# 追いかけることになる。実際 lxml を 6.1.0 へ上げた時点で
+# cyclonedx-bom==4.6.1 の `lxml>=4,<6` と衝突した。
+-r requirements.txt
+mypy==1.14.1
+ruff==0.9.3
+types-PyYAML==6.0.12.20240917
+types-jsonschema==4.23.0.20240813
+pip-audit>=2.7.3
+
+# PYSEC-2026-1845。8.3.4 は影響を受ける
+pytest>=9.0.3
+pytest-cov>=6.0.0
+
+# PYSEC-2026-87。5.4.0 は影響を受ける。
+# cyclonedx-bom は lxml の上限を持つため、こちらも解決へ委ねる。
+lxml>=6.1.0
+cyclonedx-bom>=4.6.1
+
+# PUBLIC-05: HTTPS proxy TLS and streaming resource exhaustion fixes (2.8.0).
+# Existing transitive dependency; do not resolve an affected older version.
+urllib3>=2.8.0

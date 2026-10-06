@@ -1,0 +1,300 @@
+# Schema契約のBaseline（tools/check_schema_contract.py）。
+#
+# spec/20-schemas/<Name>.md の必須Field列と
+# schemas/core/<Name>/<ver>.schema.json の properties / required の乖離を固定する。
+#
+# resolved         : 乖離0を要求するSchema@Version。是正したらここへ移す
+# known_divergence : 既知の乖離。**増えたら落ちる**。件数ではなく全Field名を列挙する
+#
+# 終了Code 0 は「乖離が無い」ではなく「既知の乖離から増えていない」を意味する。
+# 検査範囲はRequired Field関連の2種類だけであり、型・Enum・Pattern・
+# additionalProperties・条件付き必須は未検査（Owner Decision D-Q7で段階拡張）。
+contract_version: 1
+known_divergence:
+  ActionIntent@1.0.0:
+    absent: []
+    optional_only:
+    - external_effect_resources
+    - input_artifact_hashes
+    - read_resources
+    - requested_capability
+    - requested_outputs
+    - run_id
+    - write_resources
+  ArtifactManifest@1.0.0:
+    absent:
+    - byte_size
+    - classification_labels
+    - compression
+    - encoding
+    - encryption_key_reference
+    - legal_hold
+    - retention_policy
+    - source_artifact_ids
+    - verification_status
+    optional_only: []
+  ContextBundle@1.0.0:
+    absent:
+    - compression_artifact_ids
+    - context_bundle_id
+    - excluded_fragment_ids
+    - input_read_capability_set_hash
+    - input_read_evidence_hash
+    - ordered_fragment_ids
+    - selected_fragment_ids
+    - selection_receipt_id
+    - token_budget_policy_hash
+    - token_profile_snapshot_hash
+    - total_estimated_tokens
+    optional_only: []
+  ContextFragment@1.0.0:
+    absent:
+    - classification_labels
+    - content_artifact_hash
+    - deduplication_key
+    - estimated_tokens
+    - fragment_type
+    - freshness
+    - mandatory
+    - priority
+    - source_artifact_hash
+    - source_span
+    - trust_level
+    optional_only:
+    - classification_scan_evidence_hash
+    - input_read_capability_id
+    - source_file_identity
+  ContextSelectionReceipt@1.0.0:
+    absent:
+    - algorithm_version
+    - budget_policy_hash
+    - candidate_fragment_ids
+    - compression_result
+    - decision_hash
+    - deduplication_result
+    - estimated_token_total
+    - excluded_fragments
+    - input_read_capability_set_hash
+    - input_read_evidence_hash
+    - selection_receipt_id
+    - token_profile_snapshot_hash
+    optional_only: []
+  DelegationGrant@1.0.0:
+    absent:
+    - delegate_identity
+    - delegation_grant_id
+    - delegation_hash
+    - issuer_identity
+    - policy_snapshot_hash
+    - scope_predicate
+    - trust_anchor_id
+    optional_only: []
+  EffectReceipt@1.0.0:
+    absent: []
+    optional_only:
+    - receipt_hash
+    - run_id
+  EventEnvelope@1.0.0:
+    absent:
+    - actor_id
+    - event_version
+    - global_sequence
+    - payload_schema_id
+    - stream_sequence
+    - stream_type
+    optional_only:
+    - causation_id
+    - previous_event_hash
+  ExecutionPlan@1.0.0:
+    absent:
+    - action_graph
+    - control_data_policy_hash
+    - cost_upper_bound
+    - input_read_capability_set_hash
+    - input_read_evidence_hash
+    - invocation_manifest_hash
+    - runtime_envelope_spec_hash
+    - token_budget_policy_hash
+    - token_profile_snapshot_hash
+    optional_only:
+    - context_bundle_hash
+    - policy_snapshot_hash
+    - run_id
+  InputReadCapability@1.0.0:
+    absent:
+    - allowed_operations
+    - allowed_relative_path_patterns
+    - broker_or_reader_id
+    - capability_hash
+    - classification_policy_hash
+    - file_type_policy
+    - filesystem_identity
+    - issued_to_subject
+    - issuer_id
+    - maximum_bytes
+    - maximum_depth
+    - maximum_files
+    - mount_policy
+    - not_before
+    - os_boundary
+    - secret_scan_policy_hash
+    - signature_algorithm
+    - special_file_policy
+    - symlink_policy
+    optional_only: []
+  InvocationManifest@1.0.0:
+    absent:
+    - auth_route
+    - billing_identity
+    - cancel_policy
+    - credential_reference_version
+    - endpoint_identity
+    - idempotency_policy
+    - invocation_manifest_hash
+    - model_id
+    - provider_account_id
+    - provider_id
+    - retry_policy
+    - tenant_id
+    - tool_definition_hash
+    optional_only:
+    - instruction_hash
+    - output_schema_hash
+    - provider_operation
+    - request_artifact_hash
+  Lease@1.0.0:
+    absent:
+    - attempt_id
+    - issued_at
+    - renewed_at
+    - status
+    - store_version
+    optional_only: []
+  MaskingReceipt@1.0.0:
+    absent:
+    - masked_artifact_hash
+    - scanner_profile_hash
+    - source_artifact_hash
+    optional_only:
+    - masking_result
+  OperationJournal@1.0.0:
+    absent:
+    - action_id
+    - journal_hash
+    - operation_id
+    - operation_type
+    - prepared_event_id
+    - target_resource_identity
+    optional_only:
+    - prepared_at
+    - run_id
+  PolicyDecision@1.0.0:
+    absent:
+    - decision_hash
+    - human_reason
+    - input_hash
+    - lkg_age_seconds
+    - override_allowed
+    - policy_package_hash
+    - policy_package_id
+    - reason_codes
+    - required_approval_type
+    - required_evidence
+    - rule_set_id
+    - rule_set_version
+    - runtime_gate_expires_at
+    - stale_action_disposition
+    optional_only: []
+  Run@1.0.0:
+    absent: []
+    optional_only:
+    - run_id
+  RuntimeAttestation@1.0.0:
+    absent:
+    - adapter_hash
+    - assurance_level
+    - auth_route
+    - billing_identity
+    - config_tree_hash
+    - credential_type
+    - effective_argv
+    - effective_cwd_identity
+    - effective_environment_hash
+    - effective_user
+    - executable_hash
+    - executable_identity
+    - filesystem_policy_evidence
+    - invocation_manifest_hash
+    - launcher_hash
+    - model_digest
+    - model_id
+    - network_policy_evidence
+    - process_tree_root
+    - provider_account_id
+    - provider_id
+    - resource_limit_evidence
+    - runtime_attestation_id
+    - runtime_envelope_spec_hash
+    - sandbox_status
+    - started_at
+    - tenant_id
+    - tool_plugin_hook_mcp_evidence
+    - workspace_filesystem_type
+    - workspace_mount_id
+    - workspace_mount_options_hash
+    optional_only: []
+  RuntimeEnvelopeSpec@1.0.0:
+    absent:
+    - adapter_version
+    - billing_identity
+    - config_tree_hash
+    - credential_scope_hash
+    - credential_type
+    - filesystem_policy_hash
+    - instruction_policy_hash
+    - model_id
+    - network_policy_hash
+    - plugin_hook_mcp_policy_hash
+    - process_policy_hash
+    - provider_account_id
+    - provider_id
+    - resource_limits
+    - runtime_envelope_spec_hash
+    - runtime_spec_id
+    - sandbox_spec
+    - tenant_id
+    - tool_policy_hash
+    - working_directory_identity
+    - workspace_identity
+    optional_only:
+    - environment_allowlist_hash
+    - model_digest
+    - output_schema_hash
+  TokenBudgetPolicy@1.0.0:
+    absent:
+    - compression_depth_limit
+    - maximum_context_tokens
+    - maximum_input_tokens
+    - overflow_policy
+    - required_fragment_types
+    - retry_reservation
+    - safety_margin_tokens
+    optional_only: []
+  TokenProfileSnapshot@1.0.0:
+    absent:
+    - counting_adapter_version
+    - model_id
+    - overheads
+    - provider_id
+    - reserved_output_tokens
+    - reserved_tool_tokens
+    - retry_fallback_reservation
+    - token_profile_id
+    optional_only:
+    - vocabulary_hash
+resolved:
+- ContextBundle@2.0.0
+- ContextFragment@2.0.0
+- ContextSelectionReceipt@2.0.0
+- TokenBudgetPolicy@2.0.0
+- TokenProfileSnapshot@2.0.0

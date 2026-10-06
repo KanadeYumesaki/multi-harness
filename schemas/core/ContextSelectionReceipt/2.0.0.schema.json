@@ -1,0 +1,165 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/ContextSelectionReceipt/2.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "algorithm_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "budget_policy_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "candidate_fragment_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "compression_result": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "decision_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "deduplication_result": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "estimated_token_total": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "excluded_fragments": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "fragment_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "reason": {
+            "enum": [
+              "BUDGET",
+              "DUPLICATE"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "fragment_id",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "input_read_capability_set_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "input_read_evidence_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "rejected_input_resources": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "ContextSelectionReceipt"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "selected_fragment_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "selection_receipt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "token_profile_snapshot_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "selection_receipt_id",
+    "decision_hash",
+    "candidate_fragment_ids",
+    "selected_fragment_ids",
+    "excluded_fragments",
+    "rejected_input_resources",
+    "deduplication_result",
+    "compression_result",
+    "estimated_token_total",
+    "token_profile_snapshot_hash",
+    "budget_policy_hash",
+    "input_read_capability_set_hash",
+    "input_read_evidence_hash",
+    "algorithm_version"
+  ],
+  "title": "ContextSelectionReceipt",
+  "type": "object"
+}

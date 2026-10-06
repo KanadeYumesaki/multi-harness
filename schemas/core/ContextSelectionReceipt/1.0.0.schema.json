@@ -1,0 +1,107 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/ContextSelectionReceipt/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bundle_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "compressed_fragment_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "excluded_fragment_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "masking_receipt_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "receipt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "rejected_input_resources": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "ContextSelectionReceipt"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "selected_fragment_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "receipt_id",
+    "bundle_id",
+    "selected_fragment_ids",
+    "excluded_fragment_ids",
+    "rejected_input_resources"
+  ],
+  "title": "ContextSelectionReceipt",
+  "type": "object"
+}

@@ -1,0 +1,88 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fde-harness"
+version = "0.0.0"
+description = "マルチプロバイダーAI業務実行統制基盤"
+requires-python = ">=3.11"
+dependencies = ["cryptography>=50,<51"]
+
+[project.scripts]
+harness = "harness.presentation.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# `tools` は生成器の正本。Registry形式の解釈を試験側で再実装せず、
+# `tools/schema_catalog.py` をそのままimportして突き合わせる。
+pythonpath = ["src", "tools"]
+# 実行していないTestをPASSと書かない（不変条件#16）。
+# Skip/XFailでGateを通す経路を塞ぐため、既定で厳格に扱う。
+addopts = "--strict-markers --strict-config -ra"
+markers = [
+    "unit: 単体試験",
+    "integration: SQLite／Filesystem を伴う統合試験",
+    "spec_lint: 正本・生成物・層規則の静的検査",
+    # 受入Caseとの対応。tools/check_case_coverage.py が構文解析で集める。
+    # Marker自体は実行時に何もしない。対応表を機械可読にするためだけにある。
+    "case: 対応する受入Case（AT-XXX-001/CASE_ID）を宣言する",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "tools"]
+# Runtime GO Verifierと正本生成器。ci/PROTECTED_FILES.md の保護対象であり、
+# 本Repositoryでは意図的変更時のみ更新する。Styleを後付けで課さず検査対象から外す。
+extend-exclude = [
+    "verify_runtime_go.py",
+    "tests/test_verify_runtime_go.py",
+    "tests/test_hardening_contracts.py",
+    "tools/build_manifest_template.py",
+    "tools/build_registry_snapshot.py",
+    "tools/build_spec_shards.py",
+    "tools/check_blocked_records.py",
+    "tools/check_ci_runtime_boundary.py",
+    "tools/check_design_generation_contract.py",
+    "tools/check_forbidden_patterns.py",
+    "tools/check_licenses.py",
+    "tools/check_test_markers.py",
+    "tools/check_verifier_integrity.py",
+    "tools/collect_runtime_environment.py",
+    "tools/create_blocked_record.py",
+    "tools/extract_registries.py",
+    "tools/lint_spec.py",
+    "tools/refresh_verifier_integrity.py",
+    "tools/validate_blocked_record.py",
+    "tools/validate_test_manifest.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "RUF"]
+# RUF001/002/003: 全角約物（／（）「」：）は設計書に合わせた日本語記述として意図的に使う。
+ignore = ["RUF001", "RUF002", "RUF003"]
+[tool.ruff.lint.per-file-ignores]
+# S101 (assert) はTest内で正当。
+# S105/S106/S107: Test Fixtureは偽のToken・Nonce・署名値を意図的に持つ。
+#   `attempt_token` や `nonce` のような引数名をhardcoded passwordと誤検出する。
+#   実物のSecretがTestへ入らないことは AT-CONTROL-DATA-001 の
+#   Secret Canary 試験が別途担保する。
+"tests/*" = ["S101", "S105", "S106", "S107"]
+# S105: `*_TOKEN` / `TOKEN_*` を含むError Code名をhardcoded passwordと誤検出する。
+# これらはerrors.yaml由来の正規Error Code名であり、Secret値ではない。
+"src/harness/domain/_registry_generated.py" = ["S105"]
+# E501: 設計書本文を逐語で保持する定数を含む。折り返すと設計書の内容が変わるため
+# 整形器の行長制限を適用しない。
+"tools/apply_design_v18.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+packages = ["harness"]
+warn_unreachable = true
+disallow_any_explicit = false

@@ -1,0 +1,149 @@
+{
+  "$id": "https://fde-harness.local/migrations/upcasters/migration-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MigrationResult",
+  "description": "Upcaster の結果。Migration Tool 専用の語彙であり Core Schema ではない。status と reason_code はここで閉じた enum であって Ledger Event / errors.yaml / Runtime GO Evidence へは追加しない（Owner Decision D-Q6）。blocked-record.schema.json が release_scope / category / status を Registry 外の enum で固定しているのと同じ扱いである。from_version / to_version / upcaster_code_hash / conversion_reason / lossless は設計書 §15.2「Upcasterは from_version、to_version、Code Hash、変換理由、Lossless可否を持つ」に対応する。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "description": "MIGRATED は 2.0.0 Schema 全体の検証を通ったことを意味する。Lossless であることは意味しない。欠落の有無は lossless を見る。",
+      "type": "string",
+      "enum": ["MIGRATED", "UNMIGRATABLE_LEGACY"]
+    },
+    "from_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "to_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "schema_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_record_hash": {
+      "description": "元 1.0.0 Record の Canonical Bytes から測ったHash。元Recordは変更しない。",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "upcaster_code_hash": {
+      "description": "§15.2 の Code Hash。どのCodeで変換したかを結果へ束縛する。",
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "conversion_reason": {
+      "description": "§15.2 の変換理由。なぜこのMajor変換が要るのかを結果側にも残す。",
+      "type": "string",
+      "minLength": 1
+    },
+    "lossless": {
+      "description": "§15.2 の Lossless 可否。MIGRATED のとき boolean、UNMIGRATABLE_LEGACY のとき null。dropped_fields が空のときだけ true。",
+      "type": ["boolean", "null"]
+    },
+    "missing_fields": {
+      "description": "2.0.0 の required のうち 1.0.0 からも supplement からも埋まらなかった Field。移行不能の具体的な理由である。",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 0
+    },
+    "dropped_fields": {
+      "description": "元 1.0.0 Record にあり 2.0.0 に行き先が無い Field。監査・証跡Fieldが含まれる場合は AUDIT_FIELD_NOT_TRANSFERABLE で移行不能とし、分類できないFieldは UNCLASSIFIED_FIELD_LOSS で移行不能とする。黙って捨てない。",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 0
+    },
+    "conflicting_fields": {
+      "description": "supplement が変換結果と異なる値を渡した Field、または supplement が渡してはならない Envelope / schema_name / schema_version。",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 0
+    },
+    "validation_errors": {
+      "description": "2.0.0 Schema 検証の違反箇所。JSON Path と違反 Keyword だけを載せ、違反した実値は載せない（不変条件#7）。",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 0
+    },
+    "reason_code": {
+      "type": ["string", "null"],
+      "enum": [
+        "REQUIRED_FIELD_NOT_RECONSTRUCTABLE",
+        "UNSUPPORTED_SOURCE_VERSION",
+        "SOURCE_SCHEMA_NAME_MISMATCH",
+        "TARGET_SCHEMA_INVALID",
+        "SUPPLEMENT_CONFLICT",
+        "SUPPLEMENT_FIELD_NOT_PERMITTED",
+        "AUDIT_FIELD_NOT_TRANSFERABLE",
+        "UNCLASSIFIED_FIELD_LOSS",
+        "SCHEMA_VALIDATION_FAILED",
+        null
+      ]
+    },
+    "output": {
+      "type": ["object", "null"]
+    }
+  },
+  "required": [
+    "status",
+    "from_version",
+    "to_version",
+    "schema_name",
+    "source_record_hash",
+    "upcaster_code_hash",
+    "conversion_reason",
+    "lossless",
+    "missing_fields",
+    "dropped_fields",
+    "conflicting_fields",
+    "validation_errors",
+    "reason_code",
+    "output"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "status": { "const": "UNMIGRATABLE_LEGACY" } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "output": { "type": "null" },
+          "reason_code": { "type": "string" },
+          "lossless": { "type": "null" }
+        },
+        "required": ["output", "reason_code", "lossless"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "status": { "const": "MIGRATED" } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "output": { "type": "object" },
+          "reason_code": { "type": "null" },
+          "lossless": { "type": "boolean" },
+          "missing_fields": { "maxItems": 0 },
+          "conflicting_fields": { "maxItems": 0 },
+          "validation_errors": { "maxItems": 0 }
+        },
+        "required": ["output", "lossless"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": { "const": "MIGRATED" },
+          "lossless": { "const": true }
+        },
+        "required": ["status", "lossless"]
+      },
+      "then": {
+        "properties": { "dropped_fields": { "maxItems": 0 } }
+      }
+    }
+  ]
+}

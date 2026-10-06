@@ -1,0 +1,135 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/InvocationManifest/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "billing_mode": {
+      "enum": [
+        "FREE",
+        "PAID",
+        "UNKNOWN"
+      ],
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "context_bundle_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "control_data_policy_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "expected_effect": {
+      "enum": [
+        "NONE",
+        "REMOTE_INVOCATION",
+        "WORKSPACE_WRITE",
+        "EXTERNAL_EFFECT"
+      ],
+      "type": "string"
+    },
+    "instruction_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "invocation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "invocation_mode": {
+      "enum": [
+        "MOCK",
+        "LOCAL",
+        "EXTERNAL"
+      ],
+      "type": "string"
+    },
+    "message_role_manifest_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "output_schema_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "provider_operation": {
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "request_artifact_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "InvocationManifest"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "semantic_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "token_profile_snapshot_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "invocation_id",
+    "invocation_mode",
+    "provider",
+    "billing_mode",
+    "context_bundle_hash",
+    "message_role_manifest_hash",
+    "control_data_policy_hash",
+    "token_profile_snapshot_hash",
+    "expected_effect",
+    "semantic_hash"
+  ],
+  "title": "InvocationManifest",
+  "type": "object"
+}

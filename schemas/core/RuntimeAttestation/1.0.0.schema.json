@@ -1,0 +1,101 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/RuntimeAttestation/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attestation_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "attestation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "fault_injection_enabled": {
+      "type": "boolean"
+    },
+    "filesystem_type": {
+      "type": "string"
+    },
+    "mount_id": {
+      "type": "string"
+    },
+    "observed_argv": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "observed_executable_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "observed_working_directory": {
+      "type": "string"
+    },
+    "plan_build_environment_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "runtime_spec_semantic_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "RuntimeAttestation"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "attestation_id",
+    "runtime_spec_semantic_hash",
+    "observed_executable_sha256",
+    "observed_argv",
+    "observed_working_directory",
+    "fault_injection_enabled",
+    "attestation_hash"
+  ],
+  "title": "RuntimeAttestation",
+  "type": "object"
+}

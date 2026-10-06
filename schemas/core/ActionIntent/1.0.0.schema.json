@@ -1,0 +1,136 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/ActionIntent/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "action_type": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "data_classification": {
+      "type": "string"
+    },
+    "external_effect_resources": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "input_artifact_hashes": {
+      "items": {
+        "pattern": "^sha256:[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "maximum_attempts": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "read_resources": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "requested_capability": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "requested_outputs": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "risk_level": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "ActionIntent"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "timeout_seconds": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "trust_level": {
+      "type": "string"
+    },
+    "write_resources": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "action_id",
+    "action_type",
+    "data_classification",
+    "trust_level",
+    "risk_level",
+    "maximum_attempts",
+    "timeout_seconds"
+  ],
+  "title": "ActionIntent",
+  "type": "object"
+}

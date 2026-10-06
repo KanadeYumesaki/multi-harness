@@ -1,0 +1,19 @@
+# Exact Gitleaks fingerprints (path:rule:line). Evidence: ci/secret-scan-classification.json
+# Checked by tools/check_secret_scan_classification.py. Do not add globs or commit-wide entries.
+examples/offline-workflow/declaration.template.json:generic-api-key:42
+src/harness/infrastructure/crypto/ed25519_signer.py:generic-api-key:52
+tests/integration/masking/test_masker_output_types.py:generic-api-key:85
+tests/integration/test_task_plan_cli.py:generic-api-key:91
+tests/unit/domain/context_bundle_probe.py:generic-api-key:58
+tests/unit/domain/test_context_bundle_determinism.py:generic-api-key:96
+tests/unit/domain/test_context_bundle_determinism.py:generic-api-key:484
+tests/unit/domain/test_plan_declaration.py:generic-api-key:64
+tests/unit/masking/test_scanner.py:private-key:43
+tests/unit/masking/test_scanner.py:generic-api-key:51
+tests/unit/masking/test_secret_holdout_corpus.py:generic-api-key:59
+tests/unit/masking/test_secret_holdout_corpus.py:generic-api-key:72
+tests/unit/masking/test_secret_holdout_corpus.py:generic-api-key:77
+tests/unit/masking/test_secret_holdout_corpus.py:generic-api-key:82
+tests/unit/masking/test_secret_holdout_corpus.py:generic-api-key:89
+tests/unit/masking/test_secret_holdout_corpus.py:private-key:93
+tools/backup_restore_observation.py:generic-api-key:585

@@ -1,0 +1,144 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/RuntimeEnvelopeSpec/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter": {
+      "type": "string"
+    },
+    "argv": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "auth_route": {
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "environment_allowlist_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "executable_path": {
+      "type": "string"
+    },
+    "executable_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "launcher_version": {
+      "type": "string"
+    },
+    "masker_instruction_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "masker_model": {
+      "type": "string"
+    },
+    "masker_model_digest": {
+      "type": "string"
+    },
+    "masker_provider": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "model_digest": {
+      "type": "string"
+    },
+    "os_boundary": {
+      "enum": [
+        "LINUX"
+      ],
+      "type": "string"
+    },
+    "output_schema_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "runtime_spec_version": {
+      "type": "string"
+    },
+    "runtime_type": {
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "RuntimeEnvelopeSpec"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "semantic_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "working_directory": {
+      "type": "string"
+    },
+    "workspace_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "runtime_spec_version",
+    "runtime_type",
+    "launcher_version",
+    "executable_path",
+    "executable_sha256",
+    "argv",
+    "working_directory",
+    "workspace_id",
+    "os_boundary",
+    "provider",
+    "adapter",
+    "auth_route",
+    "semantic_hash"
+  ],
+  "title": "RuntimeEnvelopeSpec",
+  "type": "object"
+}

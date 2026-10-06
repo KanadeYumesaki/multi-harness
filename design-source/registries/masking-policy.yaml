@@ -1,0 +1,206 @@
+# マスキングのREJECT／MASKABLE境界とSpan制約の正本案。ADR-007 §6。
+#
+# 正本。
+# 境界を散文とコードへ直書きしない（不変条件#18）。
+
+masking_policy_version: 4
+
+# ---------------------------------------------------------------------------
+# 1. 即Reject。**LLMへ送らない**
+# ---------------------------------------------------------------------------
+# 「マスクして使う利益」より「マスクのためにLLMへ渡す危険」が大きいものを列挙する。
+reject_categories:
+  - id: SECRET_GENERIC
+    detects: 高エントロピー文字列、既知Secret Pattern
+  - id: PASSWORD
+  - id: API_KEY
+  - id: BEARER_TOKEN
+  - id: SESSION_COOKIE
+  - id: PRIVATE_KEY
+    detects: BEGIN (RSA|OPENSSH|EC|PGP|DSA) PRIVATE KEY
+  - id: CERTIFICATE_KEY
+  - id: CLOUD_CREDENTIAL
+    detects: AWS/GCP/Azure の資格情報形式
+  - id: CONNECTION_STRING
+    detects: 認証情報を含むDSN／URI
+  - id: DOTENV_CONTENT
+  - id: SPECIAL_CATEGORY_DATA
+    note: 要配慮個人情報。マスクせず拒否する
+  - id: NATIONAL_ID
+    note: 国民識別番号。日本のマイナンバー等を含む。MVP0-Aではマスクせず拒否する
+  - id: CANARY
+    note: 試験用Secret Canary。検出時は必ずReject
+
+reject_conditions:
+  - condition: classification_known == false
+    reason: 分類不能
+  - condition: scan_completed == false
+    reason: Scan不能
+  - condition: content_type IN [BINARY, EXECUTABLE, ARCHIVE, ENCRYPTED]
+    reason: 本文としてマスクできない
+  - condition: size_bytes > max_maskable_bytes
+    reason: 上限超過
+
+max_maskable_bytes: 1048576   # 1 MiB。実測後に調整する
+
+# ---------------------------------------------------------------------------
+# 2. MASKABLE。LLMへ送ってよいカテゴリと置換Token
+# ---------------------------------------------------------------------------
+# mask_tokens はカテゴリごとに固定する。LLMが返した文字列は一切使わない（ADR-007 §4）。
+categories:
+  - id: PERSON_NAME
+    mask_token: "[MASKED:PERSON_NAME]"
+  - id: EMAIL
+    mask_token: "[MASKED:EMAIL]"
+  - id: PHONE_NUMBER
+    mask_token: "[MASKED:PHONE]"
+  - id: POSTAL_ADDRESS
+    mask_token: "[MASKED:ADDRESS]"
+  - id: EMPLOYEE_ID
+    mask_token: "[MASKED:EMPLOYEE_ID]"
+  - id: CUSTOMER_NAME
+    mask_token: "[MASKED:CUSTOMER]"
+  - id: ORGANIZATION_NAME
+    mask_token: "[MASKED:ORG]"
+  - id: BANK_ACCOUNT
+    mask_token: "[MASKED:BANK_ACCOUNT]"
+  - id: DATE_OF_BIRTH
+    mask_token: "[MASKED:DOB]"
+  - id: URL_WITH_IDENTIFIER
+    mask_token: "[MASKED:URL]"
+
+# ---------------------------------------------------------------------------
+# 3. Span制約（ADR-007 §3）
+# ---------------------------------------------------------------------------
+span_constraints:
+  offset_basis: UNICODE_SCALAR_VALUE # NFC正規化済みテキスト上のUnicode scalar value index
+  interval: HALF_OPEN               # [start, end)
+  require_sorted_by_start: true
+  allow_overlap: false
+  allow_nesting: false
+  max_spans: 512
+  max_mask_ratio: 0.60              # 暫定Circuit Breaker。LLM追加Union Code Point数 / 本文Code Point数
+  ratio_basis: LLM_ADDITIONAL_UNION_CODE_POINTS
+  deterministic_scan1_excluded: true
+  ratio_denominator: NORMALIZED_CODEPOINT_COUNT
+  ratio_empty_text: REJECT
+  ratio_unset: REJECT
+  max_single_llm_addition_ratio: 0.60
+  min_span_length: 1
+  grapheme_boundary_policy: REJECT_RISKY_SPANS
+  grapheme_algorithm: CONSERVATIVE_RISKY_CODEPOINT_GUARD_V2
+  grapheme_detector_unavailable: REJECT_RISKY_SPANS_ONLY
+  grapheme_risky_classes:
+    - COMBINING_MARK
+    - SPACING_MARK
+    - HANGUL_JAMO
+    - VARIATION_SELECTOR
+    - ZERO_WIDTH_JOINER
+    - EMOJI_MODIFIER
+    - EXTENDED_PICTOGRAPHIC
+    - REGIONAL_INDICATOR
+    - TAG_CHARACTER
+    - FORMAT_JOINER
+
+# ---------------------------------------------------------------------------
+# 3-b. Grapheme判定に使うVendor表
+# ---------------------------------------------------------------------------
+# `EXTENDED_PICTOGRAPHIC` を範囲で近似していたが、`U+2190–U+2BFF` は
+# 矢印・星・囲み数字を丸ごと含む。箇条書きの丸数字（日本語の業務文書で頻出）が
+# `MASKING_GRAPHEME_SPLIT` で拒否されていた。Grapheme Clusterと無関係な文字まで
+# 巻き込む近似だったため、Unicodeの実データへ置き換える。
+#
+# UCD Assigned Bitmap と同じく、入力と生成物の双方をHashで固定する。
+# 判定が変われば `MASKING_GRAPHEME_SPLIT` の発生条件が変わるため、
+# Artifactの素性は source_normalized_hash と同格に管理する。
+grapheme:
+  pictographic_artifact_path: src/harness/masking/ucd/14.0.0-extended-pictographic
+  pictographic_artifact_format: UCD14_EXTENDED_PICTOGRAPHIC_BITMAP_V1
+  pictographic_artifact_bit_order: CODEPOINT_ASCENDING_LSB0
+  pictographic_artifact_size_bytes: 139264
+  pictographic_artifact_sha256: sha256:423a40891a4dfff16f2a922384ad862532836ceaec512512718720551c32ac5e
+  pictographic_source_url: https://www.unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt
+  pictographic_source_sha256: sha256:b597836124298b8f7fa076273802840cfc3271a25f5c397a082e120954b82c3c
+  pictographic_artifact_missing: REJECT
+  pictographic_source_hash_mismatch: REJECT
+  pictographic_source_malformed_line: REJECT
+
+normalization:
+  profile_id: NFC_CODEPOINT_V3
+  form: NFC
+  index_unit: UNICODE_SCALAR_VALUE
+  unicode_data_version: "14.0.0"
+  engine: RUNTIME_UNICODEDATA_WITH_UCD14_ASSIGNED_GUARD
+  engine_contract: UAX15_NFC_RUNTIME_WITH_UCD14_GUARD_V1
+  runtime_normalizer: unicodedata.normalize_NFC
+  engine_artifact_path: src/harness/masking/ucd/14.0.0-assigned-codepoints
+  engine_artifact_hash_required: true
+  engine_artifact_missing: REJECT
+  # 信頼根。Artifactと、その生成元である公式UCD入力の**双方**をHashで固定する。
+  # 期待値を持たない状態を「検査済み」と扱わない。
+  # engine_artifact_hash_required: true だけでは、何と突合するかが無いため無効である。
+  engine_artifact_sha256: sha256:e20aa132de7eb03a7638ba85c7c0c54a547ed5a481e902eecd55009dca6599ea
+  ucd_source_url: https://www.unicode.org/Public/14.0.0/ucd/UnicodeData.txt
+  ucd_source_sha256: sha256:36018e68657fdcb3485f636630ffe8c8532e01c977703d2803f5b89d6c5feafb
+  # 取得元が差し替わった場合、Artifactが偶然一致しても入力が違えば拒否する。
+  ucd_source_hash_mismatch: REJECT
+  # UnicodeData.txt の行形式（15 field）に合わない行を黙って読み飛ばさない。
+  ucd_source_malformed_line: REJECT
+  artifact_format: UCD14_ASSIGNED_BITMAP_V1
+  artifact_bit_order: CODEPOINT_ASCENDING_LSB0
+  artifact_size_bytes: 139264
+  artifact_hash_algorithm: SHA256_RAW_BYTES
+  runtime_unicodedata_min_version: "14.0.0"
+  runtime_unicodedata_version_policy: MINIMUM_VERSION
+  runtime_unicodedata_not_authoritative: false
+  unsupported_codepoint_policy: REJECT_UCD14_UNASSIGNED
+  artifact_scope: ASSIGNED_CODEPOINT_SET_ONLY
+  output_encoding: UTF-8
+  output_is_canonical_normalized: true
+
+candidate_span_policy:
+  deterministic_scan1_candidates: REQUIRED
+  llm_spans: ADDITIONAL_ONLY
+  union_before_validation: true
+  same_category_containment_expansion: ALLOW
+  cross_category_overlap: REJECT
+  partial_overlap_without_containment: REJECT
+
+# ---------------------------------------------------------------------------
+# 4. Masker失敗時の扱い。全てFail-Closed
+# ---------------------------------------------------------------------------
+failure_handling:
+  on_timeout: REJECT
+  on_unavailable: REJECT
+  on_malformed_output: REJECT
+  on_hash_mismatch: REJECT
+  on_invalid_span: REJECT
+  on_unknown_category: REJECT
+  on_ratio_exceeded: REJECT
+  on_scan2_failure: REJECT
+  never_pass_unmasked: true         # マスクなしでの通過を一切許さない
+
+masker_timeout_seconds: 30
+
+# ---------------------------------------------------------------------------
+# 5. ローカルMaskerの隔離要件（ADR-007 §7）
+# ---------------------------------------------------------------------------
+masker_isolation:
+  network_egress: DENY
+  telemetry: DISABLED
+  prompt_logging: DISABLED
+  core_dump: DISABLED               # RLIMIT_CORE = 0
+  temp_files: DISALLOWED
+  memory_lock: REQUIRED             # Raw PII経路ではmlockall不能時にReject
+  raw_pii_path: FAIL_CLOSED
+  on_incomplete: REJECT
+  enforcement: PRE_LAUNCH_VERIFY    # 起動前に検証し、不成立なら MASKER_UNAVAILABLE
+
+# ---------------------------------------------------------------------------
+# 6. 分類の自動Downgrade禁止（§1.13）
+# ---------------------------------------------------------------------------
+classification:
+  auto_downgrade_after_masking: false
+  rationale: >
+    マスクしても data_classification は下がらない。引下げが必要な場合は
+    根拠Artifactと人間承認を持つ独立Decisionとする。

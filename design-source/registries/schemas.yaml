@@ -1,0 +1,201 @@
+core_schemas:
+- ordinal: 1
+  schema_name: EventEnvelope
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/EventEnvelope/1.0.0.schema.json
+    read_only: false
+- ordinal: 2
+  schema_name: Run
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/Run/1.0.0.schema.json
+    read_only: false
+- ordinal: 3
+  schema_name: ActionIntent
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ActionIntent/1.0.0.schema.json
+    read_only: false
+- ordinal: 4
+  schema_name: ActionAttempt
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ActionAttempt/1.0.0.schema.json
+    read_only: false
+- ordinal: 5
+  schema_name: ExecutionPlan
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ExecutionPlan/1.0.0.schema.json
+    read_only: false
+- ordinal: 6
+  schema_name: RuntimeEnvelopeSpec
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/RuntimeEnvelopeSpec/1.0.0.schema.json
+    read_only: false
+- ordinal: 7
+  schema_name: InvocationManifest
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/InvocationManifest/1.0.0.schema.json
+    read_only: false
+- ordinal: 8
+  schema_name: TokenBudgetPolicy
+  active_write_version: 2.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/TokenBudgetPolicy/1.0.0.schema.json
+    read_only: true
+  - version: 2.0.0
+    path: schemas/core/TokenBudgetPolicy/2.0.0.schema.json
+    read_only: false
+- ordinal: 9
+  schema_name: TokenProfileSnapshot
+  active_write_version: 2.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/TokenProfileSnapshot/1.0.0.schema.json
+    read_only: true
+  - version: 2.0.0
+    path: schemas/core/TokenProfileSnapshot/2.0.0.schema.json
+    read_only: false
+- ordinal: 10
+  schema_name: ContextFragment
+  active_write_version: 2.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ContextFragment/1.0.0.schema.json
+    read_only: true
+  - version: 2.0.0
+    path: schemas/core/ContextFragment/2.0.0.schema.json
+    read_only: false
+- ordinal: 11
+  schema_name: ContextBundle
+  active_write_version: 2.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ContextBundle/1.0.0.schema.json
+    read_only: true
+  - version: 2.0.0
+    path: schemas/core/ContextBundle/2.0.0.schema.json
+    read_only: false
+- ordinal: 12
+  schema_name: ContextSelectionReceipt
+  active_write_version: 2.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ContextSelectionReceipt/1.0.0.schema.json
+    read_only: true
+  - version: 2.0.0
+    path: schemas/core/ContextSelectionReceipt/2.0.0.schema.json
+    read_only: false
+- ordinal: 13
+  schema_name: PolicyDecision
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/PolicyDecision/1.0.0.schema.json
+    read_only: false
+- ordinal: 14
+  schema_name: ApprovalGrant
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ApprovalGrant/1.0.0.schema.json
+    read_only: false
+- ordinal: 15
+  schema_name: Lease
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/Lease/1.0.0.schema.json
+    read_only: false
+- ordinal: 16
+  schema_name: RuntimeAttestation
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/RuntimeAttestation/1.0.0.schema.json
+    read_only: false
+- ordinal: 17
+  schema_name: ArtifactManifest
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ArtifactManifest/1.0.0.schema.json
+    read_only: false
+- ordinal: 18
+  schema_name: EffectReceipt
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/EffectReceipt/1.0.0.schema.json
+    read_only: false
+- ordinal: 19
+  schema_name: OperationJournal
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/OperationJournal/1.0.0.schema.json
+    read_only: false
+- ordinal: 20
+  schema_name: InputReadCapability
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/InputReadCapability/1.0.0.schema.json
+    read_only: false
+- ordinal: 21
+  schema_name: DelegationGrant
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/DelegationGrant/1.0.0.schema.json
+    read_only: false
+- ordinal: 22
+  schema_name: MaskingReceipt
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/MaskingReceipt/1.0.0.schema.json
+    read_only: false
+- ordinal: 23
+  schema_name: Conversation
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/Conversation/1.0.0.schema.json
+    read_only: false
+- ordinal: 24
+  schema_name: ConversationMessage
+  active_write_version: 2.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ConversationMessage/1.0.0.schema.json
+    read_only: true
+  - version: 2.0.0
+    path: schemas/core/ConversationMessage/2.0.0.schema.json
+    read_only: false
+- ordinal: 25
+  schema_name: ConversationSnapshot
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ConversationSnapshot/1.0.0.schema.json
+    read_only: false
+- ordinal: 26
+  schema_name: ApprovalConsumeResult
+  active_write_version: 1.0.0
+  versions:
+  - version: 1.0.0
+    path: schemas/core/ApprovalConsumeResult/1.0.0.schema.json
+    read_only: false

@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fde-harness.local/schemas/evidence/CaseEvidence/1.2.schema.json",
+  "title": "Case Evidence v1.2",
+  "description": "Runtime GO 判定の Case 単位 Evidence（凍結）。evidence_kind と event_observation を持たないため、Ledger を観測したのかしていないのかを Evidence 単体から読めない。Release 判定の入力として受理しない（設計書 v1.15 §15.11.2）。既存の Development Evidence は本形式のまま残す。2.0 へ変換しない。",
+  "type": "object",
+  "required": [
+    "evidence_schema_version",
+    "case_id",
+    "test_id",
+    "gate_ids",
+    "status",
+    "mismatched_fields",
+    "implementation_commit_sha",
+    "design_sha256",
+    "registry_snapshot_hash",
+    "schema_catalog_hash",
+    "fault_injection",
+    "source_tree_clean",
+    "input_fixture_path",
+    "input_fixture_hash",
+    "environment_manifest_hash",
+    "expected",
+    "observed",
+    "side_effects",
+    "test_node_ids",
+    "producer",
+    "evidence_hash"
+  ],
+  "properties": {
+    "evidence_schema_version": {
+      "const": "1.2"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "test_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "mismatched_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "implementation_commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "design_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "registry_snapshot_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "schema_catalog_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "fault_injection": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "source_tree_clean": {
+      "const": true
+    },
+    "input_fixture_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_fixture_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "environment_manifest_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "expected": {
+      "type": "object",
+      "required": [
+        "state",
+        "error_code",
+        "event_sequence",
+        "expectation_descriptor_hash"
+      ],
+      "properties": {
+        "state": {
+          "type": "string"
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_sequence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expectation_descriptor_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "side_effects": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "test_node_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "producer": {
+      "const": "tools/emit_case_evidence.py"
+    },
+    "evidence_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "observed": {
+      "type": "object",
+      "required": [
+        "state",
+        "error_code",
+        "event_sequence",
+        "actual_subject_id"
+      ],
+      "properties": {
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_sequence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "actual_subject_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

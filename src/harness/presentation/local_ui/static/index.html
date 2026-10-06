@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>multi-harness — AI Workspace</title>
+<link rel="stylesheet" href="/app.css">
+<meta name="harness-session" content="__HARNESS_SESSION_TOKEN__">
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインの操作へ</a>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="ワークスペースのナビゲーション">
+    <a class="brand" href="#workbench-panel" aria-label="multi-harness AIワークスペースへ"><span class="brand-mark" aria-hidden="true">✳</span><span class="brand-name">multi<span>harness</span></span></a>
+    <div class="workspace-switch"><span class="workspace-icon" aria-hidden="true">W</span><div><strong>Local workspace</strong><small>自分のペースで、AIとつくる</small></div></div>
+    <p class="nav-caption">WORKSPACE</p>
+    <nav aria-label="画面内の移動"><a href="#workbench-panel" data-nav-target="workbench-panel" aria-label="AIワークスペース" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-3-11-2 14"/></svg><span class="nav-label">AIとつくる</span></a>
+<a href="#wb-history" data-nav-target="wb-history" aria-label="作業の履歴"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2 7M3 4v7h7m2-5v6l4 2"/></svg><span class="nav-label">作業の履歴</span></a>
+<a href="#operations-panel" data-nav-target="operations-panel" aria-label="受付と復旧"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 7 3-3 3 3-3 3m-3-3H5v5m5 5-3 3-3-3 3-3m3 3h9v-5"/></svg><span class="nav-label">受付と復旧</span></a>
+<a href="#providers-panel" data-nav-target="providers-panel" aria-label="接続・詳細設定"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="8" cy="7" r="3"/><circle cx="16" cy="17" r="3"/></svg><span class="nav-label">接続・詳細設定</span></a>
+<a href="#list-panel" data-nav-target="list-panel" aria-label="会話・Context"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H6l-4 3V11a8 8 0 0 1 8-8h3a8 8 0 0 1 8 8Z"/><path d="M7 9h9M7 13h6"/></svg><span class="nav-label">会話・Context</span></a>
+</nav>
+    <div class="sidebar-foot"><span class="rail-spark" aria-hidden="true">✦</span><p>つくるのはAI。<br>決めるのはあなた。</p><small>送信は、内容を確認して承認。</small></div>
+    <span class="rail-version">LOCAL · AI WORKSPACE</span>
+  </aside>
+  <div class="workspace-shell">
+    <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><span aria-hidden="true">/</span><strong>AIワークスペース</strong></div><div class="topbar-tools"><span class="local-pill"><span class="tiny-dot" aria-hidden="true"></span>Local preview</span><a class="topbar-link" href="#operations-panel" aria-label="受付と復旧を開く"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 7 3-3 3 3-3 3m-3-3H5v5m5 5-3 3-3-3 3-3m3 3h9v-5"/></svg></a></div></header>
+    <main id="main-content" tabindex="-1">
+      <div class="workspace-intro"><div><p class="eyebrow">A LITTLE IDEA. A NEW POSSIBILITY.</p><h1>アイデアを、<span>かたちに。</span></h1><p class="intro-copy">文章をつくる。情報を整理する。考えを深める。<br>使いたいAIと、あなたの次の一歩を。</p></div><div class="intro-art" aria-hidden="true"><span class="art-orbit"></span><span class="art-code">✧</span><span class="art-star">✦</span><span class="art-dot"></span><span class="art-caption">MAKE SOMETHING GOOD.</span></div></div>
+      <p class="note scope-note" id="scope-note">この画面は127.0.0.1だけで開きます。AIへの送信は毎回確認・承認します。文章は成果物として保存し、ファイル編集はさらに差分を承認して適用します。</p>
+<section id="workbench-panel">
+  <div class="section-heading">
+    <div><p class="eyebrow">CREATE WITH YOUR AI</p><h2>AIワークスペース <span class="preview-tag">Local Preview</span></h2></div>
+    <a class="quiet-link" href="#wb-history">作業の履歴へ <span aria-hidden="true">↗</span></a>
+  </div>
+  <p id="wb-unavailable" class="warn" hidden></p>
+  <div id="wb-body" hidden>
+    <div class="workspace-meta"><span class="workspace-dot" aria-hidden="true"></span><p class="note" id="wb-scope"></p></div>
+    <ol class="workflow-track" aria-label="依頼から成果物までの流れ">
+      <li class="workflow-step is-current" data-workflow-step="1" aria-current="step"><span class="step-number">01</span><span>依頼を作成<small>用途・AI・モデルを選ぶ</small></span></li>
+      <li class="workflow-step" data-workflow-step="2"><span class="step-number">02</span><span>送信内容を確認<small>承認した内容で生成</small></span></li>
+      <li class="workflow-step" data-workflow-step="3"><span class="step-number">03</span><span>AIで生成<small>結果を待って確認</small></span></li>
+      <li class="workflow-step" data-workflow-step="4"><span class="step-number">04</span><span id="wb-last-step">成果物を使う<small>確認してコピー・保存</small></span></li>
+    </ol>
+    <div class="provider-heading"><h3>一緒につくるAI</h3><span id="wb-workflow-status" class="status-pill" role="status">設定を確認中</span></div>
+    <div id="wb-provider-cards" class="provider-cards" aria-label="CLIの選択"></div>
+    <details id="wb-provider-details" class="provider-details"><summary>接続状態・認証・操作範囲を詳しく確認 <span aria-hidden="true">↗</span></summary>
+    <p class="note" id="wb-limits"></p>
+    <div id="wb-provider-table-region" role="region" tabindex="0"
+         aria-label="Providerの導入・認証・実行前制限" aria-describedby="wb-provider-table-hint">
+    <table>
+      <thead>
+        <tr>
+          <th>Provider</th><th>導入</th><th>版</th><th>設定の検証</th>
+          <th>認証</th><th>直近の失敗</th><th>実行前制限</th><th>残る制限</th>
+        </tr>
+      </thead>
+      <tbody id="wb-provider-rows"></tbody>
+    </table>
+    </div>
+    <p class="note" id="wb-provider-table-hint">表は左右にスクロールできます。表にフォーカスすると矢印キーでも移動できます。</p>
+    <p class="note">
+      CLIの認証は各CLIの端末で行います。ChatGPTは上の公式ログイン連携を使います。
+      資格情報をこの表に表示することはありません。
+    </p>
+
+    </details>
+    <article class="compose-card" id="wb-chatgpt-connection" aria-labelledby="wb-chatgpt-title">
+      <div class="card-heading"><div><span class="card-kicker">CHATGPT CONNECT</span>
+        <h3 id="wb-chatgpt-title">ChatGPTの契約でつなぐ</h3></div><span class="soft-tag mint">公式ログイン連携</span></div>
+      <p class="note">ChatGPTの利用枠を公式ログイン（OAuth）で許可し、公式のResponses APIへ通信します。Web版の画面を操作する方式ではありません。Platform APIキーは使用しません。利用枠・追加クレジットの扱いはChatGPTの設定で確認してください。Web版の会話・メモリーは、下の取込から参考資料として選べます。</p>
+      <p id="wb-chatgpt-status" role="status">未接続</p>
+      <label><input id="wb-chatgpt-new-account" type="checkbox">前回と別のアカウントで登録する</label>
+      <div class="handoff-heading"><button id="wb-chatgpt-login" type="button">ChatGPTでログイン</button>
+        <button id="wb-chatgpt-logout" type="button" disabled>連携を切断</button>
+        <a id="wb-chatgpt-auth-link" hidden target="_blank" rel="noopener noreferrer">公式のログインページを開く ↗</a></div>
+      <p class="note">認証トークンはメモリーだけで保持します。画面の再読込みでは維持し、サーバーの再起動後は再ログインが必要です。</p>
+      <a href="https://chatgpt.com/settings/usage" target="_blank" rel="noopener noreferrer" class="quiet-link">ChatGPTの利用枠・クレジット設定を確認 ↗</a>
+    </article>
+    <details class="compose-card knowledge-card" id="knowledge-panel">
+      <summary><span class="card-kicker">BRING YOUR KNOWLEDGE</span> ChatGPT Webの会話・メモリーを取り込む</summary>
+      <p class="feature-guide">ChatGPTで話したことや保存メモリーを、次のAIの参考資料にできます。ログインだけでは共有されません。選んだ内容をローカル保存してから、送信前に確認します。</p>
+      <ol class="help-steps"><li>会話を書き出してconversations.jsonを選ぶ、または本文・メモリーを貼り付ける</li><li>取り込む内容と省略範囲を確認して保存する</li><li>「この知識で依頼する」でCLI・モデルを選び、送信内容を確認する</li></ol>
+      <p class="note">会話のZIPは先に展開してください。JSONは16MiBまで、保存する本文は64KiBまで。現在の分岐のテキストが対象です。画像・添付・別の分岐は省略範囲を表示します。メモリーはChatGPTの設定からご自身でコピーしてください。自動同期は行いません。</p>
+      <div class="grid"><label for="knowledge-kind">資料の種類</label><select id="knowledge-kind">
+        <option value="chatgpt_conversation">ChatGPTの会話</option><option value="chatgpt_memory">ChatGPTの保存メモリー</option><option value="pasted_reference">その他の参考資料</option>
+      </select><label for="knowledge-file">ファイルから読み込む（任意）</label><input id="knowledge-file" type="file" accept=".json,.txt,.md">
+      <label id="knowledge-choice-label" for="knowledge-export-choice" hidden>取り込む会話</label><select id="knowledge-export-choice" hidden></select></div>
+      <p id="knowledge-source-status" class="note">貼り付ける内容は参考資料として扱います。</p>
+      <label for="knowledge-title">資料の名前</label><input id="knowledge-title" type="text" maxlength="512" value="ChatGPTからの知識">
+      <label for="knowledge-content">取り込む本文・メモリー</label><textarea id="knowledge-content" rows="7" placeholder="引き継ぎたい会話、条件、保存メモリーを貼り付けてください。秘密情報や資格情報は含めないでください。"></textarea>
+      <button id="knowledge-preview" type="button">保存する内容を確認</button>
+      <div id="knowledge-review" hidden><p id="knowledge-preview-meta" class="hash"></p><details open><summary>保存する完全な資料を見る</summary><pre id="knowledge-preview-body" class="mono"></pre></details>
+        <label><input id="knowledge-approve-save" type="checkbox">表示した内容と省略範囲を確認し、参考資料としてローカル保存する</label>
+        <button id="knowledge-save" type="button" disabled>確認した知識を保存</button>
+      </div>
+      <p id="knowledge-status" class="note" role="status">この操作ではAIへの外部送信・CLI起動は行いません。</p>
+      <button id="knowledge-use" type="button" hidden>この知識で依頼する</button>
+    </details>
+    <form id="wb-form" class="compose-card">
+      <section class="purpose-section" aria-labelledby="wb-purpose-title">
+        <div class="card-heading"><div><span class="card-kicker">WHAT WILL YOU CREATE?</span>
+        <h3 id="wb-purpose-title">今日は、何をしましょう？</h3></div><span class="soft-tag mint">ファイルなしでも使えます</span></div>
+        <label for="wb-purpose">依頼の用途</label><select id="wb-purpose"></select>
+        <div id="wb-purpose-cards" class="purpose-cards" aria-label="用途を選ぶ"></div>
+        <p id="wb-purpose-hint" class="note"></p>
+      </section>
+      <div class="card-heading"><div><span class="card-kicker">NEW REQUEST</span><h3>何をつくりますか？</h3></div><span class="soft-tag">日本語でOK</span></div>
+      <section class="conversation-handoff" aria-labelledby="wb-conversation-title">
+        <div class="handoff-heading"><div><span class="card-kicker">SHARED CONTEXT</span>
+          <h4 id="wb-conversation-title">会話を引き継いで続ける</h4></div>
+          <button type="button" id="wb-new-conversation">新しい会話</button>
+        </div>
+        <label for="wb-thread-source">続ける会話</label>
+        <select id="wb-thread-source"><option value="">新しい会話から始める</option></select>
+        <p id="wb-handoff-status" class="note" role="status">新しい会話です。AIを切り替えるときも、同じ会話を選ぶと全履歴を自動で渡します。</p>
+        <div class="grid">
+          <label for="wb-history-mode">次のAIへ渡す履歴</label>
+          <select id="wb-history-mode"><option value="full">全履歴を渡す</option>
+            <option value="recent">最近の履歴を選んで渡す</option></select>
+          <label for="wb-history-count">最近の依頼・メッセージ数</label>
+          <input id="wb-history-count" type="number" min="1" max="100" value="3" disabled>
+        </div>
+        <p class="note">最初の依頼と保存したsystem・developerメッセージは残します。元の履歴は消さず、除外した件数と理由を送信前に表示します。</p>
+        <label for="wb-important-notes">必ず伝えたい要点・制約（任意）</label>
+        <textarea id="wb-important-notes" rows="2" maxlength="4096" placeholder="例：公開APIの互換性を保ち、変更前の試験を削除しない。"></textarea>
+        <p id="wb-context-budget" class="note" role="status">依頼作成後に実際の送信容量を表示します。モデル固有のトークン数は未計測です。</p>
+        <details id="wb-conversation-details">
+          <summary>引き継ぐ会話と生成結果を見る</summary>
+          <div id="wb-conversation-timeline" class="conversation-timeline"></div>
+          <p class="note">依頼・生成コード・変更前後・適用結果を順に渡します。過去の内容は参考情報として扱い、次の送信と適用は毎回承認します。選択した履歴でも容量を超える場合は送信せず停止します。</p>
+        </details>
+      </section>
+      <div class="compose-layout">
+        <div class="request-column">
+          <label for="wb-instruction">AIへの依頼</label>
+          <textarea id="wb-instruction" rows="5" placeholder="例：この関数に日本語の説明を追加して、読みやすくしてください。"></textarea>
+          <div id="wb-text-fields">
+            <label for="wb-reference">参考資料・メモ <span class="note">任意</span></label>
+            <textarea id="wb-reference" rows="4" placeholder="要約したい本文、企画の条件、比較する案などを貼り付けてください。送信前に内容を確認できます。"></textarea>
+            <label for="wb-output-format">成果物の形式</label>
+            <select id="wb-output-format"><option value="markdown">Markdown（見出し・箇条書き）</option><option value="text">文章（テキスト）</option></select>
+            <p class="note">結果は文字として表示します。事実・根拠はご自身でも確認してください。Web調査やWord・Excel・PDFの生成はこの経路では行いません。</p>
+          </div>
+          <div class="file-field" id="wb-file-fields" hidden><label for="wb-target">編集するファイル</label>
+          <select id="wb-target" multiple size="4" disabled></select>
+          <p class="note">CtrlまたはShiftキーで複数選択できます。一覧の順に1ファイルずつ、送信内容と差分を確認して進めます。各生成で選択したAIの利用枠を消費する場合があります。</p></div>
+        </div>
+        <aside class="compose-settings" aria-label="生成の設定"><h4>生成の設定</h4>
+      <div class="grid">
+        <label for="wb-provider">Provider</label>
+        <select id="wb-provider"></select>
+        <label for="wb-model">モデル</label>
+        <select id="wb-model" required></select>
+        <label for="wb-model-custom" id="wb-model-custom-label" hidden>モデル IDを直接入力</label>
+        <input id="wb-model-custom" type="text" autocomplete="off" maxlength="96" hidden>
+        <label for="wb-effort">推論レベル</label>
+        <select id="wb-effort"></select>
+
+      </div>
+      <p class="note" id="wb-model-note">
+        候補はCLIの対応情報に基づきます。契約で利用できるかは送信時に確認されます。
+        推論レベルを上げると時間や利用量が増える場合があります。
+      </p>
+      <fieldset>
+        <legend>このWorkspaceで使う選択を保存</legend>
+        <p class="note">Provider・モデル・推論レベルだけを保存します。送信と差分適用は毎回別の承認が必要です。</p>
+        <label><input type="checkbox" id="wb-preference-approve">この選択を保存する</label>
+        <button type="button" id="wb-preference-save">設定を保存</button>
+        <p id="wb-preference-status" role="status">未設定</p>
+      </fieldset>
+        </aside>
+      </div>
+      <div class="compose-footer"><p class="note"><span class="tiny-dot" aria-hidden="true"></span>送信前に、内容を確認できます</p><button type="submit" id="wb-create" class="button-primary">送信内容を確認 <span aria-hidden="true">→</span></button></div>
+      <p id="wb-form-error" class="warn" role="alert"></p>
+    </form>
+    <div id="wb-queue" hidden>
+      <h3>選択したファイルの進み具合</h3>
+      <p id="wb-queue-status" class="note"></p>
+      <ol id="wb-queue-files"></ol>
+      <button type="button" id="wb-next-target" disabled>次のファイルの送信内容を確認</button>
+      <button type="button" id="wb-clear-queue">未着手の選択を解除</button>
+      <p class="note">各ファイルの送信と適用は別々に承認します。未着手の選択はこの画面を閉じると消えます。作成済みの依頼・差分・結果は下の履歴に残ります。</p>
+    </div>
+    <details id="wb-denied-details">
+      <summary class="note">候補にならないファイルと理由</summary>
+      <div class="table-region" role="region" tabindex="0" aria-label="候補にならないファイルと理由">
+<table>
+        <thead><tr><th>Path</th><th>理由</th></tr></thead>
+        <tbody id="wb-denied-rows"></tbody>
+      </table>
+</div>
+    </details>
+
+    <article class="workflow-card" id="wb-confirm-card">
+    <div class="card-heading"><div><span class="card-kicker">REVIEW & GENERATE</span><h3>送信内容の確認</h3></div><span class="soft-tag">送信の承認</span></div>
+    <p id="wb-confirm-empty" class="stage-empty">依頼を作ると、AIへ送る内容がここに表示されます。</p>
+    <div id="wb-confirm" hidden>
+      <div class="table-region" role="region" tabindex="0" aria-label="送信内容の確認">
+<table>
+        <tbody id="wb-confirm-rows"></tbody>
+      </table>
+</div>
+      <h4>AIへ送る完全な内容</h4>
+      <pre id="wb-payload" class="mono"></pre>
+      <p class="note" id="wb-transparency"></p>
+      <button type="button" id="wb-approve-send" class="button-primary">この内容を送信して生成</button>
+      <p id="wb-send-error" class="warn"></p>
+      <p id="wb-send-status" class="note"></p>
+      <button type="button" id="wb-refresh-session">状態を確認する</button>
+      <button type="button" id="wb-recover" hidden>適用結果を照合する（再書込みなし）</button>
+      <p id="wb-recovery-status" class="note"></p>
+    </div>
+
+    </article>
+    <article class="workflow-card artifact-card" id="wb-result-card" hidden aria-labelledby="wb-result-title">
+      <div class="card-heading"><div><span class="card-kicker">YOUR NEXT STEP</span><h3 id="wb-result-title">できあがった成果物</h3></div><span class="soft-tag mint">保存済み</span></div>
+      <p id="wb-result-meta" class="note"></p>
+      <pre id="wb-result-text" class="artifact-text" tabindex="0"></pre>
+      <div class="artifact-actions"><button type="button" id="wb-result-copy" class="button-primary">文章をコピー</button>
+        <button type="button" id="wb-result-download">ファイルを保存</button>
+        <button type="button" id="wb-result-continue">この会話で続きを依頼</button></div>
+      <p id="wb-result-action-status" class="note" role="status"></p>
+      <p class="note">文章形式と安全スキャナの検査は済んでいます。内容の正確性や専門判断を保証するものではありません。</p>
+    </article>
+    <article class="workflow-card" id="wb-diff-card" hidden>
+    <div class="card-heading"><div><span class="card-kicker">REVIEW & APPLY</span><h3>差分を確認して適用</h3></div><span class="soft-tag mint">適用は別の承認</span></div>
+    <p id="wb-diff-empty" class="stage-empty">生成された変更を確認してから、ファイルへ適用します。</p>
+    <div id="wb-diff" hidden>
+      <p class="note" id="wb-diff-meta"></p>
+      <div class="diff-columns"><div><h4>変更前</h4><pre id="wb-before" class="mono"></pre></div>
+      <div><h4>変更後（検査済みの完全な出力 Bytes）</h4><pre id="wb-after" class="mono"></pre></div></div>
+      <h4>差分</h4>
+      <pre id="wb-unified" class="mono"></pre>
+      <button type="button" id="wb-approve-apply" class="button-primary button-apply">この差分を承認して適用</button>
+      <p id="wb-apply-error" class="warn"></p>
+      <p id="wb-apply-result" class="note"></p>
+    </div>
+
+    </article>
+    <article class="workflow-card history-card" id="wb-history">
+    <div class="card-heading"><div><span class="card-kicker">YOUR ACTIVITY</span><h3>作業の履歴</h3><p class="note">再起動後も、依頼・成果物・ファイルの差分を確認できます。</p></div><span id="wb-session-count" class="soft-tag">履歴を確認中</span></div>
+    <p id="wb-history-empty" class="stage-empty">最初の依頼を作ると、ここに履歴が残ります。</p>
+    <div class="table-region" role="region" tabindex="0" aria-label="コード編集の作業履歴">
+<table>
+      <thead>
+        <tr>
+          <th>Session</th><th>状態</th><th>Provider</th><th>モデル</th>
+          <th>対象</th><th>作成</th><th>失敗</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="wb-session-rows"></tbody>
+    </table>
+</div>
+    <p class="note">
+      途中状態は自動で再送しない。結果不明のまま残った送信は、
+      新しい依頼を作るときに必ず新しい送信承認が必要になる。
+    </p>
+    </article>
+  </div>
+</section>
+
+<section id="operations-panel" aria-labelledby="ops-heading">
+  <div class="section-heading"><div><p class="eyebrow">WORKSPACE HEALTH</p><h2 id="ops-heading">受付と復旧</h2></div><a class="quiet-link" href="#workbench-panel">依頼画面へ ↗</a></div>
+  <p class="note">途中で止まった処理を確認します。残存状態の整理と受付再開は別々の承認です。生成や送信を再実行する操作ではありません。</p>
+  <button type="button" id="ops-refresh">現在の状態を確認</button>
+  <p id="ops-status" role="status"></p>
+  <p id="ops-guidance" class="feature-guide"></p>
+  <p id="ops-start-help" class="note" hidden>参照専用で起動されています。運用操作を使う場合は、端末で現在のOS利用者を確認し、起動コマンドに --operator-auth-session を指定して再起動します。送信・整理・再開の承認は省略されません。手順は USAGE.md の「受付と復旧」を参照してください。</p>
+  <p id="ops-error" class="warn" role="alert"></p>
+  <div class="ops-cards">
+    <article>
+      <h3>1. 残存状態を整理</h3>
+      <p class="note">終了した処理の予約を解放します。失敗したコピー検証は中断として記録し、コピー先を保存します。受付は停止したままです。</p>
+      <p id="ops-reconcile-summary"></p>
+      <details><summary>整理の確認内容・確認Hash</summary><pre id="ops-reconcile-review"></pre></details>
+      <label><input id="ops-reconcile-approve" type="checkbox" disabled>この確認内容で残存状態の整理を承認する</label>
+      <button id="ops-reconcile" type="button" disabled>承認した残存状態を整理</button>
+    </article>
+    <article>
+      <h3>2. 受付を再開</h3>
+      <p class="note">未確定の処理が無く、保存データの検査が通った場合に再開できます。整理の後は新しい確認内容を読み、改めて承認してください。</p>
+      <p id="ops-resume-summary"></p>
+      <details><summary>再開の確認内容・確認Hash</summary><pre id="ops-resume-review"></pre></details>
+      <label><input id="ops-resume-approve" type="checkbox" disabled>この確認内容で受付再開を承認する</label>
+      <button id="ops-resume" type="button" disabled>承認して受付再開</button>
+    </article>
+  </div>
+  <details><summary>直近の操作結果・監査Receipt</summary><pre id="ops-result"></pre></details>
+</section>
+
+<section id="providers-panel">
+  <div class="section-heading"><div><p class="eyebrow">YOUR CONNECTIONS</p><h2>接続・生成の設定</h2></div><a class="quiet-link" href="#wb-model">AI・モデル・推論レベルを変更 ↗</a></div>
+  <p class="feature-guide">実際のコード生成に使うCLIの状態と、いま選択している設定を確認できます。設定の変更・保存は「コード編集」の生成設定から行います。保存だけではAIへ送信されません。</p>
+  <p id="connection-selection" class="status-pill" role="status">接続を確認中</p>
+  <div id="connection-overview" class="connection-cards"></div>
+  <details id="legacy-settings-details" class="legacy-details"><summary>設計・検証用の設定情報を確認</summary>
+  <p class="note">以下は従来の業務フロー用の設計情報です。上の実CLI設定とは別です。公開版に以前の所有者の回答を取り込んで有効化する操作は行いません。</p>
+  <article>
+  <h2>Provider の状態<span class="ro">読み取り専用</span></h2>
+  <p id="provider-message" class="warn"></p>
+  <ul id="provider-blocking"></ul>
+  <div class="table-region" id="provider-status-table-region" role="region" tabindex="0"
+       aria-label="Providerの現在の状態">
+  <table id="provider-table">
+    <thead>
+      <tr>
+        <th>Provider ID</th><th>Canonical Registry</th><th>route_class</th>
+        <th>enabled</th><th>contract_state</th><th>設定契約</th>
+        <th>Endpoint</th><th>Model</th><th>SecretRef</th>
+        <th>Adapter</th><th>READY_TO_SEND</th><th>備考</th>
+      </tr>
+    </thead>
+    <tbody id="provider-rows"></tbody>
+  </table>
+  </div>
+  <p class="note">
+    API Key も Secret 値も、資格情報 Store の中身も表示しない。保持もしていない。
+  </p>
+</article>
+
+<section id="execution-panel">
+  <h2>実行モード<span class="ro">読み取り専用</span></h2>
+  <p class="note" id="execution-note"></p>
+  <div class="table-region" role="region" tabindex="0" aria-label="設計情報の詳細表">
+<table id="execution-table">
+    <thead>
+      <tr>
+        <th>モード</th><th>実装</th><th>外部送出</th><th>説明</th><th>足りないもの</th>
+      </tr>
+    </thead>
+    <tbody id="execution-rows"></tbody>
+  </table>
+</div>
+  <p class="note">
+    この表は従来のMock業務フローの状態です。実CLIのコード編集は上のWorkbenchから操作します。
+    この表示は送信承認やRelease判定を兼ねません。
+  </p>
+</section>
+
+<section id="route-profile-panel">
+  <h2>用途別の希望<span class="ro" id="route-profile-status">提案のみ</span></h2>
+  <p class="warn" id="route-profile-note"></p>
+  <div class="table-region" role="region" tabindex="0" aria-label="設計情報の詳細表">
+<table>
+    <thead>
+      <tr>
+        <th>用途</th><th>希望</th><th>Canonical Provider Registry</th>
+        <th>Owner Proposal</th><th>Execution</th>
+      </tr>
+    </thead>
+    <tbody id="route-profile-rows"></tbody>
+  </table>
+</div>
+  <ul id="route-profile-not" class="note"></ul>
+  <p class="note">
+    正本の経路は design-source/registries/route-policy.yaml である。
+    ここに載っていない Provider へは送れない。
+  </p>
+</section>
+
+<section id="value-input-panel">
+  <h2>Provider 具体値の入力支援</h2>
+  <p class="note" id="value-derivation"></p>
+  <p class="warn" id="value-summary"></p>
+  <p class="note">
+    入力例も推奨方針も <strong>値として保存しない</strong>。
+    確認していない欄は null のままにする。
+    API Key・Cookie・Session Token はこの画面で受け取らない。
+  </p>
+  <div class="table-region" role="region" tabindex="0" aria-label="設計情報の詳細表">
+<table>
+    <thead>
+      <tr>
+        <th>1 項目名</th><th>2 何に使う値か</th><th>3 現在の状態</th>
+        <th>4 入力例</th><th>5 推奨方針</th><th>6 Owner の確認</th>
+        <th>7 値</th><th>8 検証</th>
+      </tr>
+    </thead>
+    <tbody id="value-rows"></tbody>
+  </table>
+</div>
+  <p id="value-error" class="warn"></p>
+  <label id="value-approve-label">
+    <input id="value-approve" type="checkbox">
+    Owner として保存を承認する（9 保存するか、保留するか）
+  </label>
+  <button id="value-save" type="button">記録器へ渡す</button>
+  <p class="note">
+    保存は harness.infrastructure.owner_value_recorder だけが行う。
+    この画面は Package へ 1 Byte も書かない。
+  </p>
+</section>
+  </details>
+</section>
+
+<section id="list-panel">
+  <div class="section-heading"><div><p class="eyebrow">YOUR NOTES & CONTEXT</p><h2>会話・資料の保存</h2></div><span class="soft-tag mint">ローカル保存・外部送信なし</span></div>
+  <p class="feature-guide">依頼の下書きや参考情報を保存し、AIに渡す情報量を確認する場所です。この保存操作だけではAIは応答しません。保存した内容はAIワークスペースの「続ける会話」で選べます。文章・企画・コードなどの依頼と一緒に、送信内容を確認してからAIへ渡します。</p>
+  <ol class="help-steps"><li>新しい会話を作り、本文を保存する</li><li>「確認用コピーを作る」で現在の会話を固定する</li><li>確認用の設定を選び、情報量を確認する</li></ol>
+  <p id="storage-line" class="note"></p>
+  <button id="new-conversation" type="button">新しい会話を作る</button>
+  <p id="list-error" class="warn"></p>
+  <p id="conversation-empty" class="stage-empty" hidden>まだ保存した会話はありません。「新しい会話を作る」から始められます。</p>
+  <div class="table-region" role="region" tabindex="0" aria-label="会話と情報量の詳細表">
+<table>
+    <thead>
+      <tr>
+        <th>表示名</th><th>Conversation ID</th><th>作成日時</th><th>Message 件数</th>
+        <th>最新 Snapshot</th><th>Hash 検証</th><th>ローカル保存</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="conversation-rows"></tbody>
+  </table>
+</div>
+</section>
+
+<section id="detail-panel" hidden>
+  <h2>保存した会話</h2>
+  <p id="conversation-progress" class="feature-guide" role="status"></p>
+  <p id="detail-heading" class="note"></p>
+
+  <h3>Message</h3>
+  <div class="table-region" role="region" tabindex="0" aria-label="会話と情報量の詳細表">
+<table>
+    <thead>
+      <tr>
+        <th>seq</th><th>role</th><th>作成日時</th><th>本文</th>
+        <th>content_artifact_hash</th><th>content_hash</th>
+      </tr>
+    </thead>
+    <tbody id="message-rows"></tbody>
+  </table>
+</div>
+
+  <h3>Message を追加する</h3>
+  <form id="composer">
+    <label for="role-select">本文の扱い（通常の依頼・資料は USER_TASK）</label>
+    <select id="role-select"></select>
+    <label for="message-text">本文</label>
+    <textarea id="message-text" rows="4"></textarea>
+    <button type="submit">保存する</button>
+    <p id="composer-error" class="warn"></p>
+    <p class="note">
+      保存は Masking Gate を通る。Secret や国民識別番号を含む本文は保存されない。
+      本文は Artifact CAS へ置かれ、Message Record は Hash だけを持つ。
+      sequence_number は Service が決める。
+    </p>
+  </form>
+
+  <details id="legacy-mock-details" class="legacy-details"><summary>開発用のMock応答を試す（実AIは呼びません）</summary>
+  <h3>Mock の 1 往復</h3>
+  <form id="mock-turn-form">
+    <div class="grid">
+      <label for="turn-mode">実行モード</label>
+      <select id="turn-mode">
+        <option value="MOCK">MOCK</option>
+        <option value="CLI">CLI</option>
+        <option value="API">API</option>
+      </select>
+      <label for="turn-provider">provider_id</label>
+      <input id="turn-provider" type="text" value="mock">
+    </div>
+    <label for="turn-text">本文</label>
+    <textarea id="turn-text" rows="3"></textarea>
+    <button type="submit">Mock で 1 往復する</button>
+    <p id="turn-error" class="warn"></p>
+    <p id="turn-result" class="note"></p>
+    <ul id="turn-reasons" class="note"></ul>
+    <p class="note">
+      instruction_hash・output_schema_hash・model_id の入力欄は無い。
+      **Application が導出する。** instruction_hash は Context 選択の後に確定した
+      最終 payload から、model_id は Profile から引く。output_schema_hash は
+      Catalog に実在する Schema からだけ引き、Mock 経路では使わないので未設定
+      （null）である。Budget と Profile は Context Preview の欄と同じ値を使う。
+    </p>
+    <p class="note" id="turn-derived"></p>
+  </form>
+
+  </details>
+  <h3>2. 確認用コピー（Snapshot）</h3>
+  <p class="note">会話の現在の内容とHashを固定します。本文を変更・追加した後は、もう一度コピーを作ってから情報量を確認してください。</p>
+  <button id="build-snapshot" type="button">確認用コピーを作る</button>
+  <p id="snapshot-error" class="warn"></p>
+  <div class="table-region" role="region" tabindex="0" aria-label="会話と情報量の詳細表">
+<table>
+    <thead>
+      <tr>
+        <th>snapshot_id</th><th>snapshot_hash</th><th>message_set_hash</th>
+        <th>schema_set_hash</th><th>design_sha256</th><th>検証</th>
+      </tr>
+    </thead>
+    <tbody id="snapshot-rows"></tbody>
+  </table>
+</div>
+
+  <h3>3. AIに渡す情報量を確認（Context）</h3>
+  <p class="note">上限の中にどの本文を収めるかをローカルで計算します。実モデルの上限を自動取得する機能ではありません。入力する上限は確認用の予算で、CLIの契約や利用枠を保証しません。</p>
+  <button id="context-use-selection" type="button">コード編集で選んだAI・モデルを確認用に使う</button>
+  <p id="context-setup-status" class="note" role="status">モデルは未設定です。上のコード編集で選ぶか、下の欄に確認用のモデルIDを入力してください。</p>
+  <form id="preview-form">
+    <div class="grid">
+      <label for="preview-snapshot">確認用コピー</label>
+      <select id="preview-snapshot"></select>
+      <label for="preview-provider">確認するProvider ID</label>
+      <input id="preview-provider" type="text" value="mock">
+      <label for="preview-model">確認するモデル ID（必須）</label>
+      <input id="preview-model" type="text" value="" required>
+      <label for="preview-context-limit">モデル入力・出力の確認用上限</label>
+      <input id="preview-context-limit" type="number" min="1" value="8192">
+      <label for="preview-output-limit">出力の確認用上限</label>
+      <input id="preview-output-limit" type="number" min="1" value="1024">
+      <label for="preview-expires">この確認設定の有効期限（UTC）</label>
+      <input id="preview-expires" type="text" value="">
+      <label for="preview-total">今回の情報量の合計予算</label>
+      <input id="preview-total" type="number" min="1" value="4096">
+      <label for="preview-reserved-output">返答のために残す量</label>
+      <input id="preview-reserved-output" type="number" min="0" value="512">
+      <label for="preview-reserved-tool">ツール用に残す量</label>
+      <input id="preview-reserved-tool" type="number" min="0" value="0">
+      <label for="preview-safety">安全余裕として残す量</label>
+      <input id="preview-safety" type="number" min="0" value="0">
+    </div>
+    <p class="note">
+      Budget も Profile もこの画面の入力である。Harness 側に既定値は無い。
+      計数器の同一性（tokenizer 名・version・計数 Adapter）は実際に数える側から取る。
+      Overhead は 0 を初期表示するが、値は送信内容としてそのまま使われる。
+    </p>
+    <button id="context-preview-submit" type="submit">情報量と選択結果を確認</button>
+    <p id="preview-error" class="warn"></p>
+  </form>
+  <div id="preview-result" hidden>
+    <p id="preview-budget" class="note"></p>
+    <p id="preview-decision" class="mono"></p>
+    <h4>選択された Fragment</h4>
+    <div class="table-region" role="region" tabindex="0" aria-label="会話と情報量の詳細表">
+<table>
+      <thead><tr><th>fragment_id</th><th>role</th><th>seq</th><th>token</th><th>mandatory</th><th>priority</th></tr></thead>
+      <tbody id="preview-selected"></tbody>
+    </table>
+</div>
+    <h4>除外された Fragment</h4>
+    <div class="table-region" role="region" tabindex="0" aria-label="会話と情報量の詳細表">
+<table>
+      <thead><tr><th>fragment_id</th><th>理由</th></tr></thead>
+      <tbody id="preview-excluded"></tbody>
+    </table>
+</div>
+    <h4>送信順（sequence_number 昇順）</h4>
+    <p id="preview-send-order" class="mono"></p>
+    <h4>receipt_projection</h4>
+    <pre id="preview-receipt" class="mono"></pre>
+  </div>
+
+  <h3>4. 実AIでコード編集へ進む</h3>
+  <p class="note">保存した USER_TASK の本文だけを依頼欄へ移します。依頼欄に入力済みの内容がある場合は上書きしません。コピー後も、対象ファイルの選択と送信承認が必要です。</p>
+  <button id="conversation-to-workbench" type="button">この会話をコード編集の依頼欄へコピー</button>
+  <button id="conversation-handoff-workbench" type="button" class="button-primary">この会話全体を引き継いでコード編集</button>
+  <p id="conversation-transfer-status" class="note" role="status"></p>
+  <details class="legacy-details"><summary>従来の外部Chat送信の実装状況</summary>
+  <p class="note">以下の送信ボタンは旧ChatのAPI経路用です。実CLIでのコード生成は上の「コード編集」から利用できます。旧APIの未構成状態を実CLIの接続失敗と同一視しません。</p>
+  <button id="send-button" type="button" disabled>外部 LLM へ送信</button>
+  <p id="send-result" class="warn"></p>
+  </details>
+</section>
+    <footer class="app-footer"><span>multi-harness</span><p>確認して、つくる。安心して、次へ。</p><a href="#workbench-panel">コード編集へ戻る ↑</a></footer>
+    </main>
+  </div>
+</div>
+<script src="/app.js"></script>
+<script src="/knowledge-import.js"></script>
+</body>
+</html>

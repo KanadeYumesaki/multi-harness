@@ -1,0 +1,202 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/MaskingReceipt/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attempt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "error_code": {
+      "type": "string"
+    },
+    "lease_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "masked_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "masker_instruction_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "masker_invocation_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "masker_model": {
+      "type": "string"
+    },
+    "masker_model_digest": {
+      "type": "string"
+    },
+    "masker_provider": {
+      "type": "string"
+    },
+    "masking_policy_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "masking_receipt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "masking_result": {
+      "type": "string"
+    },
+    "normalization_profile": {
+      "type": "string"
+    },
+    "normalization_profile_artifact_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "policy_snapshot_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "rejected_categories": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "rewriter_version": {
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "scan1_decision": {
+      "enum": [
+        "CLEAN",
+        "MASKABLE",
+        "REJECT"
+      ],
+      "type": "string"
+    },
+    "scan1_findings": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "scan2_result": {
+      "enum": [
+        "ACCEPTED",
+        "REJECTED"
+      ],
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "MaskingReceipt"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "source_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "source_normalized_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "span_validation_result": {
+      "enum": [
+        "ACCEPTED",
+        "REJECTED"
+      ],
+      "type": "string"
+    },
+    "spans": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "end": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "start": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "category"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "store_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "stream_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "masking_receipt_id",
+    "stream_id",
+    "source_content_hash",
+    "source_normalized_hash",
+    "scan1_decision",
+    "scan1_findings",
+    "normalization_profile",
+    "normalization_profile_artifact_hash",
+    "policy_snapshot_hash",
+    "masking_policy_version",
+    "store_version"
+  ],
+  "title": "MaskingReceipt",
+  "type": "object"
+}

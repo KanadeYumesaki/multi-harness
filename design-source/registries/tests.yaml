@@ -1,0 +1,3480 @@
+test_cases:
+- test_id: AT-PLAN-001
+  case_id: TAMPER
+  scenario: runtime_manifest_tamper
+  expectation_descriptor_hash: sha256:3ecd9b981c307e56af00f51b09ba0b6802a82f55cdba37e9a6ad84d64f68b925
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INTENT_CREATED
+  - PLAN_RESOLVED
+  - POLICY_DECIDED
+  - RUNTIME_SPEC_MISMATCH
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: RUNTIME_SPEC_MISMATCH
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_RUNTIME_LAUNCH
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP0-C
+- test_id: AT-APPROVAL-001
+  case_id: REPLAY
+  scenario: approval_replay
+  expectation_descriptor_hash: sha256:a44e84d1d4486d1874e95fbe80f717fd082cd9b74c3ff1680110d9e2a0e15ceb
+  input_fixture_hash: null
+  expected_event_sequence:
+  - APPROVAL_ISSUED
+  - APPROVAL_CONSUMED
+  - APPROVAL_REPLAY_DENIED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: APPROVAL_REPLAY
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_CONSUME_CAS
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-CRASH-001
+  case_id: AFTER_EXECUTION_EXPECTED_HASH
+  scenario: crash_after_execution_expected_hash_observed
+  expectation_descriptor_hash: sha256:d993d656f4b42f68dcd84be3f039171105335b01a2b9c4c4435e0f7360e6219a
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EXECUTION_ATTEMPTED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EFFECT_OBSERVED
+  - EFFECT_RECEIPT_STORED
+  - ACTION_COMMITTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: SUCCEEDED
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: AFTER_EXECUTION_ATTEMPTED
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: AFTER_EXECUTION_UNKNOWN
+  scenario: crash_after_execution_state_unknown
+  expectation_descriptor_hash: sha256:93f1bc5fe7bdbeddf236121412b272c15c8af169bf208921d13a9907251192e8
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EXECUTION_ATTEMPTED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EFFECT_UNKNOWN
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: EFFECT_UNKNOWN
+  expected_error_code: EFFECT_UNKNOWN
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: AFTER_EXECUTION_ATTEMPTED
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: AFTER_OBSERVED
+  scenario: crash_after_effect_observed
+  expectation_descriptor_hash: sha256:e09b4c5549305b44a33c35717b92fbdd536f059890fc6bcba122a121f398a587
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EFFECT_OBSERVED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EFFECT_RECEIPT_STORED
+  - ACTION_COMMITTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: SUCCEEDED
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - receipt_count == 1
+  - duplicate_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: AFTER_EFFECT_OBSERVED
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: AFTER_PREPARED_ABSENCE_PROVEN
+  scenario: crash_after_prepared_target_unchanged
+  expectation_descriptor_hash: sha256:9137c43dd1f6682badfca762230097bce5cd301701327aeb61ce5397a0dd3ce6
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_PREPARED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EXECUTION_ATTEMPTED
+  - EFFECT_OBSERVED
+  - EFFECT_RECEIPT_STORED
+  - ACTION_COMMITTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: SUCCEEDED
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: false
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: AFTER_ACTION_PREPARED
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: AFTER_RECEIPT
+  scenario: crash_after_receipt_before_commit
+  expectation_descriptor_hash: sha256:7546e0772bc341c7d127e2ea274ff0cd7710b1218a3604bfa1523c234073c74a
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EFFECT_RECEIPT_STORED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - ACTION_COMMITTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: SUCCEEDED
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - receipt_count == 1
+  - action_committed_count == 1
+  auto_reexecution_prohibited: true
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: AFTER_RECEIPT_STORE_BEFORE_COMMIT
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: AFTER_REPLACE
+  scenario: crash_after_atomic_replace_before_observe
+  expectation_descriptor_hash: sha256:6a6db7ed0d9e2d358466c405115252dc29c53a31809067d2b277120009ff3013
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EXECUTION_ATTEMPTED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EFFECT_OBSERVED
+  - EFFECT_RECEIPT_STORED
+  - ACTION_COMMITTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: SUCCEEDED
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - observed_hash == expected_after_hash
+  - duplicate_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: AFTER_ATOMIC_REPLACE_BEFORE_OBSERVE
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: BEFORE_EXECUTION
+  scenario: crash_before_execution_attempted
+  expectation_descriptor_hash: sha256:33afc74628a55797908755bf42fa94767e328152e1d4a420664c577fcf8084a7
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_PREPARED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: PREPARED_DURABLE
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - target_hash == base_hash
+  - effect_attempts == 0
+  - operator_resume_required == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_EXECUTION_ATTEMPTED
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: BEFORE_PREPARED
+  scenario: crash_before_action_prepared
+  expectation_descriptor_hash: sha256:a6dbedafabe5a64398ceb138604f6bc9ac107cbd81ea4cae2808bef386ec8129
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_STARTED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - ACTION_FAILED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: FAILED_RETRYABLE
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - effect_journal_count == 0
+  - target_hash == base_hash
+  - effect_attempts == 0
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_ACTION_PREPARED
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: BEFORE_RECEIPT
+  scenario: crash_before_receipt_store
+  expectation_descriptor_hash: sha256:bd69678037b5dbbf79b9f163dfd2676d7a1a136af757a7fe014ff284b027cf6d
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EFFECT_OBSERVED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EFFECT_RECEIPT_STORED
+  - ACTION_COMMITTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: SUCCEEDED
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - receipt_count == 1
+  - receipt_hash_valid == true
+  auto_reexecution_prohibited: true
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: BEFORE_RECEIPT_STORE
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: LEDGER_APPEND
+  scenario: crash_during_ledger_append
+  expectation_descriptor_hash: sha256:e5115da2001319349104362b4a15a677f235eae29582a23a90f75aa8e626edbe
+  input_fixture_hash: null
+  expected_event_sequence:
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  expected_subject_type: REPAIR_DECISION
+  expected_subject_id: $repair_decision_id
+  expected_state: REPAIRED
+  expected_error_code: null
+  trace_scope: LEDGER_RECOVERY_TRACE
+  assertions:
+  - partial_event_count == 0
+  - chain_valid == true
+  - duplicate_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DURING_LEDGER_APPEND
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-CRASH-001
+  case_id: TEMP_BEFORE_FSYNC
+  scenario: crash_after_temp_write_before_fsync
+  expectation_descriptor_hash: sha256:7080748934b601985b96021f553970cb3d3a9e4d73279b979ff9bb2a7f34cca9
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_STARTED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  expected_subject_type: REPAIR_DECISION
+  expected_subject_id: $repair_decision_id
+  expected_state: REPAIRED
+  expected_error_code: null
+  trace_scope: FILESYSTEM_RECOVERY_TRACE
+  assertions:
+  - journal_prepared == false
+  - target_hash == base_hash
+  - incomplete_temp_deleted_or_quarantined == true
+  - duplicate_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: AFTER_TEMP_WRITE_BEFORE_FSYNC
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-PATH-001
+  case_id: LINUX_ESCAPE
+  scenario: linux_path_escape
+  expectation_descriptor_hash: sha256:122f863c0ac42eb66b5609858f7e939da41b5fdce02b9135569947e542d56c19
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INPUT_READ_STARTED
+  - INPUT_READ_DENIED
+  expected_subject_type: INPUT_READ_DECISION
+  expected_subject_id: $read_decision_id
+  expected_state: DENIED
+  expected_error_code: PATH_OUTSIDE_CAPABILITY
+  trace_scope: INPUT_READ_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: PATH_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+- test_id: AT-SANDBOX-001
+  case_id: UNAVAILABLE
+  scenario: sandbox_unavailable
+  expectation_descriptor_hash: sha256:f9a9d6043789c21fac2a8785fad8baaf1e2b902cf11c035efac0548b6dfdadfd
+  input_fixture_hash: null
+  expected_event_sequence:
+  - RUNTIME_ATTESTED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: SANDBOX_UNAVAILABLE
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_PROCESS_LAUNCH
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-B
+  - MVP1-A
+- test_id: AT-CONFIG-001
+  case_id: DRIFT
+  scenario: provider_config_drift
+  expectation_descriptor_hash: sha256:71ed8d44da03eb64199f9c4866b27518fef48d5cb4ff65e799d6dadc11a04b96
+  input_fixture_hash: null
+  expected_event_sequence:
+  - RUNTIME_SPEC_RESOLVED
+  - RUNTIME_ATTESTED
+  - RUNTIME_SPEC_MISMATCH
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: RUNTIME_SPEC_MISMATCH
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: RUNTIME_ATTESTATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP0-C
+- test_id: AT-AUTH-001
+  case_id: ROUTE_CHANGED
+  scenario: auth_route_change
+  expectation_descriptor_hash: sha256:28cb774a6ea221ff77049797f4ed07a71f4c79dec140b9ada9825e7b4a8d7cff
+  input_fixture_hash: null
+  expected_event_sequence:
+  - PLAN_RESOLVED
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: APPROVAL_INVALIDATED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: PLAN_HASH_VERIFY
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-C
+  - MVP1-B
+  - MVP1-C
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-FALLBACK-001
+  case_id: SCOPE_CHANGED
+  scenario: fallback_scope_change
+  expectation_descriptor_hash: sha256:88f460d14e21c34f4a67a531047a9de86732777a51f0a1ec26d51f6aa42a0c3a
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_FAILED
+  - PLAN_RESOLVED
+  - POLICY_DECIDED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: APPROVAL_REQUIRED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: FALLBACK_DECISION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-C
+- test_id: AT-REMOTE-PREP-001
+  case_id: DISPATCH_STATE_MISSING
+  scenario: dispatch_without_request_dispatching_commit
+  expectation_descriptor_hash: sha256:e26a31d3d237b2b15e026840574c90020816fa5cff225b0d0e999556c3f7531d
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_STARTED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: REMOTE_DISPATCH_STATE_NOT_DURABLE
+  trace_scope: REMOTE_INVOCATION_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EGRESS_PRE_SEND_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-C
+- test_id: AT-REMOTE-PREP-001
+  case_id: REGISTRY_MISSING
+  scenario: dispatch_without_prepared_registry
+  expectation_descriptor_hash: sha256:07268c43d72b2a4a6b8b307dcc26405d9c2badc82d790f507ac2903ed66a2b14
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_STARTED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: REMOTE_REGISTRY_NOT_DURABLE
+  trace_scope: REMOTE_INVOCATION_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EGRESS_PRE_SEND_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-C
+- test_id: AT-INPUT-PATH-001
+  case_id: MOUNT_CROSSING
+  scenario: input_read_cross_mount
+  expectation_descriptor_hash: sha256:47d4ac815b8fb976ace05264d3ac7ff631b5699b1c4300621fae2632e2934ecb
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INPUT_READ_STARTED
+  - INPUT_READ_DENIED
+  expected_subject_type: INPUT_READ_DECISION
+  expected_subject_id: $read_decision_id
+  expected_state: DENIED
+  expected_error_code: MOUNT_CROSSING_DENIED
+  trace_scope: INPUT_READ_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: INPUT_MOUNT_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+- test_id: AT-INPUT-PATH-001
+  case_id: SPECIAL_FILE
+  scenario: input_read_special_file
+  expectation_descriptor_hash: sha256:129bf23d1d9d5fa0c44f5f4af9c5bf5ff613f8255a102b8401951d34a5b67bb7
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INPUT_READ_STARTED
+  - INPUT_READ_DENIED
+  expected_subject_type: INPUT_READ_DECISION
+  expected_subject_id: $read_decision_id
+  expected_state: DENIED
+  expected_error_code: SPECIAL_FILE_DENIED
+  trace_scope: INPUT_READ_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: INPUT_FILE_TYPE_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+- test_id: AT-INPUT-PATH-001
+  case_id: SYMLINK
+  scenario: input_read_via_symlink
+  expectation_descriptor_hash: sha256:a8261e49fb121a93510fc947a0cd97f9787c19f469b6c1a465e515a6cd275fb5
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INPUT_READ_STARTED
+  - INPUT_READ_DENIED
+  expected_subject_type: INPUT_READ_DECISION
+  expected_subject_id: $read_decision_id
+  expected_state: DENIED
+  expected_error_code: SYMLINK_DENIED
+  trace_scope: INPUT_READ_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: INPUT_PATH_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+- test_id: AT-SCHEMA-CONDITIONAL-001
+  case_id: CONSUMED_MISSING_ATTEMPT
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: approval_consumed_missing_attempt
+  expectation_descriptor_hash: sha256:0227eb1d8b211a80c74aba5382fe97a99730acfbf3900a1b922ad30372f32e26
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_VALIDATION_RESULT
+  expected_subject_id: $schema_validation_id
+  expected_state: REJECTED
+  expected_error_code: SCHEMA_CONDITIONAL_VIOLATION
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - schema_validation_result == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-SCHEMA-CONDITIONAL-001
+  case_id: READY_VALID
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: action_attempt_ready_without_lease
+  expectation_descriptor_hash: sha256:4add6ea8c4504b103d5866a3e251aea0577e41fb7eb13f118e1e09ba7d212617
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_VALIDATION_RESULT
+  expected_subject_id: $schema_validation_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - schema_validation_result == expected_state
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-SCHEMA-CONDITIONAL-001
+  case_id: RUNNING_MISSING_ATTESTATION
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: action_attempt_running_missing_attestation
+  expectation_descriptor_hash: sha256:656321f6b2c496359e58e53894516d46659283518dc78053801d1ab2be0b95d2
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_VALIDATION_RESULT
+  expected_subject_id: $schema_validation_id
+  expected_state: REJECTED
+  expected_error_code: SCHEMA_CONDITIONAL_VIOLATION
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - schema_validation_result == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-SCHEMA-CONDITIONAL-001
+  case_id: SUCCEEDED_MISSING_RECEIPT
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: effect_attempt_succeeded_missing_receipt
+  expectation_descriptor_hash: sha256:9d5349697efc8a68ff1e2f2af8c95e79ad6e0afef523627a8709de83f1caadfa
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_VALIDATION_RESULT
+  expected_subject_id: $schema_validation_id
+  expected_state: REJECTED
+  expected_error_code: SCHEMA_CONDITIONAL_VIOLATION
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - schema_validation_result == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-EVENT-ORDER-001
+  case_id: ACTION_STARTED_MISSING
+  scenario: prepared_before_action_started
+  expectation_descriptor_hash: sha256:9690426c57cc70c790412a80dc34018c2b07290b853e3a86ad8155ce6410bbd4
+  input_fixture_hash: null
+  expected_event_sequence:
+  - RUNTIME_ATTESTED
+  expected_subject_type: EVENT_APPEND_RESULT
+  expected_subject_id: $append_result_id
+  expected_state: REJECTED
+  expected_error_code: EVENT_ORDER_VIOLATION
+  trace_scope: EVENT_APPEND_VALIDATOR
+  assertions:
+  - append_result == REJECTED
+  - attempt_state_unchanged == true
+  - attempt_state == RUNTIME_VERIFIED
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EVENT_APPEND_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-EVENT-ORDER-001
+  case_id: SEQUENCE_REGRESSION
+  scenario: stream_sequence_regression
+  expectation_descriptor_hash: sha256:336e2423abf1a408e5f3d4e70857d3d63065e815d8ae9c94540a8b39359d776f
+  input_fixture_hash: null
+  expected_event_sequence:
+  - PLAN_RESOLVED
+  expected_subject_type: EVENT_APPEND_RESULT
+  expected_subject_id: $append_result_id
+  expected_state: REJECTED
+  expected_error_code: EVENT_ORDER_VIOLATION
+  trace_scope: EVENT_APPEND_VALIDATOR
+  assertions:
+  - append_result == REJECTED
+  - attempt_state_unchanged == true
+  - attempt_state == WAITING_POLICY
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EVENT_APPEND_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-POLICY-APPROVAL-001
+  case_id: EFFECT_BEFORE_SOD
+  scenario: automatic_external_effect_approval_before_sod
+  expectation_descriptor_hash: sha256:14f895feddbd9dcd61e0c6927360868d870a48da93fd59437f478b6ad0e88ffd
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: POLICY_APPROVAL_BEFORE_SOD
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_ISSUANCE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-POLICY-APPROVAL-001
+  case_id: PAID_BEFORE_SOD
+  scenario: automatic_paid_approval_before_sod
+  expectation_descriptor_hash: sha256:c4c8ced5d8d832b89a04d7f5bce0e01a06896d4b00b17069776e9e0ebc675f87
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: POLICY_APPROVAL_BEFORE_SOD
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_ISSUANCE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-POLICY-APPROVAL-001
+  case_id: WRITE_BEFORE_SOD
+  scenario: automatic_workspace_write_approval_before_sod
+  expectation_descriptor_hash: sha256:928702de0e1fff8dcf13ddc5b67f1063df1ca6e77458e1a5d6e97f7ac3f5fa9c
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: POLICY_APPROVAL_BEFORE_SOD
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_ISSUANCE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-OUTBOX-001
+  case_id: REMOTE_FOUND
+  scenario: receipt_loss_after_dispatch_remote_found
+  expectation_descriptor_hash: sha256:9ebcc4c87fd478e0462cdc495ef091eda70dbd1d4970f750119da2aeec362fed
+  input_fixture_hash: null
+  expected_event_sequence:
+  - OUTBOX_PREPARED
+  - ACTION_PREPARED
+  - OUTBOX_DISPATCHING
+  - EXECUTION_ATTEMPTED
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - OUTBOX_EFFECT_CONFIRMED
+  - EFFECT_OBSERVED
+  - EFFECT_RECEIPT_STORED
+  - OUTBOX_RECONCILED
+  - ACTION_COMMITTED
+  expected_subject_type: OUTBOX_RECORD
+  expected_subject_id: $outbox_id
+  expected_state: RECONCILED
+  expected_error_code: null
+  trace_scope: OUTBOX_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: true
+  manual_queue_expected: false
+  fault_point: AFTER_REMOTE_ACCEPT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-E
+- test_id: AT-OUTBOX-001
+  case_id: REMOTE_UNKNOWN
+  scenario: receipt_loss_after_dispatch_remote_unknown
+  expectation_descriptor_hash: sha256:eb0593cf370973c78124efdbf02f209d6bed9c75c6a177fb56f2d830655e7b90
+  input_fixture_hash: null
+  expected_event_sequence:
+  - OUTBOX_PREPARED
+  - ACTION_PREPARED
+  - OUTBOX_DISPATCHING
+  - EXECUTION_ATTEMPTED
+  - RECOVERY_STARTED
+  - OUTBOX_STATUS_UNKNOWN
+  - RECOVERY_DECIDED
+  - EFFECT_UNKNOWN
+  - MANUAL_RECONCILIATION_ENQUEUED
+  expected_subject_type: OUTBOX_RECORD
+  expected_subject_id: $outbox_id
+  expected_state: MANUAL_RECONCILIATION
+  expected_error_code: REMOTE_STATUS_UNKNOWN
+  trace_scope: OUTBOX_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: AFTER_REMOTE_ACCEPT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-E
+- test_id: AT-BUDGET-001
+  case_id: RESERVATION_FOUND
+  scenario: budget_reservation_store_found_ledger_missing
+  expectation_descriptor_hash: sha256:fda10090314a7b4f7bb0c29fe2204f5d76f805e62ba77389bdd16ecc369cd490
+  input_fixture_hash: null
+  expected_event_sequence:
+  - BUDGET_RESERVATION_PREPARED
+  - ACTION_PREPARED
+  - RECOVERY_STARTED
+  - BUDGET_RESERVED
+  - EFFECT_OBSERVED
+  - EFFECT_RECEIPT_STORED
+  - RECOVERY_DECIDED
+  expected_subject_type: BUDGET_RESERVATION
+  expected_subject_id: $reservation_id
+  expected_state: RESERVED
+  expected_error_code: null
+  trace_scope: BUDGET_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: AFTER_RESERVATION_COMMIT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-D
+- test_id: AT-BUDGET-001
+  case_id: RESERVATION_UNKNOWN
+  scenario: budget_reservation_state_unknown
+  expectation_descriptor_hash: sha256:6412c714645b0cb40140f1cf868a7336c5f0b7f61af46f8a72ee6daf47882b8e
+  input_fixture_hash: null
+  expected_event_sequence:
+  - RECOVERY_STARTED
+  - BUDGET_STATUS_UNKNOWN
+  - RECOVERY_DECIDED
+  - EFFECT_UNKNOWN
+  expected_subject_type: BUDGET_RESERVATION
+  expected_subject_id: $reservation_id
+  expected_state: STATUS_UNKNOWN
+  expected_error_code: BUDGET_STATUS_UNKNOWN
+  trace_scope: BUDGET_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: RESERVATION_RECONCILIATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-D
+- test_id: AT-BLIND-001
+  case_id: CONTEXT_LEAK
+  scenario: blind_context_leak
+  expectation_descriptor_hash: sha256:319485377ea5ea3b46ac74f8b03f886b11d20e1046c71c6eafff2485cc1d0dc9
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: BLINDNESS_CONTEXT_LEAK
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BLINDNESS_FILTER
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - BLIND_REVIEWER
+- test_id: AT-FENCE-001
+  case_id: STALE_WORKER
+  scenario: stale_worker_commit
+  expectation_descriptor_hash: sha256:a66a47c61b866cc7fc7faae6c9b5b5038e8179f55ec5c43744ee25911d820310
+  input_fixture_hash: null
+  expected_event_sequence:
+  - FENCING_REJECTED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_CONFLICT
+  expected_error_code: STALE_FENCING_TOKEN
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: FINAL_EFFECT_COMMIT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP2-B
+- test_id: AT-TEST-MANIFEST-001
+  case_id: AMBIGUOUS_EXPECTED
+  event_observation_policy: NOT_APPLICABLE
+  scenario: multiple_expected_states_in_one_case
+  expectation_descriptor_hash: sha256:ed7636d11b1183055263ddbc9c4d1209154c611b12392a4d70d8494048635e83
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MANIFEST_VALIDATION_RESULT
+  expected_subject_id: $manifest_validation_id
+  expected_state: REJECTED
+  expected_error_code: AMBIGUOUS_EXPECTED_STATE
+  trace_scope: MANIFEST_VALIDATOR
+  assertions:
+  - manifest_validation_result == REJECTED
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MANIFEST_SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-TEST-MANIFEST-001
+  case_id: HASH_COLUMN_MISSING
+  event_observation_policy: NOT_APPLICABLE
+  scenario: manifest_missing_expectation_or_input_hash_column
+  expectation_descriptor_hash: sha256:210b05447683cd4756b56b384f67514e2ccd99d2a502446de0b196b5f16acc0b
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MANIFEST_VALIDATION_RESULT
+  expected_subject_id: $manifest_validation_id
+  expected_state: REJECTED
+  expected_error_code: HASH_COLUMN_MISSING
+  trace_scope: MANIFEST_VALIDATOR
+  assertions:
+  - manifest_rejected == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MANIFEST_SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-TEST-MANIFEST-001
+  case_id: HASH_FORMAT
+  event_observation_policy: NOT_APPLICABLE
+  scenario: fixture_hash_without_prefix
+  expectation_descriptor_hash: sha256:4b605e4d7e0d2d6579b722d5e1d256ffbbdb99784d2c0e5ba509bfd45aa84650
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MANIFEST_VALIDATION_RESULT
+  expected_subject_id: $manifest_validation_id
+  expected_state: REJECTED
+  expected_error_code: FIXTURE_HASH_FORMAT_INVALID
+  trace_scope: MANIFEST_VALIDATOR
+  assertions:
+  - manifest_validation_result == REJECTED
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MANIFEST_SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-PLAN-DETERMINISM-001
+  case_id: NONDETERMINISTIC_OUTPUT
+  scenario: same_input_produces_different_plan_content
+  expectation_descriptor_hash: sha256:a22906fc23dd23e89f6a42374bc9ddcc28f158ff7aece83727d632f7ac286dfd
+  input_fixture_hash: null
+  expected_event_sequence:
+  - PLAN_NONDETERMINISTIC
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_CONFLICT
+  expected_error_code: PLAN_NONDETERMINISTIC
+  trace_scope: PLAN_BUILDER
+  assertions:
+  - plan_content_hash_a != plan_content_hash_b
+  - process_launches == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: PLAN_BUILD_REPEAT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-PLAN-DETERMINISM-001
+  case_id: SAME_INPUT
+  event_observation_policy: NOT_APPLICABLE
+  scenario: same_input_snapshot_plan_reproduction
+  expectation_descriptor_hash: sha256:226b00f27fd07282cd0df7862f9527ec74ac6c7d0e252148670ea31396cce63f
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: PLAN_COMPARISON
+  expected_subject_id: $comparison_id
+  expected_state: ASSERTIONS_SATISFIED
+  expected_error_code: null
+  trace_scope: PLAN_BUILDER
+  assertions:
+  - plan_content_hash_a == plan_content_hash_b
+  - execution_plan_hash_a != execution_plan_hash_b
+  - run_id_a != run_id_b
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: PLAN_BUILD_REPEAT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-CONTROL-DATA-001
+  case_id: ARTIFACT_INSTRUCTION
+  scenario: untrusted_artifact_attempts_control_role
+  expectation_descriptor_hash: sha256:0ebe42161fffce51eca0f054abdd23de3dd9095952e0e8383bfec88e2e8b35ae
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INTENT_CREATED
+  - PLAN_RESOLVED
+  - INPUT_ARTIFACT_CLASSIFIED
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: CONTROL_DATA_ROLE_ESCALATION
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MESSAGE_ROLE_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-POLICY-STALE-001
+  case_id: INFLIGHT_ATTEMPTED
+  scenario: stale_policy_allows_reconciliation_only
+  expectation_descriptor_hash: sha256:45b7c7ae25b74fa104d9ec08a39d34a3c6ef445e8624bb179db65b4d057aaebc
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_DETECTED
+  - POLICY_STALE_RECOVERY_ONLY
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  - EFFECT_UNKNOWN
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: EFFECT_UNKNOWN
+  expected_error_code: EFFECT_UNKNOWN
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - new_effect_attempts == 0
+  - retry_count == 0
+  - fallback_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: AFTER_EXECUTION_ATTEMPTED
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-POLICY-STALE-001
+  case_id: NEW_EXTERNAL_EFFECT
+  scenario: stale_policy_blocks_external_dispatch
+  expectation_descriptor_hash: sha256:5551e02b8b4e297826c2037cac6114ab8d3bd1068a85c1658bea5fd41055a4e2
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_DETECTED
+  - POLICY_STALE_ACTION_BLOCKED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: POLICY_STALE_EXTERNAL_EFFECT_BLOCKED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - network_bytes_sent == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EGRESS_PRE_SEND_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-POLICY-STALE-001
+  case_id: NEW_LOCAL_READ
+  scenario: stale_policy_blocks_new_local_read
+  expectation_descriptor_hash: sha256:49ae6fa81408ee3ac3699ce797ed569dad4374eaaa046ec26de9f3bbe86ff619
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_DETECTED
+  - POLICY_STALE_ACTION_BLOCKED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: POLICY_STALE_NEW_ACTION_BLOCKED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - network_calls == 0
+  - process_launches == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: RUNTIME_GO_POLICY_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-POLICY-STALE-001
+  case_id: NEW_PAID
+  scenario: stale_policy_blocks_paid_execution
+  expectation_descriptor_hash: sha256:d06bb2b936df06038535f988fd1cf298237dcf6b64b027a075c62c037d196721
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_DETECTED
+  - POLICY_STALE_ACTION_BLOCKED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: POLICY_STALE_PAID_BLOCKED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - budget_reservations_created == 0
+  - provider_calls == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_BUDGET_RESERVATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-POLICY-STALE-001
+  case_id: NEW_WORKSPACE_WRITE
+  scenario: stale_policy_blocks_workspace_write
+  expectation_descriptor_hash: sha256:fafdea454df05e52f70d953a3a57f029e6e281ff7fd4b65c97ed8218c52e4225
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_DETECTED
+  - POLICY_STALE_ACTION_BLOCKED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: POLICY_STALE_EFFECT_BLOCKED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - workspace_commits == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_ACTION_PREPARED
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-EVENT-MAPPING-001
+  case_id: BUDGET_UNKNOWN
+  scenario: budget_unknown_maps_to_effect_unknown
+  expectation_descriptor_hash: sha256:df32204fd3dd83acfa1ddaf4d053ab938d3ebcebf37e3e9d5a4b7afcc06b51c0
+  input_fixture_hash: null
+  expected_event_sequence:
+  - BUDGET_STATUS_UNKNOWN
+  - EFFECT_UNKNOWN
+  expected_subject_type: BUDGET_RESERVATION
+  expected_subject_id: $reservation_id
+  expected_state: STATUS_UNKNOWN
+  expected_error_code: BUDGET_STATUS_UNKNOWN
+  trace_scope: BUDGET_STREAM
+  assertions:
+  - action_state == EFFECT_UNKNOWN
+  - paid_actions_enabled == false
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: BUDGET_RECONCILIATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-D
+  phase_scope_rationale: Budget Reservation Storeが存在するPhaseに限定。
+- test_id: AT-EVENT-MAPPING-001
+  case_id: LEDGER_EVENT_MISSING
+  scenario: phase_store_advanced_without_ledger_event
+  expectation_descriptor_hash: sha256:7f7bab2ac8026691f9b4192243f333d071e449764172a47e1a7988c6d9ea7d5f
+  input_fixture_hash: null
+  expected_event_sequence:
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  expected_subject_type: REPAIR_DECISION
+  expected_subject_id: $repair_decision_id
+  expected_state: REPAIR_REQUIRED
+  expected_error_code: PHASE_LEDGER_EVENT_MISSING
+  trace_scope: CROSS_STORE_REPAIR_TRACE
+  assertions:
+  - duplicate_effect_attempts == 0
+  - compensating_event_required == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: REPAIR_SCANNER
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+  phase_scope_rationale: Phase Store先行／Ledger Event欠落はLocal File Commitでも発生する汎用不整合であり、MVP0-Aの§3.13 Gate#13が要求する。
+- test_id: AT-EVENT-MAPPING-001
+  case_id: OUTBOX_UNKNOWN
+  scenario: outbox_unknown_maps_to_effect_unknown
+  expectation_descriptor_hash: sha256:a1c741cea26cdc6b8bb53db2255cd5946f38de0269be6142c83844eb43bd8bf5
+  input_fixture_hash: null
+  expected_event_sequence:
+  - OUTBOX_STATUS_UNKNOWN
+  - EFFECT_UNKNOWN
+  - MANUAL_RECONCILIATION_ENQUEUED
+  expected_subject_type: OUTBOX_RECORD
+  expected_subject_id: $outbox_id
+  expected_state: MANUAL_RECONCILIATION
+  expected_error_code: REMOTE_STATUS_UNKNOWN
+  trace_scope: OUTBOX_STREAM
+  assertions:
+  - action_state == EFFECT_UNKNOWN
+  - manual_queue_record_count == 1
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: OUTBOX_RECONCILIATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-E
+  phase_scope_rationale: Transactional Outboxが存在するPhaseに限定。参照仕様。
+- test_id: AT-EVENT-MAPPING-001
+  case_id: REMOTE_UNCERTAIN
+  scenario: remote_uncertain_maps_to_effect_unknown
+  expectation_descriptor_hash: sha256:21d5a2e7f48dcdb35f2ceafe7ed734cdcb0eb4fb4335e3908325cb3b82ab3dc2
+  input_fixture_hash: null
+  expected_event_sequence:
+  - REMOTE_INVOCATION_UNCERTAIN
+  - EFFECT_UNKNOWN
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: EFFECT_UNKNOWN
+  expected_error_code: REMOTE_INVOCATION_UNCERTAIN
+  trace_scope: REMOTE_INVOCATION_STREAM
+  assertions:
+  - registry_state == REMOTE_INVOCATION_UNCERTAIN
+  - action_state == EFFECT_UNKNOWN
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: true
+  fault_point: REMOTE_RESPONSE_LOST
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-C
+  - MVP1-D
+  - MVP1-E
+  phase_scope_rationale: Remote Invocation Registryが存在するPhaseに限定。
+- test_id: AT-SCHEMA-COMPLETE-001
+  case_id: ALL_VALID
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: all_core_schema_valid_fixtures
+  expectation_descriptor_hash: sha256:55bbdfd878c60bee2cd540ee48c69f9fe8a37a09dea3e644b174d4099fbf1fab
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_SUITE_RESULT
+  expected_subject_id: $schema_suite_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - valid_fixture_count == 26
+  - validation_errors == 0
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SCHEMA_SUITE_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-SCHEMA-COMPLETE-001
+  case_id: INVALID_HASH
+  event_observation_policy: NOT_APPLICABLE
+  scenario: invalid_hash_fixture_rejected
+  expectation_descriptor_hash: sha256:01a5f3f096aba3afe4f50c9926efb272052dcca1620bdf79d7f273b676c03451
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_VALIDATION_RESULT
+  expected_subject_id: $schema_validation_id
+  expected_state: REJECTED
+  expected_error_code: HASH_PATTERN_INVALID
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - invalid_fixture_rejected == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-SCHEMA-COMPLETE-001
+  case_id: MISSING_CROSS_REFERENCE
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: effect_receipt_missing_journal_rejected
+  expectation_descriptor_hash: sha256:6b348e1027f4ad4c0ec4581b825c7017fb15c9e97af54cec75bda5dd23e2136c
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: SCHEMA_VALIDATION_RESULT
+  expected_subject_id: $schema_validation_id
+  expected_state: REJECTED
+  expected_error_code: JOURNAL_REFERENCE_MISSING
+  trace_scope: SCHEMA_VALIDATOR
+  assertions:
+  - cross_reference_validation == REJECTED
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: CROSS_REFERENCE_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-MANIFEST-SUBJECT-001
+  case_id: MIXED_SUBJECT_STATE
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: action_state_used_for_outbox_subject
+  expectation_descriptor_hash: sha256:774cf937c59d893ffd94e0b72b298c96f5e9b2b472b865048adf84565d7884f5
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MANIFEST_VALIDATION_RESULT
+  expected_subject_id: $manifest_validation_id
+  expected_state: REJECTED
+  expected_error_code: EXPECTED_STATE_SUBJECT_MISMATCH
+  trace_scope: MANIFEST_VALIDATOR
+  assertions:
+  - manifest_rejected == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MANIFEST_SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-MANIFEST-SUBJECT-001
+  case_id: VALID_TYPED_SUBJECT
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: typed_expected_state_subject
+  expectation_descriptor_hash: sha256:358726de2a24d7fd2f3e85fc4f46d5c4b251af875c9b15779ae392a8d5260ab6
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MANIFEST_VALIDATION_RESULT
+  expected_subject_id: $manifest_validation_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: MANIFEST_VALIDATOR
+  assertions:
+  - expected_state_enum_matches_subject_type == true
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MANIFEST_SCHEMA_VALIDATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-WSL-BOUNDARY-001
+  case_id: FOREIGN_FS
+  scenario: workspace_on_windows_filesystem
+  expectation_descriptor_hash: sha256:bcb35daf70748332d7f47cf503800bc3caf4b896c8d4b7cdc6a6ab03ff066267
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: WORKSPACE_ON_FOREIGN_FS_DENIED
+  trace_scope: STARTUP_BOUNDARY_CHECK
+  assertions:
+  - process_launches == 0
+  - workspace_writes == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MOUNT_BOUNDARY_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+- test_id: AT-APPROVAL-002
+  case_id: CONCURRENT_LOSER
+  scenario: concurrent_consume_loser
+  expectation_descriptor_hash: sha256:87530e5d6a1ff810188d28a69c85e28b8894400bb54c2fcf7b9a0d6f237e24c4
+  input_fixture_hash: null
+  expected_event_sequence:
+  - APPROVAL_REPLAY_DENIED
+  expected_subject_type: APPROVAL_CONSUME_RESULT
+  expected_subject_id: $consume_result_id
+  expected_state: REJECTED
+  expected_error_code: APPROVAL_REPLAY
+  trace_scope: APPROVAL_STORE
+  assertions:
+  - concurrency_group == $group_id
+  - failed_consumes == 1
+  - successful_consumes == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_CONSUME_CAS
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-APPROVAL-002
+  case_id: CONCURRENT_WINNER
+  scenario: concurrent_consume_winner
+  expectation_descriptor_hash: sha256:41fa7fae842a7ae9f0029e9718967f9ffcc61992641c68fece260854bdff30d3
+  input_fixture_hash: null
+  expected_event_sequence:
+  - APPROVAL_ISSUED
+  - APPROVAL_CONSUMED
+  expected_subject_type: APPROVAL_GRANT
+  expected_subject_id: $grant_id
+  expected_state: CONSUMED
+  expected_error_code: null
+  trace_scope: APPROVAL_STORE
+  assertions:
+  - concurrency_group == $group_id
+  - successful_consumes == 1
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_CONSUME_CAS
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-CLOCK-SKEW-001
+  case_id: EXCEEDED
+  scenario: approval_clock_skew_exceeded
+  expectation_descriptor_hash: sha256:94ef96984d156e7e3cb7ace0d668b1952cc2359bbd64f2a2dd34fa527ac2b735
+  input_fixture_hash: null
+  expected_event_sequence:
+  - APPROVAL_ISSUED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: CLOCK_SKEW_EXCEEDED
+  trace_scope: APPROVAL_VALIDATOR
+  assertions:
+  - process_launches == 0
+  - grant_consumed == false
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: APPROVAL_TIME_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-LEDGER-TAMPER-001
+  case_id: ONE_BYTE
+  event_observation_policy: NOT_APPLICABLE
+  scenario: ledger_payload_one_byte_modified
+  expectation_descriptor_hash: sha256:617244f5362df8b0216d3a835be36a32157c869887bde320b415e31b5374dee6
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: LEDGER_CHAIN_VERIFICATION
+  expected_subject_id: $verification_id
+  expected_state: REJECTED
+  expected_error_code: LEDGER_CHAIN_TAMPERED
+  trace_scope: LEDGER_VERIFY_CHAIN
+  assertions:
+  - tamper_detected == true
+  - chain_valid == false
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: LEDGER_TAMPER
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-RUN-TERMINAL-001
+  case_id: NO_RELEASE
+  scenario: completion_without_release_decision
+  expectation_descriptor_hash: sha256:2118e84b45a3d30f309d59bb116c811c26b73ab74f7af95013a725a752700761
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EVALUATION_COMPLETED
+  - ACTION_BLOCKED
+  expected_subject_type: RUN
+  expected_subject_id: $run_id
+  expected_state: BLOCKED
+  expected_error_code: RELEASE_DECISION_REQUIRED
+  trace_scope: RUN_TRANSITION_VALIDATOR
+  assertions:
+  - completed_event_count == 0
+  - release_decision_id == null
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: RUN_TERMINAL_TRANSITION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-RUN-TERMINAL-001
+  case_id: UNRECONCILED_TO_CANCELLED
+  scenario: unreconciled_effect_blocks_cancelled
+  expectation_descriptor_hash: sha256:d39058cc31acd50cd6e0c70ccdccd2dfcf538352e7ae8b61f4e9685ce9464c74
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EFFECT_UNKNOWN
+  - ACTION_BLOCKED
+  expected_subject_type: RUN
+  expected_subject_id: $run_id
+  expected_state: BLOCKED_REPAIR_REQUIRED
+  expected_error_code: UNRECONCILED_EFFECT_PRESENT
+  trace_scope: RUN_TRANSITION_VALIDATOR
+  assertions:
+  - requested_terminal_state == CANCELLED
+  - ended_at == null
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: RUN_TERMINAL_TRANSITION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-RUN-TERMINAL-001
+  case_id: UNRECONCILED_TO_COMPLETED
+  scenario: unreconciled_effect_blocks_completed
+  expectation_descriptor_hash: sha256:524bf0c172051650766ecfe7c42af03ff8359933611aed8aa6d80aba109f80ab
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EFFECT_UNKNOWN
+  - ACTION_BLOCKED
+  expected_subject_type: RUN
+  expected_subject_id: $run_id
+  expected_state: BLOCKED_REPAIR_REQUIRED
+  expected_error_code: UNRECONCILED_EFFECT_PRESENT
+  trace_scope: RUN_TRANSITION_VALIDATOR
+  assertions:
+  - requested_terminal_state == COMPLETED
+  - ended_at == null
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: RUN_TERMINAL_TRANSITION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-RUN-TERMINAL-001
+  case_id: UNRECONCILED_TO_FAILED
+  scenario: unreconciled_effect_blocks_failed
+  expectation_descriptor_hash: sha256:407c4cdfbedd7ea51e6896af707d5a379800547f84c8ed9bd26b2812408019fb
+  input_fixture_hash: null
+  expected_event_sequence:
+  - EFFECT_UNKNOWN
+  - ACTION_BLOCKED
+  expected_subject_type: RUN
+  expected_subject_id: $run_id
+  expected_state: BLOCKED_REPAIR_REQUIRED
+  expected_error_code: UNRECONCILED_EFFECT_PRESENT
+  trace_scope: RUN_TRANSITION_VALIDATOR
+  assertions:
+  - requested_terminal_state == FAILED
+  - ended_at == null
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: RUN_TERMINAL_TRANSITION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-FAULT-GUARD-001
+  case_id: POLICY_DENIED
+  scenario: fault_injection_enabled_when_policy_forbids
+  expectation_descriptor_hash: sha256:c859a87a80466c2eed099a0033d9049917a0e0a33f63d9fac22a2383ae06cf02
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: FAULT_INJECTION_NOT_PERMITTED
+  trace_scope: RUNTIME_GO_POLICY_CHECK
+  assertions:
+  - process_launches == 0
+  - fault_injection_enabled == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BEFORE_PROCESS_LAUNCH
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-APPROVAL-UX-001
+  case_id: DEFAULT_FIELDS
+  scenario: approval_default_view_has_seven_fields
+  expectation_descriptor_hash: sha256:4461975f0f2062bb8f1127b8f2349cee4fec782e0effdd3c6b7b09b053a15e5c
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: APPROVAL_UI_RESULT
+  expected_subject_id: $ui_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: APPROVAL_UI
+  assertions:
+  - default_field_count <= 7
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: UI_STATIC_CHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-APPROVAL-UX-001
+  case_id: MEDIAN_TIME
+  scenario: approval_operation_time_median
+  expectation_descriptor_hash: sha256:e62880d20fb9cdabd332dddd6fd985b41f6e1d360870e4f33e9d59586b37b8a5
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: UX_MEASUREMENT_RESULT
+  expected_subject_id: $measurement_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: APPROVAL_UX_MEASUREMENT
+  assertions:
+  - sample_count == 10
+  - median_seconds <= 30
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: HUMAN_MEASUREMENT
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-APPROVAL-UX-001
+  case_id: NO_BYPASS
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: approval_bypass_symbols_absent
+  expectation_descriptor_hash: sha256:093b73609a5cdb674ec56c01628225106c998168b1735489abf90d6cad7710d1
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: STATIC_ANALYSIS_RESULT
+  expected_subject_id: $analysis_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: SOURCE_STATIC_ANALYSIS
+  assertions:
+  - bypass_findings == 0
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SOURCE_SCAN
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-APPROVAL-UX-001
+  case_id: REAPPROVAL_DIFF
+  scenario: reapproval_shows_changed_fields_and_reason
+  expectation_descriptor_hash: sha256:d056a84845e42348a597dfddad4dbe250a9535575383e1ca7ea9ff7d9976694b
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: APPROVAL_UI_RESULT
+  expected_subject_id: $ui_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: APPROVAL_UI
+  assertions:
+  - changed_fields_visible == true
+  - invalidation_reason_visible == true
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: UI_RENDER
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-EMERGENCY-RECOVERY-001
+  case_id: ALLOWLIST
+  scenario: all_nine_recovery_operations_allowed
+  expectation_descriptor_hash: sha256:f682f1c39f35296addcd9b18fbf09abc08932a7b83dcc343c762606cabcc7915
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_RECOVERY_ONLY
+  - RECOVERY_STARTED
+  - RECOVERY_DECIDED
+  expected_subject_type: EMERGENCY_RECOVERY_RESULT
+  expected_subject_id: $recovery_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: EMERGENCY_RECOVERY_POLICY
+  assertions:
+  - allowed_operation_pass_count == 9
+  - new_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EMERGENCY_POLICY
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-EMERGENCY-RECOVERY-001
+  case_id: BAD_SIGNATURE
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: invalid_emergency_profile_signature
+  expectation_descriptor_hash: sha256:ba4793a6a7ab019d4627e80740b7334204ecdfe76f9966b603721d55cbfd3bd4
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: EMERGENCY_RECOVERY_RESULT
+  expected_subject_id: $recovery_result_id
+  expected_state: REJECTED
+  expected_error_code: EMERGENCY_PROFILE_SIGNATURE_INVALID
+  trace_scope: EMERGENCY_PROFILE_VALIDATOR
+  assertions:
+  - recovery_started == false
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EMERGENCY_PROFILE_VERIFY
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-EMERGENCY-RECOVERY-001
+  case_id: DENYLIST
+  scenario: all_nine_forbidden_operations_denied
+  expectation_descriptor_hash: sha256:2e20fa2fbf079d1641d64dfab616044cf5c26a941d894692ed96b073ce0818cb
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_RECOVERY_ONLY
+  expected_subject_type: EMERGENCY_RECOVERY_RESULT
+  expected_subject_id: $recovery_result_id
+  expected_state: REJECTED
+  expected_error_code: EMERGENCY_OPERATION_NOT_ALLOWED
+  trace_scope: EMERGENCY_RECOVERY_POLICY
+  assertions:
+  - denied_operation_count == 9
+  - workspace_writes == 0
+  - provider_calls == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: EMERGENCY_POLICY
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-C
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+  - ENTERPRISE
+- test_id: AT-PERF-001
+  case_id: CONTROL_OVERHEAD
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: eight_actions_sixty_events_performance
+  expectation_descriptor_hash: sha256:90c1196cf3118f889f2c276293dc1d9f452edc6f7fc8204f80c00e6e97b035be
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: PERFORMANCE_RESULT
+  expected_subject_id: $performance_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: PERFORMANCE_HARNESS
+  assertions:
+  - warmup_runs == 5
+  - measured_runs == 30
+  - p50_seconds <= 5
+  - p95_seconds <= 8
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: PERFORMANCE_RUN
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-FAULT-IO-001
+  case_id: ARTIFACT_ENOSPC
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: artifact_write_disk_full
+  expectation_descriptor_hash: sha256:ddffef8f366fcfa2c5a427750117d4e31d0af37fef5e3903c01b6fde508bc284
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: STORAGE_IO_RESULT
+  expected_subject_id: $io_result_id
+  expected_state: REJECTED
+  expected_error_code: STORAGE_WRITE_FAILED
+  trace_scope: ARTIFACT_IO
+  assertions:
+  - manifest_created == false
+  - journal_prepared == false
+  - target_hash == base_hash
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: ARTIFACT_WRITE_ENOSPC
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-FAULT-IO-001
+  case_id: FSYNC_EIO
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: file_fsync_io_error
+  expectation_descriptor_hash: sha256:0c4c01c32d8e5f34eecc57177f24692e298ec61233b1209fc12f8581bc5ce1c3
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: STORAGE_IO_RESULT
+  expected_subject_id: $io_result_id
+  expected_state: REJECTED
+  expected_error_code: STORAGE_WRITE_FAILED
+  trace_scope: FILESYSTEM_IO
+  assertions:
+  - atomic_replace_count == 0
+  - target_hash == base_hash
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: FILE_FSYNC_EIO
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-FAULT-IO-001
+  case_id: SQLITE_ENOSPC
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: sqlite_commit_disk_full
+  expectation_descriptor_hash: sha256:f3dd2b2dce993ec66b24783788aa2b7b9c153f53afdbf9630d5243d8367cbab8
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: STORAGE_IO_RESULT
+  expected_subject_id: $io_result_id
+  expected_state: REJECTED
+  expected_error_code: STORAGE_WRITE_FAILED
+  trace_scope: SQLITE_IO
+  assertions:
+  - partial_transaction_rows == 0
+  - effect_attempts == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: SQLITE_COMMIT_ENOSPC
+  durability_tier: T2_CACHE_DROP
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+  - MVP1-D
+  - MVP1-E
+- test_id: AT-MIGRATION-001
+  case_id: BACKUP_RESTORE
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: backup_restore_and_chain_verify
+  expectation_descriptor_hash: sha256:a7b1a7b17bcf703535cfd9113b75d6cbac6e4b36aff267d3005eccd50765bdb7
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: BACKUP_RESTORE_RESULT
+  expected_subject_id: $restore_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: BACKUP_RESTORE
+  assertions:
+  - restored_chain_head == original_chain_head
+  - artifact_manifest_count_equal == true
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: BACKUP_RESTORE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-MIGRATION-001
+  case_id: FRESH_INSTALL
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: migration_fresh_database
+  expectation_descriptor_hash: sha256:a76c9e25aa1cf5d6e7599177ad2392ee7a4a2981451289cef3ca04d8e3a857d4
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MIGRATION_RESULT
+  expected_subject_id: $migration_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: MIGRATION_RUNNER
+  assertions:
+  - schema_version == expected_schema_version
+  - integrity_check == ok
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MIGRATION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-DRAIN-001
+  case_id: ACTIVE_RUN_BLOCKS
+  scenario: deployment_with_active_run_is_blocked
+  expectation_descriptor_hash: sha256:0580229330e33cb52625d1ee74091fec12d5d26462817ff3f73bfd6082dee43b
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ACTION_BLOCKED
+  expected_subject_type: DEPLOYMENT_RESULT
+  expected_subject_id: $deployment_id
+  expected_state: REJECTED
+  expected_error_code: DEPLOY_DRAIN_REQUIRED
+  trace_scope: DEPLOYMENT_DRAIN
+  assertions:
+  - active_run_count > 0
+  - migration_started == false
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DEPLOY_PRECHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-DRAIN-001
+  case_id: DRAINED_DEPLOY
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: deployment_after_drain
+  expectation_descriptor_hash: sha256:ee03389b2ee29b718035f86f47cfb97f8afdee2b8417c47d13082bdd4c67b027
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: DEPLOYMENT_RESULT
+  expected_subject_id: $deployment_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: DEPLOYMENT_DRAIN
+  assertions:
+  - active_run_count == 0
+  - pending_approval_count == 0
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DEPLOY_PRECHECK
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-GC-001
+  case_id: ORPHAN_CANDIDATE
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: old_orphan_is_candidate_only
+  expectation_descriptor_hash: sha256:fa65c745de25797d9e72ed65aae61e38643c5cbb0c703612a55060e2ed086657
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: GC_RESULT
+  expected_subject_id: $gc_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: ARTIFACT_GC
+  assertions:
+  - orphan_candidate_count == 1
+  - deleted_count == 0
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: GC_DRY_RUN
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-GC-001
+  case_id: RAW_RETENTION
+  scenario: raw_payload_retention_deletes_payload_keeps_metadata
+  expectation_descriptor_hash: sha256:99ebb06a634152acb1a2825f64a42613c98edbaedaa151c89c67beb331559ab1
+  input_fixture_hash: null
+  expected_event_sequence:
+  - ARTIFACT_PAYLOAD_DELETED
+  expected_subject_type: GC_RESULT
+  expected_subject_id: $gc_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: ARTIFACT_GC
+  assertions:
+  - payload_deleted == true
+  - manifest_retained == true
+  - deletion_event_count == 1
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: GC_EXECUTE_APPROVED
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-GC-001
+  case_id: REFERENCED_KEEP
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: gc_keeps_referenced_artifact
+  expectation_descriptor_hash: sha256:a93dab4e40f630bcb628cee648199e727e893bce746942a0a106ef08b4b4b0f4
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: GC_RESULT
+  expected_subject_id: $gc_result_id
+  expected_state: ACCEPTED
+  expected_error_code: null
+  trace_scope: ARTIFACT_GC
+  assertions:
+  - referenced_deleted_count == 0
+  auto_reexecution_prohibited: false
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: GC_DRY_RUN
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  - MVP1-A
+  - MVP0-C
+  - MVP1-D
+- test_id: AT-DELEGATION-001
+  case_id: SCOPE_EXCEEDED
+  scenario: delegated_plan_outside_predicate_escalates_to_human
+  expectation_descriptor_hash: sha256:6a12693279e7e43a6c4d09a87f2775012a7dd4ab5d9e58d6d7508d3724bc6f52
+  input_fixture_hash: null
+  expected_event_sequence:
+  - PLAN_RESOLVED
+  - POLICY_DECIDED
+  - DELEGATION_REJECTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: APPROVAL_REQUIRED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - auto_approved_count == 0
+  - human_approval_required == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: SELF_MODIFICATION
+  scenario: delegation_cannot_create_or_widen_delegation
+  expectation_descriptor_hash: sha256:67b2b6906d1e96239e2f9fc2a3e971249905da58b85d4390c860a01b1b80d3cf
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_DECIDED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: BLOCKED_POLICY
+  expected_error_code: DELEGATION_SELF_MODIFICATION_DENIED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - delegation_created_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: WIDEN_DENIED
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: narrow_rejects_predicate_that_is_not_a_subset
+  expectation_descriptor_hash: sha256:eff2e9f2453e897449b9356775060b6de07d237376d13abdf4788f3902bce565
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: DELEGATION_GRANT
+  expected_subject_id: $delegation_grant_id
+  expected_state: ACTIVE
+  expected_error_code: DELEGATION_SCOPE_EXCEEDED
+  trace_scope: DELEGATION_GRANT
+  assertions:
+  - original_predicate_unchanged == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: REVOKE_IMMEDIATE
+  scenario: revoked_delegation_stops_auto_approval_at_once
+  expectation_descriptor_hash: sha256:5c562453487094d1e9bf37335a3b8013870bbee8cda0a9908a139a80c39483a4
+  input_fixture_hash: null
+  expected_event_sequence:
+  - DELEGATION_REVOKED
+  - POLICY_DECIDED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: APPROVAL_REQUIRED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: POLICY_HASH_CHANGED
+  scenario: policy_change_invalidates_delegation
+  expectation_descriptor_hash: sha256:f7e0b6733efb66d63403b79bfc09c087d29091e916884811f5d29b16d1743996
+  input_fixture_hash: null
+  expected_event_sequence:
+  - DELEGATION_INVALIDATED
+  - POLICY_DECIDED
+  expected_subject_type: DELEGATION_GRANT
+  expected_subject_id: $delegation_grant_id
+  expected_state: INVALIDATED
+  expected_error_code: null
+  trace_scope: DELEGATION_GRANT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: PAID_NEVER_DELEGATED
+  scenario: paid_execution_ignores_delegation
+  expectation_descriptor_hash: sha256:4d750d4ca1f787352f1524b3fe1d79c608848a1ccbff81b049667e6fe4145995
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: DELEGATION_NOT_DELEGABLE_ACTION
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - auto_approved_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP1-D
+- test_id: AT-DELEGATION-001
+  case_id: STALE_POLICY_NO_AUTO
+  scenario: delegation_inactive_when_policy_not_current
+  expectation_descriptor_hash: sha256:e38fb2e80c0b7abc80dbd45915acf91fcf568795bb3c70f0deff4ec9701be3f3
+  input_fixture_hash: null
+  expected_event_sequence:
+  - POLICY_STALE_DETECTED
+  - DELEGATION_REJECTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: REVOKE_BEFORE_EFFECT_LINEARIZATION
+  scenario: revocation_wins_before_effect_linearization
+  expectation_descriptor_hash: sha256:fb3db61e27cfa0c00e35d6a740b4ed97cf92b28f6ea303125bc189ea9858a112
+  input_fixture_hash: null
+  expected_event_sequence:
+  - DELEGATION_MATCHED
+  - APPROVAL_CONSUMED
+  - DELEGATION_REVOKED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: BLOCKED_CONFLICT
+  expected_error_code: DELEGATION_REVOKED_MID_FLIGHT
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - effect_attempts == 0
+  - target_hash == base_hash
+  - duplicate_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: REVOKE_AFTER_EFFECT_LINEARIZATION
+  scenario: effect_linearization_wins_before_revocation
+  expectation_descriptor_hash: sha256:443b319232c7eafef2e78ed0c8ef2ebf4c672cbbafe819362cfd71611167fe95
+  input_fixture_hash: null
+  expected_event_sequence:
+  - DELEGATION_MATCHED
+  - APPROVAL_CONSUMED
+  - DELEGATION_EFFECT_LINEARIZED
+  - DELEGATION_REVOKED_AFTER_EFFECT_START
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: READY
+  expected_error_code: DELEGATION_REVOKED_AFTER_EFFECT_START
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - effect_attempts == 1
+  - reconciliation_required == true
+  - duplicate_effects == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: DERIVED_APPROVAL_IS_SINGLE_USE
+  scenario: derived_approval_cannot_be_replayed
+  expectation_descriptor_hash: sha256:ab4132d9f07c4532c5270910b8d992cf4052ea3877301b260476a39c460cb52f
+  input_fixture_hash: null
+  expected_event_sequence:
+  - DELEGATION_MATCHED
+  - APPROVAL_CONSUMED
+  - APPROVAL_REPLAY_DENIED
+  - ACTION_BLOCKED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: BLOCKED_APPROVAL
+  expected_error_code: APPROVAL_REPLAY
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - delegation_grant_reused_as_execution_authority == false
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: PREDICATE_FIELD_CHANGED
+  scenario: any_invalidating_field_change_escalates_to_human
+  expectation_descriptor_hash: sha256:9a0a212e8ac71b91b9be564e85667c18c363fe200c4af8ac2144b8c4dd38498d
+  input_fixture_hash: null
+  expected_event_sequence:
+  - PLAN_RESOLVED
+  - POLICY_DECIDED
+  - DELEGATION_REJECTED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: DELEGATION_SCOPE_EXCEEDED
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - checked_field_count == 16
+  - auto_approved_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: TRUST_ANCHOR_ROLLBACK
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: delegation_signed_by_rotated_or_rolled_back_key_is_rejected
+  expectation_descriptor_hash: sha256:b241444711e924dd803455e36173a34793db318575bb5c732af0e3edd15d0699
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: DELEGATION_GRANT
+  expected_subject_id: $delegation_grant_id
+  expected_state: INVALIDATED
+  expected_error_code: DELEGATION_TRUST_ANCHOR_INVALID
+  trace_scope: DELEGATION_GRANT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: AUDIENCE_MISMATCH
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: delegation_from_another_workspace_is_rejected
+  expectation_descriptor_hash: sha256:5604bf960ab3cbab4dfb8afe3b3f74c0b47277e4b3de71b7542019e5f560bda5
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: DELEGATION_SUBJECT_MISMATCH
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: DESTRUCTIVE_NEVER_DELEGATED
+  event_observation_policy: REQUIRED_EMPTY
+  scenario: gc_backup_migration_key_and_policy_ops_ignore_delegation
+  expectation_descriptor_hash: sha256:cc5d0531b4fe6ccb7175b7773c8dc7838c48fa13e27a77eea8b820a253d5eb4d
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: WAITING_APPROVAL
+  expected_error_code: DELEGATION_NOT_DELEGABLE_ACTION
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - auto_approved_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-DELEGATION-001
+  case_id: AUDIT_TRAIL_COMPLETE
+  scenario: auto_approved_run_is_fully_traceable_to_delegation
+  expectation_descriptor_hash: sha256:2b72dcad3f92fe0a6c11ed4c76eaf8a335294f207e496d1c24b3b8d9ef1d2673
+  input_fixture_hash: null
+  expected_event_sequence:
+  - DELEGATION_MATCHED
+  - APPROVAL_ISSUED
+  - APPROVAL_CONSUMED
+  expected_subject_type: ACTION_ATTEMPT
+  expected_subject_id: $action_attempt_id
+  expected_state: READY
+  expected_error_code: null
+  trace_scope: ACTION_ATTEMPT_STREAM
+  assertions:
+  - approval_mode == POLICY_DELEGATED
+  - delegation_id_present == true
+  - created_from_run_id_resolvable == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: DELEGATION_RESOLUTION
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP1-A
+- test_id: AT-MASKING-001
+  case_id: SECRET_REJECTED_NOT_MASKED
+  scenario: credentials_are_rejected_never_sent_to_masker
+  expectation_descriptor_hash: sha256:01308dedfff5d701820d85c4db1f579fdc80554b4897fac0c353beaa4f8fb151
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INPUT_READ_STARTED
+  - INPUT_ARTIFACT_CLASSIFIED
+  - INPUT_READ_DENIED
+  expected_subject_type: INPUT_READ_DECISION
+  expected_subject_id: $input_read_decision_id
+  expected_state: DENIED
+  expected_error_code: null
+  trace_scope: INPUT_READ_DECISION
+  assertions:
+  - masker_invocation_count == 0
+  - artifact_persisted_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SECOND_SCAN_IS_THE_GATE
+  scenario: under_masked_output_is_rejected_by_scan2
+  expectation_descriptor_hash: sha256:5f8f90624f319ae668a21eb4e9d8e4754ce215e02e1c81cff5545463dab2af3a
+  input_fixture_hash: null
+  expected_event_sequence:
+  - INPUT_MASKING_STARTED
+  - INPUT_MASKING_SCAN1_CANDIDATES_READY
+  - INPUT_MASKING_SPANS_PROPOSED
+  - INPUT_MASKING_REJECTED
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_VERIFICATION_FAILED
+  trace_scope: MASKING_RESULT
+  assertions:
+  - context_fragment_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SPAN_OUT_OF_RANGE
+  event_observation_policy: NOT_APPLICABLE
+  scenario: span_beyond_text_length_or_negative_is_rejected
+  expectation_descriptor_hash: sha256:5f61ed97c6a33eb7dbeb735eca6c0b7e4b338511f1fd9ec33634f379b7a16b88
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_SPAN_INVALID
+  trace_scope: MASKING_RESULT
+  assertions:
+  - rewriter_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SPAN_OVERLAP_OR_NESTED
+  event_observation_policy: NOT_APPLICABLE
+  scenario: unsupported_overlap_or_nesting_outside_single_candidate_containment_is_rejected
+  expectation_descriptor_hash: sha256:7644dae7c8d9676ec8fdbc4db93d7f229208748f1890f0d9f9d19c8873baa582
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_SPAN_INVALID
+  trace_scope: MASKING_RESULT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SPAN_UNSORTED
+  scenario: spans_not_sorted_by_start_are_rejected
+  expectation_descriptor_hash: sha256:3fe567e3fc410e393ed70ac5bf3e00ee5e078307a95c3850b087cefe9f63a2a8
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_SPAN_INVALID
+  trace_scope: MASKING_RESULT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  event_observation_policy: NOT_APPLICABLE
+- test_id: AT-MASKING-001
+  case_id: SPAN_CATEGORY_UNKNOWN
+  event_observation_policy: NOT_APPLICABLE
+  scenario: unregistered_category_is_rejected
+  expectation_descriptor_hash: sha256:80e29564f92192cb8fdea99e33129627f01b83d38306320b94e4a7add3d9b898
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_CATEGORY_UNKNOWN
+  trace_scope: MASKING_RESULT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: MASK_RATIO_EXCEEDED
+  event_observation_policy: NOT_APPLICABLE
+  scenario: whole_document_masked_as_single_span_is_rejected
+  expectation_descriptor_hash: sha256:f9b37015a440046d16e008c9c0f8e93c2042d74fb57c92419117badd4cf109ae
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_RATIO_EXCEEDED
+  trace_scope: MASKING_RESULT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: MASKER_OUTPUT_MALFORMED
+  event_observation_policy: NOT_APPLICABLE
+  scenario: non_json_unknown_field_or_hash_mismatch_is_rejected
+  expectation_descriptor_hash: sha256:599cb2e2f4a4beb8fe5fd9b9f175b03ff2c0f34993b49df299c7b50a87b3b44e
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKER_OUTPUT_MALFORMED
+  trace_scope: MASKING_RESULT
+  assertions:
+  - rewriter_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: MASKER_UNAVAILABLE_FAIL_CLOSED
+  event_observation_policy: NOT_APPLICABLE
+  scenario: masker_timeout_or_down_does_not_pass_unmasked_content
+  expectation_descriptor_hash: sha256:dea9be4e1083abdc5086acd134a19ed4d0e11ebf24dd0aaa56e70432f2199dce
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKER_UNAVAILABLE
+  trace_scope: MASKING_RESULT
+  assertions:
+  - unmasked_fragment_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: MASKER_ISOLATION_INCOMPLETE
+  event_observation_policy: NOT_APPLICABLE
+  scenario: incomplete_masker_isolation_rejects_raw_pii_path
+  expectation_descriptor_hash: sha256:472d5c42b9d61df2099b40b169041d48a2457b3e1134c27bb6f0da63a2b70ae6
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKER_ISOLATION_INCOMPLETE
+  trace_scope: MASKING_RESULT
+  assertions:
+  - masker_invocation_count == 0
+  - unmasked_fragment_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: UNICODE_NORMALIZATION
+  event_observation_policy: NOT_APPLICABLE
+  scenario: span_offsets_stable_across_nfc_with_combining_and_non_bmp
+  expectation_descriptor_hash: sha256:553915ec9d50573c8f126186bad0d195e3e83b31645365060bcf60c9ca277731
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - masked_text_matches_expected == true
+  - no_codepoint_split == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: NORMALIZATION_PROFILE_MISMATCH
+  event_observation_policy: NOT_APPLICABLE
+  scenario: masker_profile_or_unicode_data_version_mismatch_is_rejected
+  expectation_descriptor_hash: sha256:195dc67abaec679b28463144a0e0a7919b4290baac6bd2f1d05912e088c00cb0
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_NORMALIZATION_PROFILE_MISMATCH
+  trace_scope: MASKING_RESULT
+  assertions:
+  - actual_state == expected_state
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: UNICODE_PROFILE_CROSS_PYTHON
+  event_observation_policy: NOT_APPLICABLE
+  scenario: python_311_and_312_produce_same_ucd14_profile_hash
+  expectation_descriptor_hash: sha256:d8260768d338e76e7c4889bb87d34bc494b59ccd25a6c139fe20fde257688f14
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - artifact_format_equal == true
+  - normalization_profile_artifact_hash_equal == true
+  - source_normalized_hash_equal == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: UNICODE_PROFILE_ARTIFACT_MISSING
+  event_observation_policy: NOT_APPLICABLE
+  scenario: missing_or_hash_mismatched_ucd14_assigned_bitmap_fails_closed
+  expectation_descriptor_hash: sha256:ea6afc5c9070e4855690d107461538fc4aed7c15c9d763ae21968719a5ab0d63
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_NORMALIZATION_ARTIFACT_MISSING
+  trace_scope: MASKING_RESULT
+  assertions:
+  - artifact_format_valid == false
+  - normalization_invocation_count == 0
+  - masker_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: UNICODE_UCD14_ASSIGNED_GUARD
+  event_observation_policy: NOT_APPLICABLE
+  scenario: codepoint_unassigned_in_ucd14_is_rejected_before_normalization
+  expectation_descriptor_hash: sha256:98f3ff10a2e397edae6b2c42072ce812281a3faf3b5a28529ac9db72bf380dee
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_UNSUPPORTED_CODEPOINT
+  trace_scope: MASKING_RESULT
+  assertions:
+  - normalization_invocation_count == 0
+  - masker_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: GRAPHEME_SPLIT
+  event_observation_policy: NOT_APPLICABLE
+  scenario: risky_grapheme_codepoint_span_is_rejected_without_runtime_dependency
+  expectation_descriptor_hash: sha256:bc737aa1ee99f86ac64d46e1d00cb1dde359e843d1c9ed1bd070f5a8322e10fc
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_GRAPHEME_SPLIT
+  trace_scope: MASKING_RESULT
+  assertions:
+  - rewriter_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: MASK_RATIO_BOUNDARY
+  event_observation_policy: NOT_APPLICABLE
+  scenario: llm_additional_union_mask_ratio_boundary_is_deterministic
+  expectation_descriptor_hash: sha256:ac15df8a567f805efbcfcc6682c7fd4445643c3c50030e1c4e50dd9d0bdb6f22
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - ratio_0_59_passes == true
+  - ratio_0_60_passes == true
+  - ratio_0_61_rejects == true
+  - deterministic_scan1_over_0_60_passes == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SCAN1_CANDIDATE_UNION
+  event_observation_policy: NOT_APPLICABLE
+  scenario: deterministic_scan_candidates_are_union_with_llm_additions
+  expectation_descriptor_hash: sha256:0f6585d02eff521ecdb2134d52cb1a80d0ed8eec44ffd9c848f4d5345c04cc77
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - deterministic_candidate_spans_preserved == true
+  - llm_only_spans_are_additive == true
+  - deterministic_scan1_over_0_60_is_not_ratio_rejected == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SPAN_CONTAINMENT_EXPANSION
+  event_observation_policy: NOT_APPLICABLE
+  scenario: same_category_llm_span_containing_one_scan1_candidate_is_canonicalized
+  expectation_descriptor_hash: sha256:862ed5d52afee7a10a5e9e3d1f1aad998d536736bb8822d940911515329f3f7c
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - canonical_span_is_containing_span == true
+  - masked_content_is_deterministic == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: SPAN_CONFLICT_PARTIAL
+  event_observation_policy: NOT_APPLICABLE
+  scenario: partial_or_cross_category_overlap_is_rejected
+  expectation_descriptor_hash: sha256:747c2d46f6d3ce12174e82a208f721bf8f897c02b2c0e2adf192acb7506296d1
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: MASKING_SPAN_CONFLICT
+  trace_scope: MASKING_RESULT
+  assertions:
+  - rewriter_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: NATIONAL_ID_REJECTED_NOT_MASKED
+  scenario: national_id_is_rejected_before_masker_invocation
+  expectation_descriptor_hash: sha256:52380063bc9afa26662c1f465f8fe0dad70797b5752fd918bb287c01faa59803
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: INPUT_READ_DECISION
+  expected_subject_id: $input_read_decision_id
+  expected_state: DENIED
+  expected_error_code: null
+  trace_scope: INPUT_READ_DECISION
+  assertions:
+  - masker_invocation_count == 0
+  - artifact_persisted_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  event_observation_policy: NOT_APPLICABLE
+- test_id: AT-MASKING-001
+  case_id: REWRITER_DETERMINISM
+  event_observation_policy: NOT_APPLICABLE
+  scenario: same_source_and_spans_always_produce_same_output
+  expectation_descriptor_hash: sha256:46e94a7fd82dc3033dd416771a1c970efa99740730ea5da29c9bddcd519600a3
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - masked_content_hash_a == masked_content_hash_b
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: NO_LLM_PATH
+  event_observation_policy: NOT_APPLICABLE
+  scenario: clean_and_reject_paths_never_invoke_masker
+  expectation_descriptor_hash: sha256:8678080c01ff66ba099740ca26e8f2b870215f7d4465030c8cac231d1bf536c8
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: CLEAN
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - masker_invocation_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+- test_id: AT-MASKING-001
+  case_id: PROMPT_INJECTION
+  scenario: instructions_inside_input_cannot_change_masking_policy
+  expectation_descriptor_hash: sha256:f0b5b20f9f1d7633d323047bc8a589888957868347a2d763dc569be487f72481
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - masking_policy_version_unchanged == true
+  - mask_tokens_unchanged == true
+  - reject_categories_unchanged == true
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  event_observation_policy: NOT_APPLICABLE
+- test_id: AT-MASKING-001
+  case_id: NO_SECRET_IN_RECEIPT
+  scenario: masking_receipt_contains_no_secret_value
+  expectation_descriptor_hash: sha256:7b6846ce50547433500403c3e29724f5c718e276a0c9515de97f9765bccc952f
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - canary_occurrences_in_receipt == 0
+  - canary_occurrences_in_ledger == 0
+  - canary_occurrences_in_logs == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  event_observation_policy: NOT_APPLICABLE
+- test_id: AT-MASKING-001
+  case_id: NO_SECRET_IN_RECEIPT_REJECTED
+  scenario: secret_input_is_rejected_and_receipt_contains_no_secret_value
+  expectation_descriptor_hash: sha256:aa98be2071cf3e040c6e7bd9d6683db9d5ef8be912fac5eb60508aa3cf8a399b
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: REJECTED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - canary_occurrences_in_receipt == 0
+  - canary_occurrences_in_ledger == 0
+  - canary_occurrences_in_logs == 0
+  - masker_invocation_count == 0
+  - artifact_persisted_count == 0
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B
+  event_observation_policy: NOT_APPLICABLE
+- test_id: AT-MASKING-001
+  case_id: NO_AUTO_DOWNGRADE
+  event_observation_policy: NOT_APPLICABLE
+  scenario: masking_does_not_lower_data_classification
+  expectation_descriptor_hash: sha256:ba0a9155c6192eeef5fd7ec69a40b5e154abab39330582fb5ee87d4e6f8831aa
+  input_fixture_hash: null
+  expected_event_sequence: []
+  expected_subject_type: MASKING_RESULT
+  expected_subject_id: $masking_result_id
+  expected_state: MASKED
+  expected_error_code: null
+  trace_scope: MASKING_RESULT
+  assertions:
+  - classification_after == classification_before
+  auto_reexecution_prohibited: true
+  release_allowed: false
+  manual_queue_expected: false
+  fault_point: MASKING_PIPELINE
+  durability_tier: null
+  evidence_status: UNVERIFIED
+  evidence_manifest_hash: null
+  phase_scope:
+  - MVP0-A
+  - MVP0-B

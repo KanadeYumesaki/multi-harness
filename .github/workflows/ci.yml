@@ -1,0 +1,605 @@
+# 設計書 v1.7 §16.5 のCI定義。正本は ci/github-actions-ci.yml。
+#
+# 重要: CIのPASSはRuntime GOを構成しない。CI RunnerはWSL2ではないため、
+# §26.4のRuntime Environment要件を満たさない。Runtime GOはWSL2上での
+# Release Gate実行だけが生成できる（不変条件#19）。
+#
+# 正本からの逸脱は次の1点だけである。
+#   正本は tests/property, tests/schema, tests/integration, tests/contract,
+#   src/harness/application を無条件に指定するが、これらはMVP0-Aの実装途上で
+#   まだ存在しない。存在しないPathを渡すとmypy／pytestが「引数が無い」で落ち、
+#   CIが恒常的に赤くなって警報として機能しなくなる。
+#   そこで「列挙したPathのうち実在するものだけを渡す」形へ変更した。
+#   Suiteを新設した時点で自動的に検査対象へ入るため、対象は縮小しない。
+name: ci
+
+on:
+  # push は main と Tag だけにする。Feature Branch の push は、同じ Commit に対して
+  # pull_request が必ず走るので**二重実行**になる。実測で 42 組が二重に走っていた。
+  # 検査を減らしたのではなく、同じ入力への二度目をやめただけである。
+  push:
+    branches: [main]
+    tags: ['v*']
+  # ready_for_review を足す。Draft の間は軽い検査で回し、Ready にした時点で
+  # 完全検査へ戻すために要る（既定の types には入っていない）。
+  pull_request:
+    # labeled を足す。`ci:full` を付けた時点で完全検査へ上げるために要る。
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+  schedule:
+    - cron: '0 17 * * *'   # nightly（JST 02:00）
+  # nightly／deep を手で起動できるようにする。schedule を待たずに確かめられる。
+  workflow_dispatch:
+
+# 同じ PR で新しい Run が始まったら、古い Run を止める。
+# main と Tag は止めない。Release の検証を途中で消さないためである。
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/') }}
+
+env:
+  PYTHONUTF8: '1'
+  LC_ALL: C.UTF-8
+  TZ: UTC
+  DESIGN: design-v1.25-runtime-go.md
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: scope-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tier: ${{ steps.scope.outputs.tier }}
+      pythons: ${{ steps.scope.outputs.pythons }}
+      run_spec: ${{ steps.scope.outputs.run_spec }}
+      run_reference: ${{ steps.scope.outputs.run_reference }}
+      run_supply: ${{ steps.scope.outputs.run_supply }}
+      run_integration: ${{ steps.scope.outputs.run_integration }}
+      run_deep: ${{ steps.scope.outputs.run_deep }}
+      run_full_tests: ${{ steps.scope.outputs.run_full_tests }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          # PR の base と比べるので履歴が要る。浅い clone だと差分が取れず、
+          # 取れなければ Fail-Closed で完全検査へ回る。
+          fetch-depth: 0
+      # `tools/ci_scope.py` は標準ライブラリだけで動く。Runner の python3 を使い、
+      # setup-python も pip install も置かない。判定に依存を持ち込まない。
+      - name: collect-changed-paths
+        env:
+          CI_INPUT_0: ${{ github.event_name }}
+          CI_INPUT_1: ${{ github.event.pull_request.base.sha }}
+          CI_INPUT_2: ${{ github.event.pull_request.head.sha }}
+          CI_INPUT_3: ${{ github.event.before }}
+          CI_INPUT_4: ${{ github.sha }}
+        run: |
+          set -u
+          if [ "${CI_INPUT_0}" = "pull_request" ]; then
+            base="${CI_INPUT_1}"
+            head="${CI_INPUT_2}"
+            git diff --name-only "$base" "$head" > /tmp/changed.txt || rm -f /tmp/changed.txt
+          else
+            git diff --name-only "${CI_INPUT_3}" "${CI_INPUT_4}" \
+              > /tmp/changed.txt || rm -f /tmp/changed.txt
+          fi
+          # 読めなかったら File を残さない。ci_scope が Fail-Closed で完全検査へ回す。
+          if [ -f /tmp/changed.txt ]; then wc -l < /tmp/changed.txt; else echo "diff 取得失敗"; fi
+      - name: decide-scope
+        id: scope
+        env:
+          CI_INPUT_0: ${{ github.event_name }}
+          CI_INPUT_1: ${{ github.event.pull_request.draft }}
+          CI_INPUT_2: ${{ join(github.event.pull_request.labels.*.name, ",") }}
+          CI_INPUT_3: ${{ github.ref }}
+          CI_INPUT_4: ${{ github.head_ref }}
+        run: |
+          python tools/ci_scope.py \
+            --changed-file /tmp/changed.txt \
+            --event "${CI_INPUT_0}" \
+            --draft "${CI_INPUT_1}" \
+            --labels "${CI_INPUT_2}" \
+            --ref "${CI_INPUT_3}" \
+            --head-ref "${CI_INPUT_4}" \
+            --github-output "$GITHUB_OUTPUT"
+
+  release-tag:
+    name: release-tag-signature
+    # Tagを押したときだけ走る。通常のpushにはTagが無く、走らせても
+    # 「Tagが無い」で毎回同じ結果になるだけで、何も見ていない工程になる。
+    if: startsWith(github.ref, 'refs/tags/')
+    # **他の検査が通っていないTagをReleaseとして認めない。**
+    # needs が無いと、Spec・Quality・Supply-chain が落ちていても署名検証
+    # だけがPASSでき、「CIが緑のTag」に見えてしまう。
+    needs: [plan, spec, quality, supply-chain]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          # Tag object と Commit の両方が要る。浅いcloneだと
+          # `git tag -v` が対象を読めない。
+          fetch-depth: 0
+      - name: fetch-annotated-release-tag
+        # actions/checkout がイベントのCommitをcheckoutした結果、
+        # annotated tag ref が軽量Tagとして見えるRunnerがある。
+        # 署名付きTag objectを明示的に取得し、軽量Tagを拒否する。
+        run: |
+          git fetch --force origin \
+            "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+          test "$(git cat-file -t "refs/tags/${GITHUB_REF_NAME}")" = "tag"
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+          # 依存は hash 固定なので、Cache が古くて困ることが無い。
+          cache: 'pip'
+          cache-dependency-path: requirements-dev.txt
+      - name: install-hash-locked-runtime-and-dev-tools
+        run: |
+          pip install --require-hashes -r requirements-dev.txt
+
+      - name: fetch-protected-branch
+        # 署名はCommitの出所を保証しない。未レビューBranchのCommitでも
+        # 署名付きTagは打てる。保護Branchの祖先であることを別途確かめる。
+        run: git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+
+      - name: verify-release-tag-signature
+        # 署名の無いTagでReleaseを名乗らせない。終了Code 2（未署名）も
+        # ここでは失敗として扱う。Tagを押すのはReleaseの意思表示であり、
+        # 「まだ張っていない」で通してよい場面ではない。
+        #
+        # 外部固定Hashは Protected Variable から渡す。Repositoryを
+        # 書き換えられる者でもVariableは変えられない、という前提が
+        # 置けて初めて外部固定になる。未設定なら **失敗する**
+        # （--require-external-anchor）。
+        # **成果物をRepositoryの中へ置かない。** 未追跡Fileが1つでも増えると、
+        # 後段の package_release_zip.py が clean tree 違反で止まる。
+        # 手順書へ落とし穴として書きながら、Workflow側で自分が踏んでいた。
+        run: |
+          python tools/verify_trust_anchor.py \
+            --tag "${GITHUB_REF_NAME}" \
+            --expect-commit "${GITHUB_SHA}" \
+            --require-ancestor-of origin/main \
+            --require-external-anchor \
+            --trusted-verifier-hash "${TRUSTED_VERIFIER_HASH}" \
+            --trusted-signers-hash "${TRUSTED_SIGNERS_HASH}" \
+            --emit-evidence "${RUNNER_TEMP}/trust-anchor.json"
+          cat "${RUNNER_TEMP}/trust-anchor.json"
+        env:
+          TRUSTED_VERIFIER_HASH: ${{ vars.TRUST_ANCHOR_VERIFIER_SHA256 }}
+          TRUSTED_SIGNERS_HASH: ${{ vars.TRUST_ANCHOR_SIGNERS_SHA256 }}
+
+      - name: assert-clean-tree-before-packaging
+        # 上の工程が作業ツリーを汚していないことを、次へ進む前に確かめる。
+        # 汚れたまま進むと clean tree 違反として現れるが、そのときには
+        # 「どの工程が汚したか」が分からなくなる。
+        run: |
+          if [ -n "$(git status --porcelain --untracked-files=all)" ]; then
+            echo "working tree is dirty before packaging:" >&2
+            git status --porcelain --untracked-files=all >&2
+            exit 1
+          fi
+
+      - name: package-and-verify-release-zip
+        # CIで検証したTagと、配布するZIPが同じBindingであることを
+        # 同一Workflowで確かめる。手元で別に作ると、検証したものと
+        # 配ったものが違っていても誰も気付かない。
+        run: |
+          python tools/package_release_zip.py \
+            --source-root . \
+            --out "${RUNNER_TEMP}/release-${GITHUB_REF_NAME}.zip" \
+            --trust-anchor-tag "${GITHUB_REF_NAME}" \
+            --verify
+
+      - name: cross-check-binding-against-the-workflow
+        # Binding が本当にこのTag・このCommitを指しているか。
+        # ZIP生成器を信じるのではなく、出力を読み直して突き合わせる。
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, zipfile
+          name = pathlib.Path(os.environ["RUNNER_TEMP"]) / f"release-{os.environ['GITHUB_REF_NAME']}.zip"
+          with zipfile.ZipFile(name) as archive:
+              path = next(n for n in archive.namelist() if n.endswith("/release-binding.json"))
+              binding = json.loads(archive.read(path))
+          assert binding["binding_version"] == "1.3", binding["binding_version"]
+          assert binding["implementation_commit_sha"] == os.environ["GITHUB_SHA"], binding
+          anchor = binding["trust_anchor"]
+          assert anchor is not None, "release ZIP carries no trust anchor"
+          assert anchor["tag"] == os.environ["GITHUB_REF_NAME"], anchor
+          assert anchor["commit"] == os.environ["GITHUB_SHA"], anchor
+          print("binding cross-check ok:", json.dumps(anchor, ensure_ascii=False))
+          PY
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ github.ref_name }}
+          path: |
+            ${{ runner.temp }}/trust-anchor.json
+            ${{ runner.temp }}/release-${{ github.ref_name }}.zip
+          # Artifactは保持期限で消える。**長期保管ではない。**
+          # C運用ではCI成果物をRelease根拠にしない。恒久保管は
+          # docs/review/2026-08-16-trust-anchor-c-release-operation.md の手順で行う。
+          retention-days: 90
+
+  spec:
+    name: spec-foundation
+    needs: [plan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: scope-check
+        id: scope
+        env:
+          CI_INPUT_0: ${{ needs.plan.outputs.run_spec }}
+          CI_INPUT_1: ${{ needs.plan.outputs.tier }}
+        run: |
+          if [ "${CI_INPUT_0}" != "true" ]; then
+            echo "not applicable — 今回の変更範囲にこの検査の対象が無い"
+            echo "tier=${CI_INPUT_1}"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+        if: steps.scope.outputs.skip != 'true'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        if: steps.scope.outputs.skip != 'true'
+        with:
+          python-version: '3.12'
+          # 依存は hash 固定なので、Cache が古くて困ることが無い。
+          cache: 'pip'
+          cache-dependency-path: requirements-dev.txt
+      - name: install-hash-locked-runtime-and-dev-tools
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          pip install --require-hashes -r requirements-dev.txt
+          pip install --no-deps -e .
+
+      - name: registry-snapshot-sync
+        if: steps.scope.outputs.skip != 'true'
+        # Registryを編集してsnapshotを再生成し忘れた状態でのMergeを防ぐ
+        run: |
+          python tools/build_registry_snapshot.py \
+            --registries design-source/registries \
+            --design "$DESIGN" --out /tmp/snapshot.json
+          python - <<'PY'
+          import json
+          a = json.load(open('registry-snapshot.json', encoding='utf-8'))
+          b = json.load(open('/tmp/snapshot.json', encoding='utf-8'))
+          assert a['registry_snapshot_hash'] == b['registry_snapshot_hash'], \
+              'registry-snapshot.json is stale'
+          PY
+
+      - name: spec-lint
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          python tools/lint_spec.py --design "$DESIGN" \
+            --registries design-source/registries --snapshot registry-snapshot.json \
+            --spec-dir spec
+
+      - name: design-generation-contract
+        if: steps.scope.outputs.skip != 'true'
+        # 移行スクリプトの古い出力でレビュー済み正本を巻き戻さない。
+        # `run:` はブロックスカラー(|)にする。折り畳みスカラーだとYAMLが改行を
+        # 空白へ畳み、行末の `\` が「空白のエスケープ」になって引数が壊れる。
+        run: |
+          python tools/check_design_generation_contract.py \
+            --design "$DESIGN" --snapshot registry-snapshot.json \
+            --spec-manifest spec/spec-manifest.json --readme README.md
+
+      - name: spec-shard-regeneration
+        if: steps.scope.outputs.skip != 'true'
+        # spec/ が設計書から再生成した内容と一致すること。
+        # 分割不具合（TASK-TOOL-001）の再発と再生成忘れを検出する。
+        run: |
+          python tools/build_spec_shards.py --design "$DESIGN" \
+            --registries design-source/registries --out /tmp/spec-regen
+          diff -r spec /tmp/spec-regen
+
+      - name: domain-registry-codegen-sync
+        if: steps.scope.outputs.skip != 'true'
+        # Registryを編集してDomain列挙を再生成し忘れた状態を検出する（不変条件#18）
+        run: python tools/generate_domain_registry_code.py --check
+
+      - name: core-schema-sync
+        if: steps.scope.outputs.skip != 'true'
+        # §15.9 Core Schema を schemas.yaml から再生成し、差分が無いこと。
+        # Schemaが変わると schema_set_hash が変わり Plan Hash が変わるため、
+        # 生成忘れを Merge 前に止める。
+        run: python tools/build_core_schemas.py --check
+
+      - name: requirements-lock-sync
+        if: steps.scope.outputs.skip != 'true'
+        # Hash固定Lockが陳腐化していないこと。Pinは requirements.txt 自身から読む。
+        run: python tools/build_requirements_lock.py --check
+
+      - name: ucd14-assigned-bitmap-integrity
+        if: steps.scope.outputs.skip != 'true'
+        # ADR-007。公式UCD 14.0.0から再生成し、チェックイン済みArtifactと一致するか。
+        # このArtifactが壊れると source_normalized_hash が静かにずれ、
+        # ADR-006 §4.3 経由で委任の照合結果まで変わる。
+        run: |
+          python tools/build_ucd_assigned_bitmap.py --version 14.0.0 \
+            --out src/harness/masking/ucd/14.0.0-assigned-codepoints --check
+
+      - name: verifier-source-integrity
+        if: steps.scope.outputs.skip != 'true'
+        # 期待Hashはブランチ保護とRequired Checkと組み合わせて外部信頼根にする。
+        run: |
+          args=(--target verify_runtime_go.py --expected ci/verifier-source.sha256)
+          if [ -n "${RUNTIME_GO_VERIFIER_SHA256:-}" ]; then
+            args+=(--trusted-hash "$RUNTIME_GO_VERIFIER_SHA256")
+          fi
+          python tools/check_verifier_integrity.py "${args[@]}"
+        env:
+          RUNTIME_GO_VERIFIER_SHA256: ${{ vars.RUNTIME_GO_VERIFIER_SHA256 }}
+
+      - name: runtime-go-boundary
+        if: steps.scope.outputs.skip != 'true'
+        # CIはRuntime Evidence／Release Manifestを生成しない。
+        run: python tools/check_ci_runtime_boundary.py --workspace . --ci
+        env:
+          CI: 'true'
+
+      - name: blocked-record-contract
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          python tools/check_blocked_records.py \
+            --records blocked/records --design "$DESIGN" --registry registry-snapshot.json
+
+      - name: manifest-validate
+        if: steps.scope.outputs.skip != 'true'
+        run: python tools/validate_test_manifest.py --registries design-source/registries
+
+      - name: case-coverage
+        if: steps.scope.outputs.skip != 'true'
+        # 受入Caseに対応する試験があるか、無いなら理由が登録されているか。
+        # 「試験が無いことに誰も気付いていない」状態だけを落とす。
+        run: python tools/check_case_coverage.py --report
+
+      - name: schema-contract
+        if: steps.scope.outputs.skip != 'true'
+        # 設計書の必須Field（spec/20-schemas）とJSON Schema（schemas/core）の乖離。
+        # 既存乖離はBaselineへ固定し、**増えたら落とす**。
+        run: python tools/check_schema_contract.py --report
+
+      - name: verifier-self-test
+        if: steps.scope.outputs.skip != 'true'
+        # GO判定器の否定系試験。ここが落ちたら他の結果は信用できない
+        run: python tests/test_verify_runtime_go.py
+
+      - name: release-zip-smoke
+        if: steps.scope.outputs.skip != 'true'
+        # Windows展開時の日本語名文字化けに依存せず、ASCII設計書とUTF-8 ZIP flagで再現できること。
+        env:
+          CI_INPUT_0: ${{ github.event.repository.name }}
+        run: |
+          python tools/package_release_zip.py --source-root . --out /tmp/mvp0a-release.zip --verify
+          unzip -Z1 /tmp/mvp0a-release.zip | grep -Fx "${CI_INPUT_0}/design-v1.24-runtime-go.md" || \
+            unzip -Z1 /tmp/mvp0a-release.zip | grep -F '/design-v1.25-runtime-go.md'
+          ! unzip -Z1 /tmp/mvp0a-release.zip | grep -E '/(\.mypy_cache|\.pytest_cache|__pycache__)/'
+
+      - name: review-hardening-self-test
+        if: steps.scope.outputs.skip != 'true'
+        run: python tests/test_hardening_contracts.py
+
+  quality:
+    name: quality (py${{ matrix.python }})
+    needs: [plan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        # 何版で回すかは `tools/ci_scope.py` が決める。Draft は 1 版、Ready と
+        # 完全検査は全版。**Job 名の形（quality (py…)）は変えない。**
+        python: ${{ fromJSON(needs.plan.outputs.pythons) }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.python }}
+          # 依存は hash 固定なので、Cache が古くて困ることが無い。
+          cache: 'pip'
+          cache-dependency-path: requirements-dev.txt
+      - name: install-hash-locked-runtime-and-dev-tools
+        run: |
+          pip install --require-hashes -r requirements-dev.txt
+          pip install --no-deps -e .
+
+      - name: format-and-lint
+        run: |
+          ruff format --check .
+          ruff check .
+
+      - name: type-check
+        if: ${{ hashFiles('src/harness/**/*.py') != '' }}
+        # 対象はCLAUDE.md §「機械検査」と同じ4層。domain/application だけに
+        # していた間、ports/ と infrastructure/ は一度も型検査されていなかった。
+        # 実装の大半はこの2層にある。
+        run: |
+          targets=()
+          for p in src/harness/domain src/harness/ports \
+                   src/harness/infrastructure src/harness/application \
+                   src/harness/presentation; do
+            [ -d "$p" ] && targets+=("$p")
+          done
+          echo "mypy targets: ${targets[*]}"
+          mypy --strict "${targets[@]}"
+
+      - name: extended-pictographic-bitmap-integrity
+        # Grapheme判定表。Source（emoji-data.txt）とArtifactの双方をHashで固定する。
+        # 判定が変われば MASKING_GRAPHEME_SPLIT の発生条件が変わるため、
+        # UCD Assigned Bitmap と同格に扱う。
+        if: ${{ hashFiles('src/harness/masking/ucd/*') != '' }}
+        run: |
+          python tools/build_extended_pictographic_bitmap.py --version 14.0.0 \
+            --out src/harness/masking/ucd/14.0.0-extended-pictographic --check
+
+      - name: normalization-fixture-cross-version
+        # Gate 44。3.11 Jobも3.12 Jobも**同じ固定値**と照合する。
+        # 片方でも違うHashを出せば落ちる。Job同士を突き合わせる仕組みが
+        # 無いため、これが実質的なCross-Version検査になる。
+        if: ${{ hashFiles('src/harness/**/*.py') != '' }}
+        run: python tools/build_normalization_fixture.py --check
+
+      - name: forbidden-patterns
+        # §16.2の機械強制。散文規約をCIで実行可能にする
+        run: python tools/check_forbidden_patterns.py src/
+
+      - name: tests-and-coverage
+        if: ${{ hashFiles('src/harness/**/*.py') != '' }}
+        # 正本(§16.5)はカバレッジ計測を unit/property/schema/spec_lint に限り、
+        # integration/contract を別Stepにしている。しかし infrastructure 層は
+        # integration でしか実行されないため、その分割のままだと
+        # 「テスト済みのコードが未カバー扱い」になり 90% ゲートが実態と乖離する。
+        # カバレッジは実際にコードを動かす全Suiteで測る。
+        env:
+          # 式を run: へ直接埋めない。env を経由させる。
+          TIER: ${{ needs.plan.outputs.tier }}
+        run: |
+          # Suite の一覧は ci/test-tiers.yaml が正本である。ここには持たない。
+          # 一覧を Workflow へ写すと、正本と実物が静かに食い違う。実際に
+          # tests/ 直下の 4 File はどちらの一覧にも無く、29 件が走っていなかった。
+          python tools/ci_suites.py --tier "$TIER" > /tmp/suites.txt
+          readarray -t suites < /tmp/suites.txt
+          echo "tier=$TIER"
+          echo "pytest suites: ${suites[*]}"
+          pytest "${suites[@]}" \
+            --cov=src/harness --cov-report=term-missing \
+            --cov-fail-under=90 -q
+
+      - name: no-skip-no-xfail
+        # 試験のSkip／XFail追加によるGreen化を検出する
+        run: python tools/check_test_markers.py tests
+
+  supply-chain:
+    name: license-and-sbom
+    needs: [plan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: scope-check
+        id: scope
+        env:
+          CI_INPUT_0: ${{ needs.plan.outputs.run_supply }}
+          CI_INPUT_1: ${{ needs.plan.outputs.tier }}
+        run: |
+          if [ "${CI_INPUT_0}" != "true" ]; then
+            echo "not applicable — 今回の変更範囲にこの検査の対象が無い"
+            echo "tier=${CI_INPUT_1}"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+        if: steps.scope.outputs.skip != 'true'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        if: steps.scope.outputs.skip != 'true'
+        with:
+          python-version: '3.12'
+          # 依存は hash 固定なので、Cache が古くて困ることが無い。
+          cache: 'pip'
+          cache-dependency-path: requirements-dev.txt
+      - name: install-hash-locked-runtime-and-dev-tools
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          pip install --require-hashes -r requirements-dev.txt
+          pip install --no-deps -e .
+      - name: dependency-audit (pip-audit / cyclonedx-py)
+        if: steps.scope.outputs.skip != 'true'
+        # 一つの固定Commit/LockにLicense・脆弱性・SBOMの結果を束縛する。
+        # Provider認証を渡さず、依存再解決・自動修正・脆弱性除外をしない。
+        run: |
+          python tools/run_public_dependency_audit.py --repo . \
+            --out "$RUNNER_TEMP/public-dependency-audit"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: steps.scope.outputs.skip != 'true'
+        with:
+          name: python-dependency-audit
+          path: |
+            ${{ runner.temp }}/public-dependency-audit/*.json
+            ${{ runner.temp }}/public-dependency-audit/*.log
+          if-no-files-found: error
+
+  nightly:
+    name: nightly-deep
+    needs: [plan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: scope-check
+        id: scope
+        env:
+          CI_INPUT_0: ${{ needs.plan.outputs.run_deep }}
+          CI_INPUT_1: ${{ needs.plan.outputs.tier }}
+        run: |
+          if [ "${CI_INPUT_0}" != "true" ]; then
+            echo "not applicable — 今回の変更範囲にこの検査の対象が無い"
+            echo "tier=${CI_INPUT_1}"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+        if: steps.scope.outputs.skip != 'true'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        if: steps.scope.outputs.skip != 'true'
+        with:
+          python-version: '3.12'
+          # 依存は hash 固定なので、Cache が古くて困ることが無い。
+          cache: 'pip'
+          cache-dependency-path: requirements-dev.txt
+      - name: install-hash-locked-runtime-and-dev-tools
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          pip install --require-hashes -r requirements-dev.txt
+          pip install --no-deps -e .
+      - name: deep-suites
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          # 一覧は ci/test-tiers.yaml が正本。存在する Path だけが出る。
+          python tools/ci_suites.py --tier deep --group deep > /tmp/deep.txt
+          if [ ! -s /tmp/deep.txt ]; then
+            echo "deep suites not created yet"
+          else
+            readarray -t suites < /tmp/deep.txt
+            for p in "${suites[@]}"; do
+              echo "== $p =="
+              # Tier 1（Process Kill）のみ。Tier 2（Cache Drop）はWSL2実機で実行する
+              pytest "$p" -q
+            done
+          fi
+      - name: migration-backup-drain-gc
+        if: steps.scope.outputs.skip != 'true'
+        run: |
+          if [ -d tests/integration/sqlite ]; then
+            pytest tests/integration/sqlite -q -k "migration or backup or drain or gc"
+          else
+            echo "tests/integration/sqlite not created yet"
+          fi
+      - name: plan-determinism-cross-process
+        if: steps.scope.outputs.skip != 'true'
+        # 別PYTHONHASHSEEDでの三重Build。同一プロセス二重Buildでは
+        # set反復由来の非決定性を検出できない（§1.11.1）
+        run: |
+          if [ -d tests/property ]; then
+            for seed in 0 1 12345 987654321; do
+              PYTHONHASHSEED=$seed pytest tests/property -q -k plan_determinism
+            done
+          else
+            echo "tests/property not created yet"
+          fi

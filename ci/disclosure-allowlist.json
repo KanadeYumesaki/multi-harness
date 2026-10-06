@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "purpose": "tools/scan_public_disclosure.py が検出した位置のうち、根拠を付けて分類したもの。path・line・kind・行のSHA-256の完全一致でだけ効き、行が変われば未分類へ戻る。値は記録しない。",
+  "entries": [
+    {
+      "path": "src/harness/infrastructure/masking/scanner.py",
+      "line": 530,
+      "kind": "email",
+      "line_sha256": "6df81691672b5bb5636d3330a41f63610fb37fda905b8a9aac9275d1dacfc93a",
+      "classification": "DOCUMENTED_PLACEHOLDER",
+      "reason": "Span選択の説明に使う例示のURL内メールアドレス。汎用の局所部で、所有者の連絡先とは一致しない（非公開の識別子Hash一覧とも不一致）"
+    },
+    {
+      "path": "tests/integration/masking/test_masking_pipeline.py",
+      "line": 404,
+      "kind": "email",
+      "line_sha256": "fed9cc6213d1aeef9238824556ccb67961284655cee3dc81369ff734f58564fb",
+      "classification": "SYNTHETIC_TEST_VECTOR",
+      "reason": "マスキング検出の試験入力。汎用の局所部を持つ合成アドレスで、所有者の連絡先とは一致しない"
+    },
+    {
+      "path": "tests/unit/masking/test_scanner.py",
+      "line": 142,
+      "kind": "email",
+      "line_sha256": "279430b7ad7015d8bec6ca5fe21df63e3e72be3b835725d3b8192c68f32d4b9f",
+      "classification": "SYNTHETIC_TEST_VECTOR",
+      "reason": "マスキング検出の試験入力。1文字の局所部・短いDomainの合成アドレス"
+    },
+    {
+      "path": "tests/unit/masking/test_scanner.py",
+      "line": 191,
+      "kind": "email",
+      "line_sha256": "c5d318098052c8584ef31ecb39542b3c82decfedc7afe9622be42d3f246a13b1",
+      "classification": "SYNTHETIC_TEST_VECTOR",
+      "reason": "マスキング検出の試験入力（複数アドレスの重なり）。1文字の局所部・短いDomainの合成アドレス"
+    },
+    {
+      "path": "tests/integration/workbench/test_chatgpt_login.py",
+      "line": 167,
+      "kind": "email",
+      "line_sha256": "cddcba3a4bc3622480515b8a6557f399ffcdabc62cc4345789a958e1e27da799",
+      "classification": "SYNTHETIC_TEST_VECTOR",
+      "reason": "資格情報をURLへ埋め込んだ入力を通信前に拒否する負の試験。局所部は合成の固定語で、メールアドレスや認証トークンとして利用しない。値を保存しない位置・行Hashの完全一致分類。"
+    }
+  ]
+}

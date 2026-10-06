@@ -1,0 +1,19 @@
+# 受入Caseと試験の対応表。
+#
+# `not_implemented` は**手で維持する**。未実装であること自体は問題ではない。
+# 問題なのは、未実装だと気付かれていないことである。明示的に書けば
+# 「意図して未着手」になり、数えられる。
+#
+#   covered（@pytest.mark.case）∪ not_implemented == MVP0-A の全Case
+#   covered ∩ not_implemented == 空
+#
+# 検査は tools/check_case_coverage.py。試験を足してMarkerを付けたら、
+# ここから該当行を消す。消し忘れれば重複として落ちる。
+#
+# ここで見るのは「対応する試験が存在するか」だけである。
+# evidence_status は UNVERIFIED のまま据え置く（Evidence収集はTier5）。
+# Markerが付いていることと、その試験がCaseを十分に検証していることは別である。
+
+coverage_registry_version: 1
+phase: MVP0-A
+not_implemented: []

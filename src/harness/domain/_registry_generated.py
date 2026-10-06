@@ -1,0 +1,550 @@
+"""design-source/registries/ からの生成物。直接編集しない。
+
+再生成: python tools/generate_domain_registry_code.py
+整合検査: python tools/generate_domain_registry_code.py --check
+
+source registries:
+  states.yaml  sha256:e68d5af890e9259219c24c8c159e981ca46ead5aa73eb91bfab8f7398efcfa92
+  events.yaml  sha256:938d45585efd955c3a6c83ebfa2d69db2ba4eed766495bc01fd8d30ad12f25d3
+  errors.yaml  sha256:d785f23d05f61bdae7e975bafa6a697ef66cee00245c36ad43fbef4c5b1ef844
+  schemas.yaml sha256:db46d4121545ae959d193ba399f930d955866a2d4564b5b7933b6030221ec2e0
+"""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
+from enum import Enum
+from types import MappingProxyType
+from typing import Final
+
+REGISTRY_SOURCE_HASHES: Final[Mapping[str, str]] = MappingProxyType(
+    {
+        "states.yaml": "sha256:e68d5af890e9259219c24c8c159e981ca46ead5aa73eb91bfab8f7398efcfa92",
+        "events.yaml": "sha256:938d45585efd955c3a6c83ebfa2d69db2ba4eed766495bc01fd8d30ad12f25d3",
+        "errors.yaml": "sha256:d785f23d05f61bdae7e975bafa6a697ef66cee00245c36ad43fbef4c5b1ef844",
+        "schemas.yaml": "sha256:db46d4121545ae959d193ba399f930d955866a2d4564b5b7933b6030221ec2e0",
+    }
+)
+
+
+class EventType(Enum):
+    """§1.8 共通監査イベント。正本は events.yaml。"""
+
+    RUN_CREATED = "RUN_CREATED"
+    INPUT_READ_CAPABILITY_ISSUED = "INPUT_READ_CAPABILITY_ISSUED"
+    INPUT_READ_STARTED = "INPUT_READ_STARTED"
+    INPUT_READ_DENIED = "INPUT_READ_DENIED"
+    INPUT_ARTIFACT_CLASSIFIED = "INPUT_ARTIFACT_CLASSIFIED"
+    INTENT_CREATED = "INTENT_CREATED"
+    CAPABILITY_SNAPSHOT_CAPTURED = "CAPABILITY_SNAPSHOT_CAPTURED"
+    RUNTIME_SPEC_RESOLVED = "RUNTIME_SPEC_RESOLVED"
+    INVOCATION_MANIFEST_RESOLVED = "INVOCATION_MANIFEST_RESOLVED"
+    PLAN_RESOLVED = "PLAN_RESOLVED"
+    PLAN_NONDETERMINISTIC = "PLAN_NONDETERMINISTIC"
+    POLICY_DECIDED = "POLICY_DECIDED"
+    APPROVAL_ISSUED = "APPROVAL_ISSUED"
+    APPROVAL_CONSUMED = "APPROVAL_CONSUMED"
+    APPROVAL_REPLAY_DENIED = "APPROVAL_REPLAY_DENIED"
+    ACTION_CLAIMED = "ACTION_CLAIMED"
+    LEASE_ACQUIRED = "LEASE_ACQUIRED"
+    RUNTIME_ATTESTED = "RUNTIME_ATTESTED"
+    RUNTIME_SPEC_MISMATCH = "RUNTIME_SPEC_MISMATCH"
+    ACTION_STARTED = "ACTION_STARTED"
+    REMOTE_INVOCATION_PREPARED = "REMOTE_INVOCATION_PREPARED"
+    REMOTE_REQUEST_DISPATCHING = "REMOTE_REQUEST_DISPATCHING"
+    REMOTE_ID_RECORDED = "REMOTE_ID_RECORDED"
+    REMOTE_INVOCATION_RUNNING = "REMOTE_INVOCATION_RUNNING"
+    REMOTE_INVOCATION_COMPLETED = "REMOTE_INVOCATION_COMPLETED"
+    REMOTE_INVOCATION_RECONCILED = "REMOTE_INVOCATION_RECONCILED"
+    REMOTE_INVOCATION_UNCERTAIN = "REMOTE_INVOCATION_UNCERTAIN"
+    OUTBOX_PREPARED = "OUTBOX_PREPARED"
+    OUTBOX_DISPATCHING = "OUTBOX_DISPATCHING"
+    OUTBOX_ACCEPTED = "OUTBOX_ACCEPTED"
+    OUTBOX_SENT = "OUTBOX_SENT"
+    OUTBOX_EFFECT_CONFIRMED = "OUTBOX_EFFECT_CONFIRMED"
+    OUTBOX_RECONCILED = "OUTBOX_RECONCILED"
+    OUTBOX_STATUS_UNKNOWN = "OUTBOX_STATUS_UNKNOWN"
+    MANUAL_RECONCILIATION_ENQUEUED = "MANUAL_RECONCILIATION_ENQUEUED"
+    BUDGET_RESERVATION_PREPARED = "BUDGET_RESERVATION_PREPARED"
+    BUDGET_RESERVED = "BUDGET_RESERVED"
+    BUDGET_CONSUMING = "BUDGET_CONSUMING"
+    BUDGET_RECONCILIATION_PENDING = "BUDGET_RECONCILIATION_PENDING"
+    BUDGET_SETTLED = "BUDGET_SETTLED"
+    BUDGET_RELEASED = "BUDGET_RELEASED"
+    BUDGET_RESERVATION_EXPIRED = "BUDGET_RESERVATION_EXPIRED"
+    BUDGET_STATUS_UNKNOWN = "BUDGET_STATUS_UNKNOWN"
+    POLICY_STALE_DETECTED = "POLICY_STALE_DETECTED"
+    POLICY_STALE_ACTION_BLOCKED = "POLICY_STALE_ACTION_BLOCKED"
+    POLICY_STALE_RECOVERY_ONLY = "POLICY_STALE_RECOVERY_ONLY"
+    EFFECT_CONFLICT_DETECTED = "EFFECT_CONFLICT_DETECTED"
+    ACTION_PREPARED = "ACTION_PREPARED"
+    EXECUTION_ATTEMPTED = "EXECUTION_ATTEMPTED"
+    EFFECT_OBSERVED = "EFFECT_OBSERVED"
+    EFFECT_RECEIPT_STORED = "EFFECT_RECEIPT_STORED"
+    ACTION_COMMITTED = "ACTION_COMMITTED"
+    ACTION_FAILED = "ACTION_FAILED"
+    ACTION_BLOCKED = "ACTION_BLOCKED"
+    CANCEL_REQUESTED = "CANCEL_REQUESTED"
+    CANCEL_CONFIRMED = "CANCEL_CONFIRMED"
+    CANCEL_UNKNOWN = "CANCEL_UNKNOWN"
+    EFFECT_UNKNOWN = "EFFECT_UNKNOWN"
+    FENCING_REJECTED = "FENCING_REJECTED"
+    RECOVERY_STARTED = "RECOVERY_STARTED"
+    RECOVERY_DECIDED = "RECOVERY_DECIDED"
+    EVALUATION_COMPLETED = "EVALUATION_COMPLETED"
+    RELEASE_DECIDED = "RELEASE_DECIDED"
+    DELEGATION_CREATED = "DELEGATION_CREATED"
+    DELEGATION_MATCHED = "DELEGATION_MATCHED"
+    DELEGATION_REJECTED = "DELEGATION_REJECTED"
+    DELEGATION_NARROWED = "DELEGATION_NARROWED"
+    DELEGATION_REVOKED = "DELEGATION_REVOKED"
+    DELEGATION_EXPIRED = "DELEGATION_EXPIRED"
+    DELEGATION_INVALIDATED = "DELEGATION_INVALIDATED"
+    DELEGATION_REVALIDATED = "DELEGATION_REVALIDATED"
+    DELEGATION_EFFECT_LINEARIZED = "DELEGATION_EFFECT_LINEARIZED"
+    DELEGATION_REVOKED_AFTER_EFFECT_START = "DELEGATION_REVOKED_AFTER_EFFECT_START"
+    INPUT_MASKING_STARTED = "INPUT_MASKING_STARTED"
+    INPUT_MASKING_SCAN1_CANDIDATES_READY = "INPUT_MASKING_SCAN1_CANDIDATES_READY"
+    INPUT_MASKING_SPANS_PROPOSED = "INPUT_MASKING_SPANS_PROPOSED"
+    INPUT_MASKING_COMPLETED = "INPUT_MASKING_COMPLETED"
+    INPUT_MASKING_REJECTED = "INPUT_MASKING_REJECTED"
+    ARTIFACT_PAYLOAD_DELETED = "ARTIFACT_PAYLOAD_DELETED"
+
+
+class ErrorClassification(Enum):
+    """§1.7 共通エラー分類。正本は errors.yaml の classification 列。"""
+
+    VALIDATION_ERROR = "VALIDATION_ERROR"
+    POLICY_DENIED = "POLICY_DENIED"
+    APPROVAL_REQUIRED = "APPROVAL_REQUIRED"
+    CONFLICT = "CONFLICT"
+    AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR"
+    ENTITLEMENT_ERROR = "ENTITLEMENT_ERROR"
+    EFFECT_UNKNOWN = "EFFECT_UNKNOWN"
+    INTERNAL_ERROR = "INTERNAL_ERROR"
+
+
+class ErrorCode(Enum):
+    """§1.7.1 Error Code Registry。正本は errors.yaml。"""
+
+    HASH_PATTERN_INVALID = "HASH_PATTERN_INVALID"
+    FIXTURE_HASH_FORMAT_INVALID = "FIXTURE_HASH_FORMAT_INVALID"
+    HASH_COLUMN_MISSING = "HASH_COLUMN_MISSING"
+    AMBIGUOUS_EXPECTED_STATE = "AMBIGUOUS_EXPECTED_STATE"
+    EXPECTED_STATE_SUBJECT_MISMATCH = "EXPECTED_STATE_SUBJECT_MISMATCH"
+    SCHEMA_CONDITIONAL_VIOLATION = "SCHEMA_CONDITIONAL_VIOLATION"
+    EVENT_ORDER_VIOLATION = "EVENT_ORDER_VIOLATION"
+    JOURNAL_REFERENCE_MISSING = "JOURNAL_REFERENCE_MISSING"
+    PHASE_LEDGER_EVENT_MISSING = "PHASE_LEDGER_EVENT_MISSING"
+    RUNTIME_SPEC_MISMATCH = "RUNTIME_SPEC_MISMATCH"
+    PLAN_NONDETERMINISTIC = "PLAN_NONDETERMINISTIC"
+    TOKEN_PROFILE_DRIFT_DETECTED = "TOKEN_PROFILE_DRIFT_DETECTED"
+    PATH_OUTSIDE_CAPABILITY = "PATH_OUTSIDE_CAPABILITY"
+    SYMLINK_DENIED = "SYMLINK_DENIED"
+    MOUNT_CROSSING_DENIED = "MOUNT_CROSSING_DENIED"
+    SPECIAL_FILE_DENIED = "SPECIAL_FILE_DENIED"
+    WORKSPACE_ON_FOREIGN_FS_DENIED = "WORKSPACE_ON_FOREIGN_FS_DENIED"
+    CONTROL_DATA_ROLE_ESCALATION = "CONTROL_DATA_ROLE_ESCALATION"
+    BLINDNESS_CONTEXT_LEAK = "BLINDNESS_CONTEXT_LEAK"
+    SANDBOX_UNAVAILABLE = "SANDBOX_UNAVAILABLE"
+    POLICY_APPROVAL_BEFORE_SOD = "POLICY_APPROVAL_BEFORE_SOD"
+    POLICY_STALE_NEW_ACTION_BLOCKED = "POLICY_STALE_NEW_ACTION_BLOCKED"
+    POLICY_STALE_EFFECT_BLOCKED = "POLICY_STALE_EFFECT_BLOCKED"
+    POLICY_STALE_PAID_BLOCKED = "POLICY_STALE_PAID_BLOCKED"
+    POLICY_STALE_EXTERNAL_EFFECT_BLOCKED = "POLICY_STALE_EXTERNAL_EFFECT_BLOCKED"
+    POLICY_STALE_RECOVERY_ONLY = "POLICY_STALE_RECOVERY_ONLY"
+    APPROVAL_KEY_PERMISSION_INVALID = "APPROVAL_KEY_PERMISSION_INVALID"
+    FAULT_INJECTION_NOT_PERMITTED = "FAULT_INJECTION_NOT_PERMITTED"
+    EMERGENCY_OPERATION_NOT_ALLOWED = "EMERGENCY_OPERATION_NOT_ALLOWED"
+    EMERGENCY_PROFILE_SIGNATURE_INVALID = "EMERGENCY_PROFILE_SIGNATURE_INVALID"
+    DEPLOY_DRAIN_REQUIRED = "DEPLOY_DRAIN_REQUIRED"
+    APPROVAL_REQUIRED = "APPROVAL_REQUIRED"
+    APPROVAL_INVALIDATED = "APPROVAL_INVALIDATED"
+    APPROVAL_REPLAY = "APPROVAL_REPLAY"
+    CLOCK_SKEW_EXCEEDED = "CLOCK_SKEW_EXCEEDED"
+    RELEASE_DECISION_REQUIRED = "RELEASE_DECISION_REQUIRED"
+    STALE_FENCING_TOKEN = "STALE_FENCING_TOKEN"
+    UNRECONCILED_EFFECT_PRESENT = "UNRECONCILED_EFFECT_PRESENT"
+    LEDGER_CHAIN_TAMPERED = "LEDGER_CHAIN_TAMPERED"
+    ARTIFACT_CONTENT_CONFLICT = "ARTIFACT_CONTENT_CONFLICT"
+    APPROVAL_ISSUER_UNTRUSTED = "APPROVAL_ISSUER_UNTRUSTED"
+    APPROVAL_SUBJECT_MISMATCH = "APPROVAL_SUBJECT_MISMATCH"
+    ENTITLEMENT_SNAPSHOT_INVALID = "ENTITLEMENT_SNAPSHOT_INVALID"
+    EFFECT_UNKNOWN = "EFFECT_UNKNOWN"
+    REMOTE_INVOCATION_UNCERTAIN = "REMOTE_INVOCATION_UNCERTAIN"
+    REMOTE_STATUS_UNKNOWN = "REMOTE_STATUS_UNKNOWN"
+    BUDGET_STATUS_UNKNOWN = "BUDGET_STATUS_UNKNOWN"
+    REMOTE_REGISTRY_NOT_DURABLE = "REMOTE_REGISTRY_NOT_DURABLE"
+    REMOTE_DISPATCH_STATE_NOT_DURABLE = "REMOTE_DISPATCH_STATE_NOT_DURABLE"
+    STORAGE_WRITE_FAILED = "STORAGE_WRITE_FAILED"
+    MIGRATION_FAILED = "MIGRATION_FAILED"
+    BACKUP_RESTORE_FAILED = "BACKUP_RESTORE_FAILED"
+    DELEGATION_SCOPE_EXCEEDED = "DELEGATION_SCOPE_EXCEEDED"
+    DELEGATION_SELF_MODIFICATION_DENIED = "DELEGATION_SELF_MODIFICATION_DENIED"
+    DELEGATION_NOT_DELEGABLE_ACTION = "DELEGATION_NOT_DELEGABLE_ACTION"
+    DELEGATION_EXPIRED = "DELEGATION_EXPIRED"
+    DELEGATION_REVOKED = "DELEGATION_REVOKED"
+    DELEGATION_SIGNATURE_INVALID = "DELEGATION_SIGNATURE_INVALID"
+    DELEGATION_PREDICATE_AMBIGUOUS = "DELEGATION_PREDICATE_AMBIGUOUS"
+    DELEGATION_TRUST_ANCHOR_INVALID = "DELEGATION_TRUST_ANCHOR_INVALID"
+    DELEGATION_SUBJECT_MISMATCH = "DELEGATION_SUBJECT_MISMATCH"
+    DELEGATION_REVOKED_MID_FLIGHT = "DELEGATION_REVOKED_MID_FLIGHT"
+    DELEGATION_REVOKED_AFTER_EFFECT_START = "DELEGATION_REVOKED_AFTER_EFFECT_START"
+    MASKING_VERIFICATION_FAILED = "MASKING_VERIFICATION_FAILED"
+    MASKING_SPAN_INVALID = "MASKING_SPAN_INVALID"
+    MASKING_CATEGORY_UNKNOWN = "MASKING_CATEGORY_UNKNOWN"
+    MASKING_RATIO_EXCEEDED = "MASKING_RATIO_EXCEEDED"
+    MASKER_OUTPUT_MALFORMED = "MASKER_OUTPUT_MALFORMED"
+    MASKER_UNAVAILABLE = "MASKER_UNAVAILABLE"
+    MASKING_GRAPHEME_SPLIT = "MASKING_GRAPHEME_SPLIT"
+    MASKING_NORMALIZATION_PROFILE_MISMATCH = "MASKING_NORMALIZATION_PROFILE_MISMATCH"
+    MASKING_NORMALIZATION_ARTIFACT_MISSING = "MASKING_NORMALIZATION_ARTIFACT_MISSING"
+    MASKING_UNSUPPORTED_CODEPOINT = "MASKING_UNSUPPORTED_CODEPOINT"
+    MASKING_SPAN_CONFLICT = "MASKING_SPAN_CONFLICT"
+    MASKER_ISOLATION_INCOMPLETE = "MASKER_ISOLATION_INCOMPLETE"
+    CONTEXT_BUDGET_EXCEEDED = "CONTEXT_BUDGET_EXCEEDED"
+
+
+ERROR_CLASSIFICATION: Final[Mapping[ErrorCode, ErrorClassification]] = MappingProxyType(
+    {
+        ErrorCode.HASH_PATTERN_INVALID: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.FIXTURE_HASH_FORMAT_INVALID: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.HASH_COLUMN_MISSING: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.AMBIGUOUS_EXPECTED_STATE: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.EXPECTED_STATE_SUBJECT_MISMATCH: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.SCHEMA_CONDITIONAL_VIOLATION: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.EVENT_ORDER_VIOLATION: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.JOURNAL_REFERENCE_MISSING: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.PHASE_LEDGER_EVENT_MISSING: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.RUNTIME_SPEC_MISMATCH: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.PLAN_NONDETERMINISTIC: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.TOKEN_PROFILE_DRIFT_DETECTED: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.PATH_OUTSIDE_CAPABILITY: ErrorClassification.POLICY_DENIED,
+        ErrorCode.SYMLINK_DENIED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.MOUNT_CROSSING_DENIED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.SPECIAL_FILE_DENIED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.WORKSPACE_ON_FOREIGN_FS_DENIED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.CONTROL_DATA_ROLE_ESCALATION: ErrorClassification.POLICY_DENIED,
+        ErrorCode.BLINDNESS_CONTEXT_LEAK: ErrorClassification.POLICY_DENIED,
+        ErrorCode.SANDBOX_UNAVAILABLE: ErrorClassification.POLICY_DENIED,
+        ErrorCode.POLICY_APPROVAL_BEFORE_SOD: ErrorClassification.POLICY_DENIED,
+        ErrorCode.POLICY_STALE_NEW_ACTION_BLOCKED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.POLICY_STALE_EFFECT_BLOCKED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.POLICY_STALE_PAID_BLOCKED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.POLICY_STALE_EXTERNAL_EFFECT_BLOCKED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.POLICY_STALE_RECOVERY_ONLY: ErrorClassification.POLICY_DENIED,
+        ErrorCode.APPROVAL_KEY_PERMISSION_INVALID: ErrorClassification.POLICY_DENIED,
+        ErrorCode.FAULT_INJECTION_NOT_PERMITTED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.EMERGENCY_OPERATION_NOT_ALLOWED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.EMERGENCY_PROFILE_SIGNATURE_INVALID: ErrorClassification.POLICY_DENIED,
+        ErrorCode.DEPLOY_DRAIN_REQUIRED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.APPROVAL_REQUIRED: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.APPROVAL_INVALIDATED: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.APPROVAL_REPLAY: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.CLOCK_SKEW_EXCEEDED: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.RELEASE_DECISION_REQUIRED: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.STALE_FENCING_TOKEN: ErrorClassification.CONFLICT,
+        ErrorCode.UNRECONCILED_EFFECT_PRESENT: ErrorClassification.CONFLICT,
+        ErrorCode.LEDGER_CHAIN_TAMPERED: ErrorClassification.CONFLICT,
+        ErrorCode.ARTIFACT_CONTENT_CONFLICT: ErrorClassification.CONFLICT,
+        ErrorCode.APPROVAL_ISSUER_UNTRUSTED: ErrorClassification.AUTHENTICATION_ERROR,
+        ErrorCode.APPROVAL_SUBJECT_MISMATCH: ErrorClassification.AUTHENTICATION_ERROR,
+        ErrorCode.ENTITLEMENT_SNAPSHOT_INVALID: ErrorClassification.ENTITLEMENT_ERROR,
+        ErrorCode.EFFECT_UNKNOWN: ErrorClassification.EFFECT_UNKNOWN,
+        ErrorCode.REMOTE_INVOCATION_UNCERTAIN: ErrorClassification.EFFECT_UNKNOWN,
+        ErrorCode.REMOTE_STATUS_UNKNOWN: ErrorClassification.EFFECT_UNKNOWN,
+        ErrorCode.BUDGET_STATUS_UNKNOWN: ErrorClassification.EFFECT_UNKNOWN,
+        ErrorCode.REMOTE_REGISTRY_NOT_DURABLE: ErrorClassification.INTERNAL_ERROR,
+        ErrorCode.REMOTE_DISPATCH_STATE_NOT_DURABLE: ErrorClassification.INTERNAL_ERROR,
+        ErrorCode.STORAGE_WRITE_FAILED: ErrorClassification.INTERNAL_ERROR,
+        ErrorCode.MIGRATION_FAILED: ErrorClassification.INTERNAL_ERROR,
+        ErrorCode.BACKUP_RESTORE_FAILED: ErrorClassification.INTERNAL_ERROR,
+        ErrorCode.DELEGATION_SCOPE_EXCEEDED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.DELEGATION_SELF_MODIFICATION_DENIED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.DELEGATION_NOT_DELEGABLE_ACTION: ErrorClassification.POLICY_DENIED,
+        ErrorCode.DELEGATION_EXPIRED: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.DELEGATION_REVOKED: ErrorClassification.APPROVAL_REQUIRED,
+        ErrorCode.DELEGATION_SIGNATURE_INVALID: ErrorClassification.AUTHENTICATION_ERROR,
+        ErrorCode.DELEGATION_PREDICATE_AMBIGUOUS: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.DELEGATION_TRUST_ANCHOR_INVALID: ErrorClassification.AUTHENTICATION_ERROR,
+        ErrorCode.DELEGATION_SUBJECT_MISMATCH: ErrorClassification.AUTHENTICATION_ERROR,
+        ErrorCode.DELEGATION_REVOKED_MID_FLIGHT: ErrorClassification.CONFLICT,
+        ErrorCode.DELEGATION_REVOKED_AFTER_EFFECT_START: ErrorClassification.CONFLICT,
+        ErrorCode.MASKING_VERIFICATION_FAILED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.MASKING_SPAN_INVALID: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKING_CATEGORY_UNKNOWN: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKING_RATIO_EXCEEDED: ErrorClassification.POLICY_DENIED,
+        ErrorCode.MASKER_OUTPUT_MALFORMED: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKER_UNAVAILABLE: ErrorClassification.POLICY_DENIED,
+        ErrorCode.MASKING_GRAPHEME_SPLIT: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKING_NORMALIZATION_PROFILE_MISMATCH: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKING_NORMALIZATION_ARTIFACT_MISSING: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKING_UNSUPPORTED_CODEPOINT: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKING_SPAN_CONFLICT: ErrorClassification.VALIDATION_ERROR,
+        ErrorCode.MASKER_ISOLATION_INCOMPLETE: ErrorClassification.POLICY_DENIED,
+        ErrorCode.CONTEXT_BUDGET_EXCEEDED: ErrorClassification.VALIDATION_ERROR,
+    }
+)
+
+
+class StateNamespace(Enum):
+    """§19.1 State名空間。正本は states.yaml。"""
+
+    ACTION_ATTEMPT = "ACTION_ATTEMPT"
+    RUN = "RUN"
+    APPROVAL_GRANT = "APPROVAL_GRANT"
+    APPROVAL_CONSUME_RESULT = "APPROVAL_CONSUME_RESULT"
+    REMOTE_INVOCATION_REGISTRY = "REMOTE_INVOCATION_REGISTRY"
+    OUTBOX_RECORD = "OUTBOX_RECORD"
+    BUDGET_RESERVATION = "BUDGET_RESERVATION"
+    INPUT_READ_DECISION = "INPUT_READ_DECISION"
+    SCHEMA_VALIDATION_RESULT = "SCHEMA_VALIDATION_RESULT"
+    SCHEMA_SUITE_RESULT = "SCHEMA_SUITE_RESULT"
+    MANIFEST_VALIDATION_RESULT = "MANIFEST_VALIDATION_RESULT"
+    EVENT_APPEND_RESULT = "EVENT_APPEND_RESULT"
+    PLAN_COMPARISON = "PLAN_COMPARISON"
+    REPAIR_DECISION = "REPAIR_DECISION"
+    LEDGER_CHAIN_VERIFICATION = "LEDGER_CHAIN_VERIFICATION"
+    APPROVAL_UI_RESULT = "APPROVAL_UI_RESULT"
+    STATIC_ANALYSIS_RESULT = "STATIC_ANALYSIS_RESULT"
+    UX_MEASUREMENT_RESULT = "UX_MEASUREMENT_RESULT"
+    EMERGENCY_RECOVERY_RESULT = "EMERGENCY_RECOVERY_RESULT"
+    PERFORMANCE_RESULT = "PERFORMANCE_RESULT"
+    STORAGE_IO_RESULT = "STORAGE_IO_RESULT"
+    MIGRATION_RESULT = "MIGRATION_RESULT"
+    BACKUP_RESTORE_RESULT = "BACKUP_RESTORE_RESULT"
+    DEPLOYMENT_RESULT = "DEPLOYMENT_RESULT"
+    GC_RESULT = "GC_RESULT"
+    DELEGATION_GRANT = "DELEGATION_GRANT"
+    MASKING_RESULT = "MASKING_RESULT"
+
+
+STATE_NAMESPACES: Final[Mapping[StateNamespace, tuple[str, ...]]] = MappingProxyType(
+    {
+        StateNamespace.ACTION_ATTEMPT: (
+            "PLANNING",
+            "WAITING_POLICY",
+            "WAITING_APPROVAL",
+            "READY",
+            "CLAIMED",
+            "LEASED",
+            "RUNTIME_VERIFIED",
+            "RUNNING",
+            "PREPARED_DURABLE",
+            "EFFECT_IN_FLIGHT",
+            "EFFECT_VERIFIED",
+            "RECEIPT_DURABLE",
+            "SUCCEEDED",
+            "FAILED_RETRYABLE",
+            "FAILED_PERMANENT",
+            "BLOCKED_POLICY",
+            "BLOCKED_APPROVAL",
+            "BLOCKED_CONFLICT",
+            "CANCELLED",
+            "CANCEL_UNKNOWN",
+            "EFFECT_UNKNOWN",
+        ),
+        StateNamespace.RUN: (
+            "CREATED",
+            "PLANNING",
+            "WAITING_APPROVAL",
+            "READY",
+            "RUNNING",
+            "RECOVERING",
+            "WAITING_RELEASE",
+            "COMPLETED",
+            "BLOCKED",
+            "BLOCKED_REPAIR_REQUIRED",
+            "CANCELLING",
+            "CANCELLED",
+            "FAILED",
+        ),
+        StateNamespace.APPROVAL_GRANT: (
+            "NOT_REQUIRED",
+            "REQUESTED",
+            "ISSUED",
+            "CONSUMED",
+            "EXPIRED",
+            "REVOKED",
+            "INVALIDATED",
+            "REPLAY_DENIED",
+        ),
+        StateNamespace.APPROVAL_CONSUME_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.REMOTE_INVOCATION_REGISTRY: (
+            "PREPARED_DURABLE",
+            "REQUEST_DISPATCHING",
+            "REMOTE_ID_RECORDED",
+            "REMOTE_INVOCATION_UNCERTAIN",
+            "RECONCILED",
+        ),
+        StateNamespace.OUTBOX_RECORD: (
+            "PREPARED_DURABLE",
+            "DISPATCHING",
+            "RECONCILED",
+            "MANUAL_RECONCILIATION",
+        ),
+        StateNamespace.BUDGET_RESERVATION: (
+            "RESERVED",
+            "PENDING_RECONCILIATION",
+            "SETTLED",
+            "STATUS_UNKNOWN",
+        ),
+        StateNamespace.INPUT_READ_DECISION: (
+            "ALLOWED",
+            "DENIED",
+        ),
+        StateNamespace.SCHEMA_VALIDATION_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.SCHEMA_SUITE_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.MANIFEST_VALIDATION_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.EVENT_APPEND_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.PLAN_COMPARISON: (
+            "ASSERTIONS_SATISFIED",
+            "ASSERTIONS_FAILED",
+        ),
+        StateNamespace.REPAIR_DECISION: (
+            "REPAIR_REQUIRED",
+            "REPAIRED",
+            "EFFECT_UNKNOWN",
+        ),
+        StateNamespace.LEDGER_CHAIN_VERIFICATION: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.APPROVAL_UI_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.STATIC_ANALYSIS_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.UX_MEASUREMENT_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.EMERGENCY_RECOVERY_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.PERFORMANCE_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.STORAGE_IO_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.MIGRATION_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.BACKUP_RESTORE_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.DEPLOYMENT_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.GC_RESULT: (
+            "ACCEPTED",
+            "REJECTED",
+        ),
+        StateNamespace.DELEGATION_GRANT: (
+            "ACTIVE",
+            "EXPIRED",
+            "REVOKED",
+            "SUPERSEDED",
+            "INVALIDATED",
+        ),
+        StateNamespace.MASKING_RESULT: (
+            "CLEAN",
+            "MASKED",
+            "REJECTED",
+        ),
+    }
+)
+
+
+CORE_SCHEMAS: Final[tuple[tuple[str, str, str], ...]] = (
+    ("EventEnvelope", "1.0.0", "schemas/core/EventEnvelope/1.0.0.schema.json"),
+    ("Run", "1.0.0", "schemas/core/Run/1.0.0.schema.json"),
+    ("ActionIntent", "1.0.0", "schemas/core/ActionIntent/1.0.0.schema.json"),
+    ("ActionAttempt", "1.0.0", "schemas/core/ActionAttempt/1.0.0.schema.json"),
+    ("ExecutionPlan", "1.0.0", "schemas/core/ExecutionPlan/1.0.0.schema.json"),
+    ("RuntimeEnvelopeSpec", "1.0.0", "schemas/core/RuntimeEnvelopeSpec/1.0.0.schema.json"),
+    ("InvocationManifest", "1.0.0", "schemas/core/InvocationManifest/1.0.0.schema.json"),
+    ("TokenBudgetPolicy", "1.0.0", "schemas/core/TokenBudgetPolicy/1.0.0.schema.json"),
+    ("TokenBudgetPolicy", "2.0.0", "schemas/core/TokenBudgetPolicy/2.0.0.schema.json"),
+    ("TokenProfileSnapshot", "1.0.0", "schemas/core/TokenProfileSnapshot/1.0.0.schema.json"),
+    ("TokenProfileSnapshot", "2.0.0", "schemas/core/TokenProfileSnapshot/2.0.0.schema.json"),
+    ("ContextFragment", "1.0.0", "schemas/core/ContextFragment/1.0.0.schema.json"),
+    ("ContextFragment", "2.0.0", "schemas/core/ContextFragment/2.0.0.schema.json"),
+    ("ContextBundle", "1.0.0", "schemas/core/ContextBundle/1.0.0.schema.json"),
+    ("ContextBundle", "2.0.0", "schemas/core/ContextBundle/2.0.0.schema.json"),
+    ("ContextSelectionReceipt", "1.0.0", "schemas/core/ContextSelectionReceipt/1.0.0.schema.json"),
+    ("ContextSelectionReceipt", "2.0.0", "schemas/core/ContextSelectionReceipt/2.0.0.schema.json"),
+    ("PolicyDecision", "1.0.0", "schemas/core/PolicyDecision/1.0.0.schema.json"),
+    ("ApprovalGrant", "1.0.0", "schemas/core/ApprovalGrant/1.0.0.schema.json"),
+    ("Lease", "1.0.0", "schemas/core/Lease/1.0.0.schema.json"),
+    ("RuntimeAttestation", "1.0.0", "schemas/core/RuntimeAttestation/1.0.0.schema.json"),
+    ("ArtifactManifest", "1.0.0", "schemas/core/ArtifactManifest/1.0.0.schema.json"),
+    ("EffectReceipt", "1.0.0", "schemas/core/EffectReceipt/1.0.0.schema.json"),
+    ("OperationJournal", "1.0.0", "schemas/core/OperationJournal/1.0.0.schema.json"),
+    ("InputReadCapability", "1.0.0", "schemas/core/InputReadCapability/1.0.0.schema.json"),
+    ("DelegationGrant", "1.0.0", "schemas/core/DelegationGrant/1.0.0.schema.json"),
+    ("MaskingReceipt", "1.0.0", "schemas/core/MaskingReceipt/1.0.0.schema.json"),
+    ("Conversation", "1.0.0", "schemas/core/Conversation/1.0.0.schema.json"),
+    ("ConversationMessage", "1.0.0", "schemas/core/ConversationMessage/1.0.0.schema.json"),
+    ("ConversationMessage", "2.0.0", "schemas/core/ConversationMessage/2.0.0.schema.json"),
+    ("ConversationSnapshot", "1.0.0", "schemas/core/ConversationSnapshot/1.0.0.schema.json"),
+    ("ApprovalConsumeResult", "1.0.0", "schemas/core/ApprovalConsumeResult/1.0.0.schema.json"),
+)
+
+
+# 論理Schema名 → 書込み可能Version。読み取り専用の旧版はここに現れない。
+CORE_SCHEMA_ACTIVE_WRITE_VERSIONS: Final[Mapping[str, str]] = MappingProxyType(
+    {
+        "ActionAttempt": "1.0.0",
+        "ActionIntent": "1.0.0",
+        "ApprovalConsumeResult": "1.0.0",
+        "ApprovalGrant": "1.0.0",
+        "ArtifactManifest": "1.0.0",
+        "ContextBundle": "2.0.0",
+        "ContextFragment": "2.0.0",
+        "ContextSelectionReceipt": "2.0.0",
+        "Conversation": "1.0.0",
+        "ConversationMessage": "2.0.0",
+        "ConversationSnapshot": "1.0.0",
+        "DelegationGrant": "1.0.0",
+        "EffectReceipt": "1.0.0",
+        "EventEnvelope": "1.0.0",
+        "ExecutionPlan": "1.0.0",
+        "InputReadCapability": "1.0.0",
+        "InvocationManifest": "1.0.0",
+        "Lease": "1.0.0",
+        "MaskingReceipt": "1.0.0",
+        "OperationJournal": "1.0.0",
+        "PolicyDecision": "1.0.0",
+        "Run": "1.0.0",
+        "RuntimeAttestation": "1.0.0",
+        "RuntimeEnvelopeSpec": "1.0.0",
+        "TokenBudgetPolicy": "2.0.0",
+        "TokenProfileSnapshot": "2.0.0",
+    }
+)

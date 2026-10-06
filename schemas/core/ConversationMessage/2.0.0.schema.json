@@ -1,0 +1,84 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/ConversationMessage/2.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_artifact_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "conversation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "message_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "SYSTEM_CONTROL",
+        "DEVELOPER_CONTROL",
+        "USER_TASK",
+        "TOOL_DEFINITION",
+        "VERIFIED_REFERENCE_DATA",
+        "UNTRUSTED_ARTIFACT_DATA",
+        "UNTRUSTED_PROVIDER_DATA"
+      ],
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "ConversationMessage"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "message_id",
+    "conversation_id",
+    "role",
+    "sequence_number",
+    "content_artifact_hash"
+  ],
+  "title": "ConversationMessage",
+  "type": "object"
+}

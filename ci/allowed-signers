@@ -1,0 +1,10 @@
+# 信頼するRelease署名鍵の一覧（OpenSSH allowed signers形式）。
+#
+# 初期状態では信頼する鍵を1件も登録していない。以前の所有者の鍵を
+# 既定で信頼しないためである。この状態の tools/verify_trust_anchor.py は
+# どのTagも受け付けず、判定は UNTRUSTED_REVIEW_ONLY のまま止まる。
+#
+# 自分の鍵を登録する手順は docs/TRUST-ANCHOR-SETUP.md を参照すること。
+# 鍵を1行足しただけでは信頼根にならない。このFileと検証器の期待Hashを
+# Repositoryの外（Protected Variable、または受領者のオフライン照合）で
+# 固定して初めて外部固定になる。

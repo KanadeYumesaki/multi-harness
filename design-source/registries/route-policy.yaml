@@ -1,0 +1,168 @@
+# Provider Route Policyの正本。Owner Decision CHAT-3-A。
+#
+# 正本。
+# 経路の可否を散文とコードへ直書きしない（不変条件#18）。
+#
+# CHAT-3-Aは「`masking-policy.yaml`と同じ位置づけでRoute Policyを持つ」と決めた。
+# `docs/IMPLEMENTATION-ROADMAP-LLM-FIRST.md`にしか無かった`LOCAL_ONLY`／
+# `EXTERNAL_ALLOWED`を、ここでHash対象の正本へ移す。文書の語はTrust Anchorを持たない。
+#
+# **このFileは契約であって実装ではない。** 本Taskでは実Providerへ接続しない。
+
+route_policy_version: 1
+
+# ---------------------------------------------------------------------------
+# 1. 経路種別。LOCAL_ONLY相当の正式な語彙
+# ---------------------------------------------------------------------------
+# Route Classは「どこまで出てよいか」を決める。Provider自身の申告では決めない。
+route_classes:
+  - id: LOCAL_ONLY
+    description: Process内・同一Host内で完結する。Networkへ出ない
+    masking_gate_required: false
+    external_egress: false
+  - id: CONTRACTED_INTERNAL
+    description: 契約済みの自社LLM。Networkへ出るが組織境界を越えない
+    masking_gate_required: true
+    external_egress: false
+  - id: EXTERNAL_ALLOWED
+    description: 契約済みの外部Provider。組織境界を越える
+    masking_gate_required: true
+    external_egress: true
+
+# 既定はもっとも狭い経路である。宣言が無いRouteはLOCAL_ONLYとして扱う。
+default_route_class: LOCAL_ONLY
+
+# ---------------------------------------------------------------------------
+# 2. Provider allowlist
+# ---------------------------------------------------------------------------
+# **列挙されていないProviderは許可されない。** 既定拒否である。
+# MVP0-Aで`ProviderPort`が受け付けるのは`mock`だけであり、それ以外は
+# `RUNTIME_SPEC_MISMATCH`で拒否される。この表はその拒否の正本側である。
+providers:
+  - id: mock
+    route_class: LOCAL_ONLY
+    enabled: true
+    contract_state: NOT_REQUIRED
+    note: Network・認証・請求を伴わない。MVP0-Aで唯一許可されるProvider
+    capabilities:
+      - PROPOSE
+
+# 外部Providerは、この表へ追加され、かつ§3の全条件を満たしたときにだけ許可される。
+# 追加は設計本文とこのFileを同じTaskで更新して行う。
+
+# ---------------------------------------------------------------------------
+# 3. 明示有効化の要件
+# ---------------------------------------------------------------------------
+# **すべて満たしたときだけ**そのProviderへ送ってよい。1つでも欠ければ拒否する。
+# 「前回送れたから」を根拠にしない（不変条件#11と同じ考え方）。
+enablement_requirements:
+  - id: LISTED_IN_ALLOWLIST
+    description: §2のprovidersに登録されている
+  - id: EXPLICITLY_ENABLED
+    description: '設定で`enabled: true`が明示されている。既定値による有効化を認めない'
+  - id: CONTRACT_ACTIVE
+    description: contract_stateがACTIVEである（自社・外部）。期限切れは拒否
+  - id: CAPABILITY_DECLARED
+    description: 要求するCapabilityがそのProviderのcapabilitiesに載っている
+  - id: SECRET_RESOLVABLE
+    description: SecretRefがKeyringから解決できる。解決できなければFail-Closed
+  - id: MASKING_GATE_PASSED
+    description: route_classがmasking_gate_required=trueなら§4を満たしている
+
+# 契約状態の語彙。Provider自身の申告ではなく、こちら側の記録である。
+contract_states:
+  - id: NOT_REQUIRED
+    description: 外部送信を伴わないため契約を要しない
+    may_send: true
+  - id: ACTIVE
+    description: 契約が有効である
+    may_send: true
+  - id: EXPIRED
+    description: 契約が切れている
+    may_send: false
+  - id: ABSENT
+    description: 契約が無い
+    may_send: false
+
+# ---------------------------------------------------------------------------
+# 4. Masking Gate必須条件
+# ---------------------------------------------------------------------------
+# 外部へ出るRouteは必ずMasking Pipelineを通す（ADR-007）。
+# 判定はMASKING_RESULT State名前空間の値で行う。
+masking_gate:
+  required_for_route_classes:
+    - CONTRACTED_INTERNAL
+    - EXTERNAL_ALLOWED
+  allowed_results:
+    - CLEAN
+    - MASKED
+  blocked_results:
+    - REJECTED
+  # REJECTEDは送らない。マスクして送り直すこともしない。
+  # Secret／Credential／NATIONAL_ID／SPECIAL_CATEGORY_DATAはマスクせずRejectする
+  # （不変条件#21）。
+  reject_is_terminal: true
+  # 決定論スキャナが合否を決める。LLMはマスクを増やせるが通せない。
+  decided_by: DETERMINISTIC_SCANNER
+
+# ---------------------------------------------------------------------------
+# 5. Fallback可能な障害
+# ---------------------------------------------------------------------------
+# **一時障害だけ**が対象である。もう一度やれば結果が変わりうるものに限る。
+# error_codeがnullのものは、現行Registryに該当Codeが無いという意味である。
+# 推測でCodeを足さない。Provider Adapterを実装するTaskで採番する。
+fallback_eligible_failures:
+  - id: PROVIDER_TIMEOUT
+    error_code: null
+    description: 応答が期限内に返らない
+  - id: PROVIDER_RATE_LIMITED
+    error_code: null
+    description: Rate Limitに当たった
+  - id: PROVIDER_TEMPORARILY_UNAVAILABLE
+    error_code: null
+    description: 一時的に受け付けられない（5xx相当）
+
+# ---------------------------------------------------------------------------
+# 6. Fallback禁止の障害
+# ---------------------------------------------------------------------------
+# **別のProviderへ回して隠さない。** 回しても同じ結果になるか、
+# 回すこと自体が制御の迂回になる。
+fallback_forbidden_failures:
+  - id: AUTHENTICATION_FAILED
+    error_code: null
+    description: 認証に失敗した。別Providerへ回しても正当化されない
+  - id: POLICY_VIOLATION
+    error_code: null
+    description: Policyに反する。回避先を探す行為そのものが迂回である
+  - id: MASKING_REJECTED
+    error_code: MASKING_VERIFICATION_FAILED
+    description: Masking Gateで拒否された。送ってよい先は無い
+  - id: MALFORMED_INPUT
+    error_code: null
+    description: 入力が不備である。同じ入力は他所でも通らない
+  - id: PROVIDER_NOT_ALLOWED
+    error_code: RUNTIME_SPEC_MISMATCH
+    description: allowlistに無い、または有効化されていない
+  - id: SECRET_UNRESOLVABLE
+    error_code: null
+    description: SecretRefを解決できない。Fail-Closedで止める
+
+# ---------------------------------------------------------------------------
+# 7. Fallbackの実行規則
+# ---------------------------------------------------------------------------
+fallback_rules:
+  # 1回の実行の途中でProviderを差し替えない。判定根拠が混ざる。
+  switch_during_attempt: FORBIDDEN
+  # Fallback先も§3をすべて満たさなければならない。委任による委任を作らない。
+  fallback_target_requires_full_enablement: true
+  # 判定不能はFallbackではない。EFFECT_UNKNOWNで止める（不変条件#9）。
+  unknown_state_is_not_fallback: true
+
+# ---------------------------------------------------------------------------
+# 8. Provider自己申告の扱い
+# ---------------------------------------------------------------------------
+# Providerが「安全である」「契約済みである」と述べても、それは入力であって
+# 判定ではない。判定はこのFileと、こちら側の契約記録だけで行う。
+provider_self_assertion:
+  accepted_as_evidence: false
+  note: Capability申告はallowlistとの照合対象であって、許可の根拠ではない

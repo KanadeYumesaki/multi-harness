@@ -1,0 +1,5174 @@
+{
+  "snapshot_version": "1.4",
+  "hash_profile": "json-sorted-compact-utf8/1",
+  "design_version": "1.25",
+  "design_sha256": "sha256:cef978e653bbf16b0f3c1cf9b3125829c4d3fea742db2f93753016c64f889f31",
+  "generated_at": "2026-09-07T06:00:34Z",
+  "source_registry_hashes": {
+    "chat-context-policy.yaml": "sha256:e621e6986aec2ff7f7797dbc6b2850a4b2dd5befc476d3e991b6f604ee363733",
+    "delegation-floor.yaml": "sha256:da70291bd91e134a0c4dc44c817133752e24ed7e1c4280549a6999000955607a",
+    "errors.yaml": "sha256:d785f23d05f61bdae7e975bafa6a697ef66cee00245c36ad43fbef4c5b1ef844",
+    "events.yaml": "sha256:938d45585efd955c3a6c83ebfa2d69db2ba4eed766495bc01fd8d30ad12f25d3",
+    "evidence-areas.yaml": "sha256:4b8b2f80c3a2e89484925131af83a36ac546afb2abee8cdf4c2e01fdb712e105",
+    "evidence-schemas.yaml": "sha256:d81bc2567df349b28741c8135a788966627f1a2c4bf7d76f1803f32adb1cdbca",
+    "filesystem-policy.yaml": "sha256:9b5b19d3673eaa507fc0f8f40af5cb6b74523922bc2e6a0596ab93f319fa1a99",
+    "gates.yaml": "sha256:88b7d5d559fc326637c2acfaeaa765b94d709f73de2ef59b2a903f6b82d4b148",
+    "masking-policy.yaml": "sha256:06695af16188c2717661eda006fead21b38f56ccb1843288dba223f1ce6db7ee",
+    "route-policy.yaml": "sha256:3c9ca877c05dab04bbf5ab0b470478d4c82ffeac16195c9a54ab165e56817046",
+    "schemas.yaml": "sha256:db46d4121545ae959d193ba399f930d955866a2d4564b5b7933b6030221ec2e0",
+    "states.yaml": "sha256:e68d5af890e9259219c24c8c159e981ca46ead5aa73eb91bfab8f7398efcfa92",
+    "tests.yaml": "sha256:9cc0eecfc171a70c48f94e72110f3c4aadb96b7b1525d39d519c5a2ec0f07d63"
+  },
+  "implemented_phases": [
+    "MVP0-A",
+    "MVP0-B",
+    "MVP1-A",
+    "MVP0-C",
+    "MVP1-D"
+  ],
+  "release_enabled_phases": [
+    "MVP0-A"
+  ],
+  "reference_phases": [
+    "MVP1-B",
+    "MVP1-C",
+    "MVP1-E",
+    "MVP2-A",
+    "MVP2-B",
+    "BLIND_REVIEWER",
+    "ENTERPRISE"
+  ],
+  "evidence_areas": [
+    {
+      "area": "approval_ux",
+      "evidence_path": "approval/approval-ux-report.json",
+      "human_measured": true,
+      "phase_scope": [
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "reuse_bound_subtree": "src/harness/presentation/cli"
+    },
+    {
+      "area": "backup_restore",
+      "evidence_path": "migration/backup-restore-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "core_schema_suite",
+      "evidence_path": "schema/schema-suite-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "environment",
+      "evidence_path": "environment/runtime-environment.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "fault_injection_recovery",
+      "evidence_path": "fault/fault-matrix-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "linux_safe_reader",
+      "evidence_path": "filesystem/safe-reader-corpus-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "performance",
+      "evidence_path": "performance/performance-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "runtime_attestation",
+      "evidence_path": "runtime/runtime-attestation.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "secret_canary",
+      "evidence_path": "security/secret-canary-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "source_static_analysis",
+      "evidence_path": "source/static-analysis.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "spec_lint",
+      "evidence_path": "source/spec-lint-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "sqlite_migration",
+      "evidence_path": "migration/migration-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "unit_case_suite",
+      "evidence_path": "cases/unit-case-suite-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    },
+    {
+      "area": "verifier_self_test",
+      "evidence_path": "tooling/verifier-self-test-report.json",
+      "human_measured": false,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ]
+    }
+  ],
+  "scopes": {
+    "MVP0-A": {
+      "required_case_count": 108,
+      "required_test_id_count": 31,
+      "required_cases": [
+        [
+          "AT-APPROVAL-001",
+          "REPLAY"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_LOSER"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_WINNER"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "NO_BYPASS"
+        ],
+        [
+          "AT-CLOCK-SKEW-001",
+          "EXCEEDED"
+        ],
+        [
+          "AT-CONFIG-001",
+          "DRIFT"
+        ],
+        [
+          "AT-CONTROL-DATA-001",
+          "ARTIFACT_INSTRUCTION"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_EXECUTION_EXPECTED_HASH"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_EXECUTION_UNKNOWN"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_OBSERVED"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_PREPARED_ABSENCE_PROVEN"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_RECEIPT"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_REPLACE"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_EXECUTION"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_PREPARED"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_RECEIPT"
+        ],
+        [
+          "AT-CRASH-001",
+          "LEDGER_APPEND"
+        ],
+        [
+          "AT-CRASH-001",
+          "TEMP_BEFORE_FSYNC"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "AUDIENCE_MISMATCH"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "AUDIT_TRAIL_COMPLETE"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "DERIVED_APPROVAL_IS_SINGLE_USE"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "DESTRUCTIVE_NEVER_DELEGATED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "POLICY_HASH_CHANGED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "PREDICATE_FIELD_CHANGED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "REVOKE_AFTER_EFFECT_LINEARIZATION"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "REVOKE_BEFORE_EFFECT_LINEARIZATION"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "REVOKE_IMMEDIATE"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "SCOPE_EXCEEDED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "SELF_MODIFICATION"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "STALE_POLICY_NO_AUTO"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "TRUST_ANCHOR_ROLLBACK"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "WIDEN_DENIED"
+        ],
+        [
+          "AT-DRAIN-001",
+          "ACTIVE_RUN_BLOCKS"
+        ],
+        [
+          "AT-DRAIN-001",
+          "DRAINED_DEPLOY"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "ALLOWLIST"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "BAD_SIGNATURE"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "DENYLIST"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "LEDGER_EVENT_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "ACTION_STARTED_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "SEQUENCE_REGRESSION"
+        ],
+        [
+          "AT-FAULT-GUARD-001",
+          "POLICY_DENIED"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "ARTIFACT_ENOSPC"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "FSYNC_EIO"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "SQLITE_ENOSPC"
+        ],
+        [
+          "AT-FENCE-001",
+          "STALE_WORKER"
+        ],
+        [
+          "AT-GC-001",
+          "ORPHAN_CANDIDATE"
+        ],
+        [
+          "AT-GC-001",
+          "RAW_RETENTION"
+        ],
+        [
+          "AT-GC-001",
+          "REFERENCED_KEEP"
+        ],
+        [
+          "AT-INPUT-PATH-001",
+          "MOUNT_CROSSING"
+        ],
+        [
+          "AT-INPUT-PATH-001",
+          "SPECIAL_FILE"
+        ],
+        [
+          "AT-INPUT-PATH-001",
+          "SYMLINK"
+        ],
+        [
+          "AT-LEDGER-TAMPER-001",
+          "ONE_BYTE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "MIXED_SUBJECT_STATE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "VALID_TYPED_SUBJECT"
+        ],
+        [
+          "AT-MASKING-001",
+          "GRAPHEME_SPLIT"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASKER_ISOLATION_INCOMPLETE"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASKER_OUTPUT_MALFORMED"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASKER_UNAVAILABLE_FAIL_CLOSED"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASK_RATIO_BOUNDARY"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASK_RATIO_EXCEEDED"
+        ],
+        [
+          "AT-MASKING-001",
+          "NATIONAL_ID_REJECTED_NOT_MASKED"
+        ],
+        [
+          "AT-MASKING-001",
+          "NORMALIZATION_PROFILE_MISMATCH"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_AUTO_DOWNGRADE"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_LLM_PATH"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_SECRET_IN_RECEIPT"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_SECRET_IN_RECEIPT_REJECTED"
+        ],
+        [
+          "AT-MASKING-001",
+          "PROMPT_INJECTION"
+        ],
+        [
+          "AT-MASKING-001",
+          "REWRITER_DETERMINISM"
+        ],
+        [
+          "AT-MASKING-001",
+          "SCAN1_CANDIDATE_UNION"
+        ],
+        [
+          "AT-MASKING-001",
+          "SECOND_SCAN_IS_THE_GATE"
+        ],
+        [
+          "AT-MASKING-001",
+          "SECRET_REJECTED_NOT_MASKED"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_CATEGORY_UNKNOWN"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_CONFLICT_PARTIAL"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_CONTAINMENT_EXPANSION"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_OUT_OF_RANGE"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_OVERLAP_OR_NESTED"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_UNSORTED"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_NORMALIZATION"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_PROFILE_ARTIFACT_MISSING"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_PROFILE_CROSS_PYTHON"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_UCD14_ASSIGNED_GUARD"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "BACKUP_RESTORE"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "FRESH_INSTALL"
+        ],
+        [
+          "AT-PATH-001",
+          "LINUX_ESCAPE"
+        ],
+        [
+          "AT-PERF-001",
+          "CONTROL_OVERHEAD"
+        ],
+        [
+          "AT-PLAN-001",
+          "TAMPER"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "NONDETERMINISTIC_OUTPUT"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "SAME_INPUT"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "INFLIGHT_ATTEMPTED"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_EXTERNAL_EFFECT"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_LOCAL_READ"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_PAID"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_WORKSPACE_WRITE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "NO_RELEASE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_CANCELLED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_COMPLETED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_FAILED"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "ALL_VALID"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "INVALID_HASH"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "MISSING_CROSS_REFERENCE"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "CONSUMED_MISSING_ATTEMPT"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "READY_VALID"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "RUNNING_MISSING_ATTESTATION"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "SUCCEEDED_MISSING_RECEIPT"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "AMBIGUOUS_EXPECTED"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_COLUMN_MISSING"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_FORMAT"
+        ],
+        [
+          "AT-WSL-BOUNDARY-001",
+          "FOREIGN_FS"
+        ]
+      ],
+      "required_gate_ids": [
+        "MVP0A-GATE-01",
+        "MVP0A-GATE-02",
+        "MVP0A-GATE-03",
+        "MVP0A-GATE-04",
+        "MVP0A-GATE-05",
+        "MVP0A-GATE-06",
+        "MVP0A-GATE-07",
+        "MVP0A-GATE-08",
+        "MVP0A-GATE-09",
+        "MVP0A-GATE-10",
+        "MVP0A-GATE-11",
+        "MVP0A-GATE-12",
+        "MVP0A-GATE-13",
+        "MVP0A-GATE-14",
+        "MVP0A-GATE-15",
+        "MVP0A-GATE-16",
+        "MVP0A-GATE-17",
+        "MVP0A-GATE-18",
+        "MVP0A-GATE-19",
+        "MVP0A-GATE-20",
+        "MVP0A-GATE-21",
+        "MVP0A-GATE-22",
+        "MVP0A-GATE-23",
+        "MVP0A-GATE-24",
+        "MVP0A-GATE-25",
+        "MVP0A-GATE-26",
+        "MVP0A-GATE-27",
+        "MVP0A-GATE-28",
+        "MVP0A-GATE-29",
+        "MVP0A-GATE-30",
+        "MVP0A-GATE-31",
+        "MVP0A-GATE-32",
+        "MVP0A-GATE-33",
+        "MVP0A-GATE-34",
+        "MVP0A-GATE-35",
+        "MVP0A-GATE-36",
+        "MVP0A-GATE-37",
+        "MVP0A-GATE-38",
+        "MVP0A-GATE-39",
+        "MVP0A-GATE-40",
+        "MVP0A-GATE-41",
+        "MVP0A-GATE-42",
+        "MVP0A-GATE-43",
+        "MVP0A-GATE-44",
+        "MVP0A-GATE-45"
+      ],
+      "required_gate_count": 45,
+      "test_manifest_hash": "sha256:6a2937c21decb4a65ac72eb2992f1bc795f19b19830efaa7d8ab0af9f0ee2429",
+      "required_evidence_areas": [
+        "backup_restore",
+        "core_schema_suite",
+        "environment",
+        "fault_injection_recovery",
+        "linux_safe_reader",
+        "performance",
+        "runtime_attestation",
+        "secret_canary",
+        "source_static_analysis",
+        "spec_lint",
+        "sqlite_migration",
+        "unit_case_suite",
+        "verifier_self_test"
+      ],
+      "required_evidence_area_count": 13
+    },
+    "MVP0-B": {
+      "required_case_count": 69,
+      "required_test_id_count": 22,
+      "required_cases": [
+        [
+          "AT-APPROVAL-001",
+          "REPLAY"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_LOSER"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_WINNER"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "DEFAULT_FIELDS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "MEDIAN_TIME"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "NO_BYPASS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "REAPPROVAL_DIFF"
+        ],
+        [
+          "AT-CLOCK-SKEW-001",
+          "EXCEEDED"
+        ],
+        [
+          "AT-CONFIG-001",
+          "DRIFT"
+        ],
+        [
+          "AT-CONTROL-DATA-001",
+          "ARTIFACT_INSTRUCTION"
+        ],
+        [
+          "AT-DRAIN-001",
+          "ACTIVE_RUN_BLOCKS"
+        ],
+        [
+          "AT-DRAIN-001",
+          "DRAINED_DEPLOY"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "LEDGER_EVENT_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "ACTION_STARTED_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "SEQUENCE_REGRESSION"
+        ],
+        [
+          "AT-GC-001",
+          "ORPHAN_CANDIDATE"
+        ],
+        [
+          "AT-GC-001",
+          "RAW_RETENTION"
+        ],
+        [
+          "AT-GC-001",
+          "REFERENCED_KEEP"
+        ],
+        [
+          "AT-LEDGER-TAMPER-001",
+          "ONE_BYTE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "MIXED_SUBJECT_STATE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "VALID_TYPED_SUBJECT"
+        ],
+        [
+          "AT-MASKING-001",
+          "GRAPHEME_SPLIT"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASKER_ISOLATION_INCOMPLETE"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASKER_OUTPUT_MALFORMED"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASKER_UNAVAILABLE_FAIL_CLOSED"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASK_RATIO_BOUNDARY"
+        ],
+        [
+          "AT-MASKING-001",
+          "MASK_RATIO_EXCEEDED"
+        ],
+        [
+          "AT-MASKING-001",
+          "NATIONAL_ID_REJECTED_NOT_MASKED"
+        ],
+        [
+          "AT-MASKING-001",
+          "NORMALIZATION_PROFILE_MISMATCH"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_AUTO_DOWNGRADE"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_LLM_PATH"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_SECRET_IN_RECEIPT"
+        ],
+        [
+          "AT-MASKING-001",
+          "NO_SECRET_IN_RECEIPT_REJECTED"
+        ],
+        [
+          "AT-MASKING-001",
+          "PROMPT_INJECTION"
+        ],
+        [
+          "AT-MASKING-001",
+          "REWRITER_DETERMINISM"
+        ],
+        [
+          "AT-MASKING-001",
+          "SCAN1_CANDIDATE_UNION"
+        ],
+        [
+          "AT-MASKING-001",
+          "SECOND_SCAN_IS_THE_GATE"
+        ],
+        [
+          "AT-MASKING-001",
+          "SECRET_REJECTED_NOT_MASKED"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_CATEGORY_UNKNOWN"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_CONFLICT_PARTIAL"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_CONTAINMENT_EXPANSION"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_OUT_OF_RANGE"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_OVERLAP_OR_NESTED"
+        ],
+        [
+          "AT-MASKING-001",
+          "SPAN_UNSORTED"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_NORMALIZATION"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_PROFILE_ARTIFACT_MISSING"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_PROFILE_CROSS_PYTHON"
+        ],
+        [
+          "AT-MASKING-001",
+          "UNICODE_UCD14_ASSIGNED_GUARD"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "BACKUP_RESTORE"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "FRESH_INSTALL"
+        ],
+        [
+          "AT-PERF-001",
+          "CONTROL_OVERHEAD"
+        ],
+        [
+          "AT-PLAN-001",
+          "TAMPER"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "NONDETERMINISTIC_OUTPUT"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "SAME_INPUT"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "NO_RELEASE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_CANCELLED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_COMPLETED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_FAILED"
+        ],
+        [
+          "AT-SANDBOX-001",
+          "UNAVAILABLE"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "ALL_VALID"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "INVALID_HASH"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "MISSING_CROSS_REFERENCE"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "CONSUMED_MISSING_ATTEMPT"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "READY_VALID"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "RUNNING_MISSING_ATTESTATION"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "SUCCEEDED_MISSING_RECEIPT"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "AMBIGUOUS_EXPECTED"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_COLUMN_MISSING"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_FORMAT"
+        ]
+      ],
+      "required_gate_ids": [],
+      "required_gate_count": 0,
+      "test_manifest_hash": "sha256:6d6debe06e5ec0f35a8a3cf4982ab15b354b65d5daddcfc23bd9c99f82cb5c96",
+      "required_evidence_areas": [
+        "approval_ux",
+        "backup_restore",
+        "core_schema_suite",
+        "environment",
+        "fault_injection_recovery",
+        "linux_safe_reader",
+        "performance",
+        "runtime_attestation",
+        "secret_canary",
+        "source_static_analysis",
+        "spec_lint",
+        "sqlite_migration",
+        "unit_case_suite",
+        "verifier_self_test"
+      ],
+      "required_evidence_area_count": 14
+    },
+    "MVP1-A": {
+      "required_case_count": 80,
+      "required_test_id_count": 26,
+      "required_cases": [
+        [
+          "AT-APPROVAL-001",
+          "REPLAY"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_LOSER"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_WINNER"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "DEFAULT_FIELDS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "MEDIAN_TIME"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "NO_BYPASS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "REAPPROVAL_DIFF"
+        ],
+        [
+          "AT-CLOCK-SKEW-001",
+          "EXCEEDED"
+        ],
+        [
+          "AT-CONTROL-DATA-001",
+          "ARTIFACT_INSTRUCTION"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_EXECUTION_EXPECTED_HASH"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_EXECUTION_UNKNOWN"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_OBSERVED"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_PREPARED_ABSENCE_PROVEN"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_RECEIPT"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_REPLACE"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_EXECUTION"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_PREPARED"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_RECEIPT"
+        ],
+        [
+          "AT-CRASH-001",
+          "LEDGER_APPEND"
+        ],
+        [
+          "AT-CRASH-001",
+          "TEMP_BEFORE_FSYNC"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "AUDIENCE_MISMATCH"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "AUDIT_TRAIL_COMPLETE"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "DERIVED_APPROVAL_IS_SINGLE_USE"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "DESTRUCTIVE_NEVER_DELEGATED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "POLICY_HASH_CHANGED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "PREDICATE_FIELD_CHANGED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "REVOKE_AFTER_EFFECT_LINEARIZATION"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "REVOKE_BEFORE_EFFECT_LINEARIZATION"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "REVOKE_IMMEDIATE"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "SCOPE_EXCEEDED"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "SELF_MODIFICATION"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "STALE_POLICY_NO_AUTO"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "TRUST_ANCHOR_ROLLBACK"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "WIDEN_DENIED"
+        ],
+        [
+          "AT-DRAIN-001",
+          "ACTIVE_RUN_BLOCKS"
+        ],
+        [
+          "AT-DRAIN-001",
+          "DRAINED_DEPLOY"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "ALLOWLIST"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "BAD_SIGNATURE"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "DENYLIST"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "LEDGER_EVENT_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "ACTION_STARTED_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "SEQUENCE_REGRESSION"
+        ],
+        [
+          "AT-FAULT-GUARD-001",
+          "POLICY_DENIED"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "ARTIFACT_ENOSPC"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "FSYNC_EIO"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "SQLITE_ENOSPC"
+        ],
+        [
+          "AT-GC-001",
+          "ORPHAN_CANDIDATE"
+        ],
+        [
+          "AT-GC-001",
+          "RAW_RETENTION"
+        ],
+        [
+          "AT-GC-001",
+          "REFERENCED_KEEP"
+        ],
+        [
+          "AT-LEDGER-TAMPER-001",
+          "ONE_BYTE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "MIXED_SUBJECT_STATE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "VALID_TYPED_SUBJECT"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "BACKUP_RESTORE"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "FRESH_INSTALL"
+        ],
+        [
+          "AT-PERF-001",
+          "CONTROL_OVERHEAD"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "NONDETERMINISTIC_OUTPUT"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "SAME_INPUT"
+        ],
+        [
+          "AT-POLICY-APPROVAL-001",
+          "EFFECT_BEFORE_SOD"
+        ],
+        [
+          "AT-POLICY-APPROVAL-001",
+          "PAID_BEFORE_SOD"
+        ],
+        [
+          "AT-POLICY-APPROVAL-001",
+          "WRITE_BEFORE_SOD"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "INFLIGHT_ATTEMPTED"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_EXTERNAL_EFFECT"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_LOCAL_READ"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_PAID"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_WORKSPACE_WRITE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "NO_RELEASE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_CANCELLED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_COMPLETED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_FAILED"
+        ],
+        [
+          "AT-SANDBOX-001",
+          "UNAVAILABLE"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "ALL_VALID"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "INVALID_HASH"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "MISSING_CROSS_REFERENCE"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "CONSUMED_MISSING_ATTEMPT"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "READY_VALID"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "RUNNING_MISSING_ATTESTATION"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "SUCCEEDED_MISSING_RECEIPT"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "AMBIGUOUS_EXPECTED"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_COLUMN_MISSING"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_FORMAT"
+        ]
+      ],
+      "required_gate_ids": [],
+      "required_gate_count": 0,
+      "test_manifest_hash": "sha256:6b920b386fd4fdc4b8fa3398b2f2c3a619371333369f1fe0b9546914a73064e4",
+      "required_evidence_areas": [
+        "approval_ux",
+        "backup_restore",
+        "core_schema_suite",
+        "environment",
+        "fault_injection_recovery",
+        "linux_safe_reader",
+        "performance",
+        "runtime_attestation",
+        "secret_canary",
+        "source_static_analysis",
+        "spec_lint",
+        "sqlite_migration",
+        "unit_case_suite",
+        "verifier_self_test"
+      ],
+      "required_evidence_area_count": 14
+    },
+    "MVP0-C": {
+      "required_case_count": 53,
+      "required_test_id_count": 24,
+      "required_cases": [
+        [
+          "AT-APPROVAL-001",
+          "REPLAY"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_LOSER"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_WINNER"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "DEFAULT_FIELDS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "MEDIAN_TIME"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "NO_BYPASS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "REAPPROVAL_DIFF"
+        ],
+        [
+          "AT-AUTH-001",
+          "ROUTE_CHANGED"
+        ],
+        [
+          "AT-CLOCK-SKEW-001",
+          "EXCEEDED"
+        ],
+        [
+          "AT-CONFIG-001",
+          "DRIFT"
+        ],
+        [
+          "AT-CONTROL-DATA-001",
+          "ARTIFACT_INSTRUCTION"
+        ],
+        [
+          "AT-DRAIN-001",
+          "ACTIVE_RUN_BLOCKS"
+        ],
+        [
+          "AT-DRAIN-001",
+          "DRAINED_DEPLOY"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "ALLOWLIST"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "BAD_SIGNATURE"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "DENYLIST"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "LEDGER_EVENT_MISSING"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "REMOTE_UNCERTAIN"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "ACTION_STARTED_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "SEQUENCE_REGRESSION"
+        ],
+        [
+          "AT-GC-001",
+          "ORPHAN_CANDIDATE"
+        ],
+        [
+          "AT-GC-001",
+          "RAW_RETENTION"
+        ],
+        [
+          "AT-GC-001",
+          "REFERENCED_KEEP"
+        ],
+        [
+          "AT-LEDGER-TAMPER-001",
+          "ONE_BYTE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "MIXED_SUBJECT_STATE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "VALID_TYPED_SUBJECT"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "BACKUP_RESTORE"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "FRESH_INSTALL"
+        ],
+        [
+          "AT-PERF-001",
+          "CONTROL_OVERHEAD"
+        ],
+        [
+          "AT-PLAN-001",
+          "TAMPER"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "NONDETERMINISTIC_OUTPUT"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "SAME_INPUT"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "INFLIGHT_ATTEMPTED"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_EXTERNAL_EFFECT"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_LOCAL_READ"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_PAID"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_WORKSPACE_WRITE"
+        ],
+        [
+          "AT-REMOTE-PREP-001",
+          "DISPATCH_STATE_MISSING"
+        ],
+        [
+          "AT-REMOTE-PREP-001",
+          "REGISTRY_MISSING"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "NO_RELEASE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_CANCELLED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_COMPLETED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_FAILED"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "ALL_VALID"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "INVALID_HASH"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "MISSING_CROSS_REFERENCE"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "CONSUMED_MISSING_ATTEMPT"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "READY_VALID"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "RUNNING_MISSING_ATTESTATION"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "SUCCEEDED_MISSING_RECEIPT"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "AMBIGUOUS_EXPECTED"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_COLUMN_MISSING"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_FORMAT"
+        ]
+      ],
+      "required_gate_ids": [],
+      "required_gate_count": 0,
+      "test_manifest_hash": "sha256:19bdf1b4f7d4ad1189c8033c685130dd92caf0f35e90f25e6a3655b325ff5236",
+      "required_evidence_areas": [
+        "approval_ux",
+        "backup_restore",
+        "core_schema_suite",
+        "environment",
+        "fault_injection_recovery",
+        "linux_safe_reader",
+        "performance",
+        "runtime_attestation",
+        "secret_canary",
+        "source_static_analysis",
+        "spec_lint",
+        "sqlite_migration",
+        "unit_case_suite",
+        "verifier_self_test"
+      ],
+      "required_evidence_area_count": 14
+    },
+    "MVP1-D": {
+      "required_case_count": 71,
+      "required_test_id_count": 27,
+      "required_cases": [
+        [
+          "AT-APPROVAL-001",
+          "REPLAY"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_LOSER"
+        ],
+        [
+          "AT-APPROVAL-002",
+          "CONCURRENT_WINNER"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "DEFAULT_FIELDS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "MEDIAN_TIME"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "NO_BYPASS"
+        ],
+        [
+          "AT-APPROVAL-UX-001",
+          "REAPPROVAL_DIFF"
+        ],
+        [
+          "AT-AUTH-001",
+          "ROUTE_CHANGED"
+        ],
+        [
+          "AT-BUDGET-001",
+          "RESERVATION_FOUND"
+        ],
+        [
+          "AT-BUDGET-001",
+          "RESERVATION_UNKNOWN"
+        ],
+        [
+          "AT-CLOCK-SKEW-001",
+          "EXCEEDED"
+        ],
+        [
+          "AT-CONTROL-DATA-001",
+          "ARTIFACT_INSTRUCTION"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_EXECUTION_EXPECTED_HASH"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_EXECUTION_UNKNOWN"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_OBSERVED"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_PREPARED_ABSENCE_PROVEN"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_RECEIPT"
+        ],
+        [
+          "AT-CRASH-001",
+          "AFTER_REPLACE"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_EXECUTION"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_PREPARED"
+        ],
+        [
+          "AT-CRASH-001",
+          "BEFORE_RECEIPT"
+        ],
+        [
+          "AT-CRASH-001",
+          "LEDGER_APPEND"
+        ],
+        [
+          "AT-CRASH-001",
+          "TEMP_BEFORE_FSYNC"
+        ],
+        [
+          "AT-DELEGATION-001",
+          "PAID_NEVER_DELEGATED"
+        ],
+        [
+          "AT-DRAIN-001",
+          "ACTIVE_RUN_BLOCKS"
+        ],
+        [
+          "AT-DRAIN-001",
+          "DRAINED_DEPLOY"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "ALLOWLIST"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "BAD_SIGNATURE"
+        ],
+        [
+          "AT-EMERGENCY-RECOVERY-001",
+          "DENYLIST"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "BUDGET_UNKNOWN"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "LEDGER_EVENT_MISSING"
+        ],
+        [
+          "AT-EVENT-MAPPING-001",
+          "REMOTE_UNCERTAIN"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "ACTION_STARTED_MISSING"
+        ],
+        [
+          "AT-EVENT-ORDER-001",
+          "SEQUENCE_REGRESSION"
+        ],
+        [
+          "AT-FAULT-GUARD-001",
+          "POLICY_DENIED"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "ARTIFACT_ENOSPC"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "FSYNC_EIO"
+        ],
+        [
+          "AT-FAULT-IO-001",
+          "SQLITE_ENOSPC"
+        ],
+        [
+          "AT-GC-001",
+          "ORPHAN_CANDIDATE"
+        ],
+        [
+          "AT-GC-001",
+          "RAW_RETENTION"
+        ],
+        [
+          "AT-GC-001",
+          "REFERENCED_KEEP"
+        ],
+        [
+          "AT-LEDGER-TAMPER-001",
+          "ONE_BYTE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "MIXED_SUBJECT_STATE"
+        ],
+        [
+          "AT-MANIFEST-SUBJECT-001",
+          "VALID_TYPED_SUBJECT"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "BACKUP_RESTORE"
+        ],
+        [
+          "AT-MIGRATION-001",
+          "FRESH_INSTALL"
+        ],
+        [
+          "AT-PERF-001",
+          "CONTROL_OVERHEAD"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "NONDETERMINISTIC_OUTPUT"
+        ],
+        [
+          "AT-PLAN-DETERMINISM-001",
+          "SAME_INPUT"
+        ],
+        [
+          "AT-POLICY-APPROVAL-001",
+          "EFFECT_BEFORE_SOD"
+        ],
+        [
+          "AT-POLICY-APPROVAL-001",
+          "PAID_BEFORE_SOD"
+        ],
+        [
+          "AT-POLICY-APPROVAL-001",
+          "WRITE_BEFORE_SOD"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "INFLIGHT_ATTEMPTED"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_EXTERNAL_EFFECT"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_LOCAL_READ"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_PAID"
+        ],
+        [
+          "AT-POLICY-STALE-001",
+          "NEW_WORKSPACE_WRITE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "NO_RELEASE"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_CANCELLED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_COMPLETED"
+        ],
+        [
+          "AT-RUN-TERMINAL-001",
+          "UNRECONCILED_TO_FAILED"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "ALL_VALID"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "INVALID_HASH"
+        ],
+        [
+          "AT-SCHEMA-COMPLETE-001",
+          "MISSING_CROSS_REFERENCE"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "CONSUMED_MISSING_ATTEMPT"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "READY_VALID"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "RUNNING_MISSING_ATTESTATION"
+        ],
+        [
+          "AT-SCHEMA-CONDITIONAL-001",
+          "SUCCEEDED_MISSING_RECEIPT"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "AMBIGUOUS_EXPECTED"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_COLUMN_MISSING"
+        ],
+        [
+          "AT-TEST-MANIFEST-001",
+          "HASH_FORMAT"
+        ]
+      ],
+      "required_gate_ids": [],
+      "required_gate_count": 0,
+      "test_manifest_hash": "sha256:e8e909559717c9ed68d7980f0cf47f0b9dd85680f93bf0a3632a5cbe4631e8d8",
+      "required_evidence_areas": [
+        "approval_ux",
+        "backup_restore",
+        "core_schema_suite",
+        "environment",
+        "fault_injection_recovery",
+        "linux_safe_reader",
+        "performance",
+        "runtime_attestation",
+        "secret_canary",
+        "source_static_analysis",
+        "spec_lint",
+        "sqlite_migration",
+        "unit_case_suite",
+        "verifier_self_test"
+      ],
+      "required_evidence_area_count": 14
+    }
+  },
+  "expectations": {
+    "AT-PLAN-001/TAMPER": {
+      "expectation_descriptor_hash": "sha256:3ecd9b981c307e56af00f51b09ba0b6802a82f55cdba37e9a6ad84d64f68b925",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "RUNTIME_SPEC_MISMATCH",
+      "expected_event_sequence": [
+        "INTENT_CREATED",
+        "PLAN_RESOLVED",
+        "POLICY_DECIDED",
+        "RUNTIME_SPEC_MISMATCH",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP0-C"
+      ],
+      "fault_point": "BEFORE_RUNTIME_LAUNCH",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-001/REPLAY": {
+      "expectation_descriptor_hash": "sha256:a44e84d1d4486d1874e95fbe80f717fd082cd9b74c3ff1680110d9e2a0e15ceb",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "APPROVAL_REPLAY",
+      "expected_event_sequence": [
+        "APPROVAL_ISSUED",
+        "APPROVAL_CONSUMED",
+        "APPROVAL_REPLAY_DENIED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "APPROVAL_CONSUME_CAS",
+      "durability_tier": null
+    },
+    "AT-CRASH-001/AFTER_EXECUTION_EXPECTED_HASH": {
+      "expectation_descriptor_hash": "sha256:d993d656f4b42f68dcd84be3f039171105335b01a2b9c4c4435e0f7360e6219a",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "SUCCEEDED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "EXECUTION_ATTEMPTED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EFFECT_OBSERVED",
+        "EFFECT_RECEIPT_STORED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_EXECUTION_ATTEMPTED",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/AFTER_EXECUTION_UNKNOWN": {
+      "expectation_descriptor_hash": "sha256:93f1bc5fe7bdbeddf236121412b272c15c8af169bf208921d13a9907251192e8",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "EFFECT_UNKNOWN",
+      "expected_error_code": "EFFECT_UNKNOWN",
+      "expected_event_sequence": [
+        "EXECUTION_ATTEMPTED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EFFECT_UNKNOWN"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_EXECUTION_ATTEMPTED",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/AFTER_OBSERVED": {
+      "expectation_descriptor_hash": "sha256:e09b4c5549305b44a33c35717b92fbdd536f059890fc6bcba122a121f398a587",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "SUCCEEDED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "EFFECT_OBSERVED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EFFECT_RECEIPT_STORED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_EFFECT_OBSERVED",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/AFTER_PREPARED_ABSENCE_PROVEN": {
+      "expectation_descriptor_hash": "sha256:9137c43dd1f6682badfca762230097bce5cd301701327aeb61ce5397a0dd3ce6",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "SUCCEEDED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "ACTION_PREPARED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EXECUTION_ATTEMPTED",
+        "EFFECT_OBSERVED",
+        "EFFECT_RECEIPT_STORED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_ACTION_PREPARED",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/AFTER_RECEIPT": {
+      "expectation_descriptor_hash": "sha256:7546e0772bc341c7d127e2ea274ff0cd7710b1218a3604bfa1523c234073c74a",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "SUCCEEDED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "EFFECT_RECEIPT_STORED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_RECEIPT_STORE_BEFORE_COMMIT",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/AFTER_REPLACE": {
+      "expectation_descriptor_hash": "sha256:6a6db7ed0d9e2d358466c405115252dc29c53a31809067d2b277120009ff3013",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "SUCCEEDED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "EXECUTION_ATTEMPTED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EFFECT_OBSERVED",
+        "EFFECT_RECEIPT_STORED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_ATOMIC_REPLACE_BEFORE_OBSERVE",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/BEFORE_EXECUTION": {
+      "expectation_descriptor_hash": "sha256:33afc74628a55797908755bf42fa94767e328152e1d4a420664c577fcf8084a7",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "PREPARED_DURABLE",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "ACTION_PREPARED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "BEFORE_EXECUTION_ATTEMPTED",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/BEFORE_PREPARED": {
+      "expectation_descriptor_hash": "sha256:a6dbedafabe5a64398ceb138604f6bc9ac107cbd81ea4cae2808bef386ec8129",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "FAILED_RETRYABLE",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "ACTION_STARTED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "ACTION_FAILED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "BEFORE_ACTION_PREPARED",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/BEFORE_RECEIPT": {
+      "expectation_descriptor_hash": "sha256:bd69678037b5dbbf79b9f163dfd2676d7a1a136af757a7fe014ff284b027cf6d",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "SUCCEEDED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "EFFECT_OBSERVED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EFFECT_RECEIPT_STORED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "BEFORE_RECEIPT_STORE",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/LEDGER_APPEND": {
+      "expectation_descriptor_hash": "sha256:e5115da2001319349104362b4a15a677f235eae29582a23a90f75aa8e626edbe",
+      "expected_subject_type": "REPAIR_DECISION",
+      "expected_state": "REPAIRED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "DURING_LEDGER_APPEND",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-CRASH-001/TEMP_BEFORE_FSYNC": {
+      "expectation_descriptor_hash": "sha256:7080748934b601985b96021f553970cb3d3a9e4d73279b979ff9bb2a7f34cca9",
+      "expected_subject_type": "REPAIR_DECISION",
+      "expected_state": "REPAIRED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "ACTION_STARTED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_TEMP_WRITE_BEFORE_FSYNC",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-PATH-001/LINUX_ESCAPE": {
+      "expectation_descriptor_hash": "sha256:122f863c0ac42eb66b5609858f7e939da41b5fdce02b9135569947e542d56c19",
+      "expected_subject_type": "INPUT_READ_DECISION",
+      "expected_state": "DENIED",
+      "expected_error_code": "PATH_OUTSIDE_CAPABILITY",
+      "expected_event_sequence": [
+        "INPUT_READ_STARTED",
+        "INPUT_READ_DENIED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A"
+      ],
+      "fault_point": "PATH_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-SANDBOX-001/UNAVAILABLE": {
+      "expectation_descriptor_hash": "sha256:f9a9d6043789c21fac2a8785fad8baaf1e2b902cf11c035efac0548b6dfdadfd",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "SANDBOX_UNAVAILABLE",
+      "expected_event_sequence": [
+        "RUNTIME_ATTESTED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-B",
+        "MVP1-A"
+      ],
+      "fault_point": "BEFORE_PROCESS_LAUNCH",
+      "durability_tier": null
+    },
+    "AT-CONFIG-001/DRIFT": {
+      "expectation_descriptor_hash": "sha256:71ed8d44da03eb64199f9c4866b27518fef48d5cb4ff65e799d6dadc11a04b96",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "RUNTIME_SPEC_MISMATCH",
+      "expected_event_sequence": [
+        "RUNTIME_SPEC_RESOLVED",
+        "RUNTIME_ATTESTED",
+        "RUNTIME_SPEC_MISMATCH",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP0-C"
+      ],
+      "fault_point": "RUNTIME_ATTESTATION",
+      "durability_tier": null
+    },
+    "AT-AUTH-001/ROUTE_CHANGED": {
+      "expectation_descriptor_hash": "sha256:28cb774a6ea221ff77049797f4ed07a71f4c79dec140b9ada9825e7b4a8d7cff",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "APPROVAL_INVALIDATED",
+      "expected_event_sequence": [
+        "PLAN_RESOLVED",
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-C",
+        "MVP1-B",
+        "MVP1-C",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "PLAN_HASH_VERIFY",
+      "durability_tier": null
+    },
+    "AT-FALLBACK-001/SCOPE_CHANGED": {
+      "expectation_descriptor_hash": "sha256:88f460d14e21c34f4a67a531047a9de86732777a51f0a1ec26d51f6aa42a0c3a",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "APPROVAL_REQUIRED",
+      "expected_event_sequence": [
+        "ACTION_FAILED",
+        "PLAN_RESOLVED",
+        "POLICY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-C"
+      ],
+      "fault_point": "FALLBACK_DECISION",
+      "durability_tier": null
+    },
+    "AT-REMOTE-PREP-001/DISPATCH_STATE_MISSING": {
+      "expectation_descriptor_hash": "sha256:e26a31d3d237b2b15e026840574c90020816fa5cff225b0d0e999556c3f7531d",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "REMOTE_DISPATCH_STATE_NOT_DURABLE",
+      "expected_event_sequence": [
+        "ACTION_STARTED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-C"
+      ],
+      "fault_point": "EGRESS_PRE_SEND_CHECK",
+      "durability_tier": null
+    },
+    "AT-REMOTE-PREP-001/REGISTRY_MISSING": {
+      "expectation_descriptor_hash": "sha256:07268c43d72b2a4a6b8b307dcc26405d9c2badc82d790f507ac2903ed66a2b14",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "REMOTE_REGISTRY_NOT_DURABLE",
+      "expected_event_sequence": [
+        "ACTION_STARTED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-C"
+      ],
+      "fault_point": "EGRESS_PRE_SEND_CHECK",
+      "durability_tier": null
+    },
+    "AT-INPUT-PATH-001/MOUNT_CROSSING": {
+      "expectation_descriptor_hash": "sha256:47d4ac815b8fb976ace05264d3ac7ff631b5699b1c4300621fae2632e2934ecb",
+      "expected_subject_type": "INPUT_READ_DECISION",
+      "expected_state": "DENIED",
+      "expected_error_code": "MOUNT_CROSSING_DENIED",
+      "expected_event_sequence": [
+        "INPUT_READ_STARTED",
+        "INPUT_READ_DENIED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A"
+      ],
+      "fault_point": "INPUT_MOUNT_CHECK",
+      "durability_tier": null
+    },
+    "AT-INPUT-PATH-001/SPECIAL_FILE": {
+      "expectation_descriptor_hash": "sha256:129bf23d1d9d5fa0c44f5f4af9c5bf5ff613f8255a102b8401951d34a5b67bb7",
+      "expected_subject_type": "INPUT_READ_DECISION",
+      "expected_state": "DENIED",
+      "expected_error_code": "SPECIAL_FILE_DENIED",
+      "expected_event_sequence": [
+        "INPUT_READ_STARTED",
+        "INPUT_READ_DENIED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A"
+      ],
+      "fault_point": "INPUT_FILE_TYPE_CHECK",
+      "durability_tier": null
+    },
+    "AT-INPUT-PATH-001/SYMLINK": {
+      "expectation_descriptor_hash": "sha256:a8261e49fb121a93510fc947a0cd97f9787c19f469b6c1a465e515a6cd275fb5",
+      "expected_subject_type": "INPUT_READ_DECISION",
+      "expected_state": "DENIED",
+      "expected_error_code": "SYMLINK_DENIED",
+      "expected_event_sequence": [
+        "INPUT_READ_STARTED",
+        "INPUT_READ_DENIED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A"
+      ],
+      "fault_point": "INPUT_PATH_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-CONDITIONAL-001/CONSUMED_MISSING_ATTEMPT": {
+      "expectation_descriptor_hash": "sha256:0227eb1d8b211a80c74aba5382fe97a99730acfbf3900a1b922ad30372f32e26",
+      "expected_subject_type": "SCHEMA_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "SCHEMA_CONDITIONAL_VIOLATION",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-CONDITIONAL-001/READY_VALID": {
+      "expectation_descriptor_hash": "sha256:4add6ea8c4504b103d5866a3e251aea0577e41fb7eb13f118e1e09ba7d212617",
+      "expected_subject_type": "SCHEMA_VALIDATION_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-CONDITIONAL-001/RUNNING_MISSING_ATTESTATION": {
+      "expectation_descriptor_hash": "sha256:656321f6b2c496359e58e53894516d46659283518dc78053801d1ab2be0b95d2",
+      "expected_subject_type": "SCHEMA_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "SCHEMA_CONDITIONAL_VIOLATION",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-CONDITIONAL-001/SUCCEEDED_MISSING_RECEIPT": {
+      "expectation_descriptor_hash": "sha256:9d5349697efc8a68ff1e2f2af8c95e79ad6e0afef523627a8709de83f1caadfa",
+      "expected_subject_type": "SCHEMA_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "SCHEMA_CONDITIONAL_VIOLATION",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-EVENT-ORDER-001/ACTION_STARTED_MISSING": {
+      "expectation_descriptor_hash": "sha256:9690426c57cc70c790412a80dc34018c2b07290b853e3a86ad8155ce6410bbd4",
+      "expected_subject_type": "EVENT_APPEND_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "EVENT_ORDER_VIOLATION",
+      "expected_event_sequence": [
+        "RUNTIME_ATTESTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "EVENT_APPEND_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-EVENT-ORDER-001/SEQUENCE_REGRESSION": {
+      "expectation_descriptor_hash": "sha256:336e2423abf1a408e5f3d4e70857d3d63065e815d8ae9c94540a8b39359d776f",
+      "expected_subject_type": "EVENT_APPEND_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "EVENT_ORDER_VIOLATION",
+      "expected_event_sequence": [
+        "PLAN_RESOLVED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "EVENT_APPEND_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-POLICY-APPROVAL-001/EFFECT_BEFORE_SOD": {
+      "expectation_descriptor_hash": "sha256:14f895feddbd9dcd61e0c6927360868d870a48da93fd59437f478b6ad0e88ffd",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "POLICY_APPROVAL_BEFORE_SOD",
+      "expected_event_sequence": [
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "APPROVAL_ISSUANCE",
+      "durability_tier": null
+    },
+    "AT-POLICY-APPROVAL-001/PAID_BEFORE_SOD": {
+      "expectation_descriptor_hash": "sha256:c4c8ced5d8d832b89a04d7f5bce0e01a06896d4b00b17069776e9e0ebc675f87",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "POLICY_APPROVAL_BEFORE_SOD",
+      "expected_event_sequence": [
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "APPROVAL_ISSUANCE",
+      "durability_tier": null
+    },
+    "AT-POLICY-APPROVAL-001/WRITE_BEFORE_SOD": {
+      "expectation_descriptor_hash": "sha256:928702de0e1fff8dcf13ddc5b67f1063df1ca6e77458e1a5d6e97f7ac3f5fa9c",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "POLICY_APPROVAL_BEFORE_SOD",
+      "expected_event_sequence": [
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "APPROVAL_ISSUANCE",
+      "durability_tier": null
+    },
+    "AT-OUTBOX-001/REMOTE_FOUND": {
+      "expectation_descriptor_hash": "sha256:9ebcc4c87fd478e0462cdc495ef091eda70dbd1d4970f750119da2aeec362fed",
+      "expected_subject_type": "OUTBOX_RECORD",
+      "expected_state": "RECONCILED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "OUTBOX_PREPARED",
+        "ACTION_PREPARED",
+        "OUTBOX_DISPATCHING",
+        "EXECUTION_ATTEMPTED",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "OUTBOX_EFFECT_CONFIRMED",
+        "EFFECT_OBSERVED",
+        "EFFECT_RECEIPT_STORED",
+        "OUTBOX_RECONCILED",
+        "ACTION_COMMITTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_REMOTE_ACCEPT",
+      "durability_tier": null
+    },
+    "AT-OUTBOX-001/REMOTE_UNKNOWN": {
+      "expectation_descriptor_hash": "sha256:eb0593cf370973c78124efdbf02f209d6bed9c75c6a177fb56f2d830655e7b90",
+      "expected_subject_type": "OUTBOX_RECORD",
+      "expected_state": "MANUAL_RECONCILIATION",
+      "expected_error_code": "REMOTE_STATUS_UNKNOWN",
+      "expected_event_sequence": [
+        "OUTBOX_PREPARED",
+        "ACTION_PREPARED",
+        "OUTBOX_DISPATCHING",
+        "EXECUTION_ATTEMPTED",
+        "RECOVERY_STARTED",
+        "OUTBOX_STATUS_UNKNOWN",
+        "RECOVERY_DECIDED",
+        "EFFECT_UNKNOWN",
+        "MANUAL_RECONCILIATION_ENQUEUED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-E"
+      ],
+      "fault_point": "AFTER_REMOTE_ACCEPT",
+      "durability_tier": null
+    },
+    "AT-BUDGET-001/RESERVATION_FOUND": {
+      "expectation_descriptor_hash": "sha256:fda10090314a7b4f7bb0c29fe2204f5d76f805e62ba77389bdd16ecc369cd490",
+      "expected_subject_type": "BUDGET_RESERVATION",
+      "expected_state": "RESERVED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "BUDGET_RESERVATION_PREPARED",
+        "ACTION_PREPARED",
+        "RECOVERY_STARTED",
+        "BUDGET_RESERVED",
+        "EFFECT_OBSERVED",
+        "EFFECT_RECEIPT_STORED",
+        "RECOVERY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-D"
+      ],
+      "fault_point": "AFTER_RESERVATION_COMMIT",
+      "durability_tier": null
+    },
+    "AT-BUDGET-001/RESERVATION_UNKNOWN": {
+      "expectation_descriptor_hash": "sha256:6412c714645b0cb40140f1cf868a7336c5f0b7f61af46f8a72ee6daf47882b8e",
+      "expected_subject_type": "BUDGET_RESERVATION",
+      "expected_state": "STATUS_UNKNOWN",
+      "expected_error_code": "BUDGET_STATUS_UNKNOWN",
+      "expected_event_sequence": [
+        "RECOVERY_STARTED",
+        "BUDGET_STATUS_UNKNOWN",
+        "RECOVERY_DECIDED",
+        "EFFECT_UNKNOWN"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-D"
+      ],
+      "fault_point": "RESERVATION_RECONCILIATION",
+      "durability_tier": null
+    },
+    "AT-BLIND-001/CONTEXT_LEAK": {
+      "expectation_descriptor_hash": "sha256:319485377ea5ea3b46ac74f8b03f886b11d20e1046c71c6eafff2485cc1d0dc9",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "BLINDNESS_CONTEXT_LEAK",
+      "expected_event_sequence": [
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "BLIND_REVIEWER"
+      ],
+      "fault_point": "BLINDNESS_FILTER",
+      "durability_tier": null
+    },
+    "AT-FENCE-001/STALE_WORKER": {
+      "expectation_descriptor_hash": "sha256:a66a47c61b866cc7fc7faae6c9b5b5038e8179f55ec5c43744ee25911d820310",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_CONFLICT",
+      "expected_error_code": "STALE_FENCING_TOKEN",
+      "expected_event_sequence": [
+        "FENCING_REJECTED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP2-B"
+      ],
+      "fault_point": "FINAL_EFFECT_COMMIT",
+      "durability_tier": null
+    },
+    "AT-TEST-MANIFEST-001/AMBIGUOUS_EXPECTED": {
+      "expectation_descriptor_hash": "sha256:ed7636d11b1183055263ddbc9c4d1209154c611b12392a4d70d8494048635e83",
+      "expected_subject_type": "MANIFEST_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "AMBIGUOUS_EXPECTED_STATE",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MANIFEST_SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-TEST-MANIFEST-001/HASH_COLUMN_MISSING": {
+      "expectation_descriptor_hash": "sha256:210b05447683cd4756b56b384f67514e2ccd99d2a502446de0b196b5f16acc0b",
+      "expected_subject_type": "MANIFEST_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "HASH_COLUMN_MISSING",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MANIFEST_SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-TEST-MANIFEST-001/HASH_FORMAT": {
+      "expectation_descriptor_hash": "sha256:4b605e4d7e0d2d6579b722d5e1d256ffbbdb99784d2c0e5ba509bfd45aa84650",
+      "expected_subject_type": "MANIFEST_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "FIXTURE_HASH_FORMAT_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MANIFEST_SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-PLAN-DETERMINISM-001/NONDETERMINISTIC_OUTPUT": {
+      "expectation_descriptor_hash": "sha256:a22906fc23dd23e89f6a42374bc9ddcc28f158ff7aece83727d632f7ac286dfd",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_CONFLICT",
+      "expected_error_code": "PLAN_NONDETERMINISTIC",
+      "expected_event_sequence": [
+        "PLAN_NONDETERMINISTIC",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "PLAN_BUILD_REPEAT",
+      "durability_tier": null
+    },
+    "AT-PLAN-DETERMINISM-001/SAME_INPUT": {
+      "expectation_descriptor_hash": "sha256:226b00f27fd07282cd0df7862f9527ec74ac6c7d0e252148670ea31396cce63f",
+      "expected_subject_type": "PLAN_COMPARISON",
+      "expected_state": "ASSERTIONS_SATISFIED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "PLAN_BUILD_REPEAT",
+      "durability_tier": null
+    },
+    "AT-CONTROL-DATA-001/ARTIFACT_INSTRUCTION": {
+      "expectation_descriptor_hash": "sha256:0ebe42161fffce51eca0f054abdd23de3dd9095952e0e8383bfec88e2e8b35ae",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "CONTROL_DATA_ROLE_ESCALATION",
+      "expected_event_sequence": [
+        "INTENT_CREATED",
+        "PLAN_RESOLVED",
+        "INPUT_ARTIFACT_CLASSIFIED",
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MESSAGE_ROLE_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-POLICY-STALE-001/INFLIGHT_ATTEMPTED": {
+      "expectation_descriptor_hash": "sha256:45b7c7ae25b74fa104d9ec08a39d34a3c6ef445e8624bb179db65b4d057aaebc",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "EFFECT_UNKNOWN",
+      "expected_error_code": "EFFECT_UNKNOWN",
+      "expected_event_sequence": [
+        "POLICY_STALE_DETECTED",
+        "POLICY_STALE_RECOVERY_ONLY",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED",
+        "EFFECT_UNKNOWN"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "AFTER_EXECUTION_ATTEMPTED",
+      "durability_tier": null
+    },
+    "AT-POLICY-STALE-001/NEW_EXTERNAL_EFFECT": {
+      "expectation_descriptor_hash": "sha256:5551e02b8b4e297826c2037cac6114ab8d3bd1068a85c1658bea5fd41055a4e2",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "POLICY_STALE_EXTERNAL_EFFECT_BLOCKED",
+      "expected_event_sequence": [
+        "POLICY_STALE_DETECTED",
+        "POLICY_STALE_ACTION_BLOCKED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "EGRESS_PRE_SEND_CHECK",
+      "durability_tier": null
+    },
+    "AT-POLICY-STALE-001/NEW_LOCAL_READ": {
+      "expectation_descriptor_hash": "sha256:49ae6fa81408ee3ac3699ce797ed569dad4374eaaa046ec26de9f3bbe86ff619",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "POLICY_STALE_NEW_ACTION_BLOCKED",
+      "expected_event_sequence": [
+        "POLICY_STALE_DETECTED",
+        "POLICY_STALE_ACTION_BLOCKED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "RUNTIME_GO_POLICY_CHECK",
+      "durability_tier": null
+    },
+    "AT-POLICY-STALE-001/NEW_PAID": {
+      "expectation_descriptor_hash": "sha256:d06bb2b936df06038535f988fd1cf298237dcf6b64b027a075c62c037d196721",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "POLICY_STALE_PAID_BLOCKED",
+      "expected_event_sequence": [
+        "POLICY_STALE_DETECTED",
+        "POLICY_STALE_ACTION_BLOCKED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "BEFORE_BUDGET_RESERVATION",
+      "durability_tier": null
+    },
+    "AT-POLICY-STALE-001/NEW_WORKSPACE_WRITE": {
+      "expectation_descriptor_hash": "sha256:fafdea454df05e52f70d953a3a57f029e6e281ff7fd4b65c97ed8218c52e4225",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "POLICY_STALE_EFFECT_BLOCKED",
+      "expected_event_sequence": [
+        "POLICY_STALE_DETECTED",
+        "POLICY_STALE_ACTION_BLOCKED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "BEFORE_ACTION_PREPARED",
+      "durability_tier": null
+    },
+    "AT-EVENT-MAPPING-001/BUDGET_UNKNOWN": {
+      "expectation_descriptor_hash": "sha256:df32204fd3dd83acfa1ddaf4d053ab938d3ebcebf37e3e9d5a4b7afcc06b51c0",
+      "expected_subject_type": "BUDGET_RESERVATION",
+      "expected_state": "STATUS_UNKNOWN",
+      "expected_error_code": "BUDGET_STATUS_UNKNOWN",
+      "expected_event_sequence": [
+        "BUDGET_STATUS_UNKNOWN",
+        "EFFECT_UNKNOWN"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-D"
+      ],
+      "fault_point": "BUDGET_RECONCILIATION",
+      "durability_tier": null
+    },
+    "AT-EVENT-MAPPING-001/LEDGER_EVENT_MISSING": {
+      "expectation_descriptor_hash": "sha256:7f7bab2ac8026691f9b4192243f333d071e449764172a47e1a7988c6d9ea7d5f",
+      "expected_subject_type": "REPAIR_DECISION",
+      "expected_state": "REPAIR_REQUIRED",
+      "expected_error_code": "PHASE_LEDGER_EVENT_MISSING",
+      "expected_event_sequence": [
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "REPAIR_SCANNER",
+      "durability_tier": null
+    },
+    "AT-EVENT-MAPPING-001/OUTBOX_UNKNOWN": {
+      "expectation_descriptor_hash": "sha256:a1c741cea26cdc6b8bb53db2255cd5946f38de0269be6142c83844eb43bd8bf5",
+      "expected_subject_type": "OUTBOX_RECORD",
+      "expected_state": "MANUAL_RECONCILIATION",
+      "expected_error_code": "REMOTE_STATUS_UNKNOWN",
+      "expected_event_sequence": [
+        "OUTBOX_STATUS_UNKNOWN",
+        "EFFECT_UNKNOWN",
+        "MANUAL_RECONCILIATION_ENQUEUED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-E"
+      ],
+      "fault_point": "OUTBOX_RECONCILIATION",
+      "durability_tier": null
+    },
+    "AT-EVENT-MAPPING-001/REMOTE_UNCERTAIN": {
+      "expectation_descriptor_hash": "sha256:21d5a2e7f48dcdb35f2ceafe7ed734cdcb0eb4fb4335e3908325cb3b82ab3dc2",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "EFFECT_UNKNOWN",
+      "expected_error_code": "REMOTE_INVOCATION_UNCERTAIN",
+      "expected_event_sequence": [
+        "REMOTE_INVOCATION_UNCERTAIN",
+        "EFFECT_UNKNOWN"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-C",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "REMOTE_RESPONSE_LOST",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-COMPLETE-001/ALL_VALID": {
+      "expectation_descriptor_hash": "sha256:55bbdfd878c60bee2cd540ee48c69f9fe8a37a09dea3e644b174d4099fbf1fab",
+      "expected_subject_type": "SCHEMA_SUITE_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SCHEMA_SUITE_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-COMPLETE-001/INVALID_HASH": {
+      "expectation_descriptor_hash": "sha256:01a5f3f096aba3afe4f50c9926efb272052dcca1620bdf79d7f273b676c03451",
+      "expected_subject_type": "SCHEMA_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "HASH_PATTERN_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-SCHEMA-COMPLETE-001/MISSING_CROSS_REFERENCE": {
+      "expectation_descriptor_hash": "sha256:6b348e1027f4ad4c0ec4581b825c7017fb15c9e97af54cec75bda5dd23e2136c",
+      "expected_subject_type": "SCHEMA_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "JOURNAL_REFERENCE_MISSING",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "CROSS_REFERENCE_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-MANIFEST-SUBJECT-001/MIXED_SUBJECT_STATE": {
+      "expectation_descriptor_hash": "sha256:774cf937c59d893ffd94e0b72b298c96f5e9b2b472b865048adf84565d7884f5",
+      "expected_subject_type": "MANIFEST_VALIDATION_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "EXPECTED_STATE_SUBJECT_MISMATCH",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MANIFEST_SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-MANIFEST-SUBJECT-001/VALID_TYPED_SUBJECT": {
+      "expectation_descriptor_hash": "sha256:358726de2a24d7fd2f3e85fc4f46d5c4b251af875c9b15779ae392a8d5260ab6",
+      "expected_subject_type": "MANIFEST_VALIDATION_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MANIFEST_SCHEMA_VALIDATION",
+      "durability_tier": null
+    },
+    "AT-WSL-BOUNDARY-001/FOREIGN_FS": {
+      "expectation_descriptor_hash": "sha256:bcb35daf70748332d7f47cf503800bc3caf4b896c8d4b7cdc6a6ab03ff066267",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "WORKSPACE_ON_FOREIGN_FS_DENIED",
+      "expected_event_sequence": [
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A"
+      ],
+      "fault_point": "MOUNT_BOUNDARY_CHECK",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-002/CONCURRENT_LOSER": {
+      "expectation_descriptor_hash": "sha256:87530e5d6a1ff810188d28a69c85e28b8894400bb54c2fcf7b9a0d6f237e24c4",
+      "expected_subject_type": "APPROVAL_CONSUME_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "APPROVAL_REPLAY",
+      "expected_event_sequence": [
+        "APPROVAL_REPLAY_DENIED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "APPROVAL_CONSUME_CAS",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-002/CONCURRENT_WINNER": {
+      "expectation_descriptor_hash": "sha256:41fa7fae842a7ae9f0029e9718967f9ffcc61992641c68fece260854bdff30d3",
+      "expected_subject_type": "APPROVAL_GRANT",
+      "expected_state": "CONSUMED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "APPROVAL_ISSUED",
+        "APPROVAL_CONSUMED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "APPROVAL_CONSUME_CAS",
+      "durability_tier": null
+    },
+    "AT-CLOCK-SKEW-001/EXCEEDED": {
+      "expectation_descriptor_hash": "sha256:94ef96984d156e7e3cb7ace0d668b1952cc2359bbd64f2a2dd34fa527ac2b735",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "CLOCK_SKEW_EXCEEDED",
+      "expected_event_sequence": [
+        "APPROVAL_ISSUED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "APPROVAL_TIME_CHECK",
+      "durability_tier": null
+    },
+    "AT-LEDGER-TAMPER-001/ONE_BYTE": {
+      "expectation_descriptor_hash": "sha256:617244f5362df8b0216d3a835be36a32157c869887bde320b415e31b5374dee6",
+      "expected_subject_type": "LEDGER_CHAIN_VERIFICATION",
+      "expected_state": "REJECTED",
+      "expected_error_code": "LEDGER_CHAIN_TAMPERED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "LEDGER_TAMPER",
+      "durability_tier": null
+    },
+    "AT-RUN-TERMINAL-001/NO_RELEASE": {
+      "expectation_descriptor_hash": "sha256:2118e84b45a3d30f309d59bb116c811c26b73ab74f7af95013a725a752700761",
+      "expected_subject_type": "RUN",
+      "expected_state": "BLOCKED",
+      "expected_error_code": "RELEASE_DECISION_REQUIRED",
+      "expected_event_sequence": [
+        "EVALUATION_COMPLETED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "RUN_TERMINAL_TRANSITION",
+      "durability_tier": null
+    },
+    "AT-RUN-TERMINAL-001/UNRECONCILED_TO_CANCELLED": {
+      "expectation_descriptor_hash": "sha256:d39058cc31acd50cd6e0c70ccdccd2dfcf538352e7ae8b61f4e9685ce9464c74",
+      "expected_subject_type": "RUN",
+      "expected_state": "BLOCKED_REPAIR_REQUIRED",
+      "expected_error_code": "UNRECONCILED_EFFECT_PRESENT",
+      "expected_event_sequence": [
+        "EFFECT_UNKNOWN",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "RUN_TERMINAL_TRANSITION",
+      "durability_tier": null
+    },
+    "AT-RUN-TERMINAL-001/UNRECONCILED_TO_COMPLETED": {
+      "expectation_descriptor_hash": "sha256:524bf0c172051650766ecfe7c42af03ff8359933611aed8aa6d80aba109f80ab",
+      "expected_subject_type": "RUN",
+      "expected_state": "BLOCKED_REPAIR_REQUIRED",
+      "expected_error_code": "UNRECONCILED_EFFECT_PRESENT",
+      "expected_event_sequence": [
+        "EFFECT_UNKNOWN",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "RUN_TERMINAL_TRANSITION",
+      "durability_tier": null
+    },
+    "AT-RUN-TERMINAL-001/UNRECONCILED_TO_FAILED": {
+      "expectation_descriptor_hash": "sha256:407c4cdfbedd7ea51e6896af707d5a379800547f84c8ed9bd26b2812408019fb",
+      "expected_subject_type": "RUN",
+      "expected_state": "BLOCKED_REPAIR_REQUIRED",
+      "expected_error_code": "UNRECONCILED_EFFECT_PRESENT",
+      "expected_event_sequence": [
+        "EFFECT_UNKNOWN",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "RUN_TERMINAL_TRANSITION",
+      "durability_tier": null
+    },
+    "AT-FAULT-GUARD-001/POLICY_DENIED": {
+      "expectation_descriptor_hash": "sha256:c859a87a80466c2eed099a0033d9049917a0e0a33f63d9fac22a2383ae06cf02",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "FAULT_INJECTION_NOT_PERMITTED",
+      "expected_event_sequence": [
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "BEFORE_PROCESS_LAUNCH",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-UX-001/DEFAULT_FIELDS": {
+      "expectation_descriptor_hash": "sha256:4461975f0f2062bb8f1127b8f2349cee4fec782e0effdd3c6b7b09b053a15e5c",
+      "expected_subject_type": "APPROVAL_UI_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "UI_STATIC_CHECK",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-UX-001/MEDIAN_TIME": {
+      "expectation_descriptor_hash": "sha256:e62880d20fb9cdabd332dddd6fd985b41f6e1d360870e4f33e9d59586b37b8a5",
+      "expected_subject_type": "UX_MEASUREMENT_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "HUMAN_MEASUREMENT",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-UX-001/NO_BYPASS": {
+      "expectation_descriptor_hash": "sha256:093b73609a5cdb674ec56c01628225106c998168b1735489abf90d6cad7710d1",
+      "expected_subject_type": "STATIC_ANALYSIS_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "SOURCE_SCAN",
+      "durability_tier": null
+    },
+    "AT-APPROVAL-UX-001/REAPPROVAL_DIFF": {
+      "expectation_descriptor_hash": "sha256:d056a84845e42348a597dfddad4dbe250a9535575383e1ca7ea9ff7d9976694b",
+      "expected_subject_type": "APPROVAL_UI_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "UI_RENDER",
+      "durability_tier": null
+    },
+    "AT-EMERGENCY-RECOVERY-001/ALLOWLIST": {
+      "expectation_descriptor_hash": "sha256:f682f1c39f35296addcd9b18fbf09abc08932a7b83dcc343c762606cabcc7915",
+      "expected_subject_type": "EMERGENCY_RECOVERY_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "POLICY_STALE_RECOVERY_ONLY",
+        "RECOVERY_STARTED",
+        "RECOVERY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "EMERGENCY_POLICY",
+      "durability_tier": null
+    },
+    "AT-EMERGENCY-RECOVERY-001/BAD_SIGNATURE": {
+      "expectation_descriptor_hash": "sha256:ba4793a6a7ab019d4627e80740b7334204ecdfe76f9966b603721d55cbfd3bd4",
+      "expected_subject_type": "EMERGENCY_RECOVERY_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "EMERGENCY_PROFILE_SIGNATURE_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "EMERGENCY_PROFILE_VERIFY",
+      "durability_tier": null
+    },
+    "AT-EMERGENCY-RECOVERY-001/DENYLIST": {
+      "expectation_descriptor_hash": "sha256:2e20fa2fbf079d1641d64dfab616044cf5c26a941d894692ed96b073ce0818cb",
+      "expected_subject_type": "EMERGENCY_RECOVERY_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "EMERGENCY_OPERATION_NOT_ALLOWED",
+      "expected_event_sequence": [
+        "POLICY_STALE_RECOVERY_ONLY"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-C",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E",
+        "ENTERPRISE"
+      ],
+      "fault_point": "EMERGENCY_POLICY",
+      "durability_tier": null
+    },
+    "AT-PERF-001/CONTROL_OVERHEAD": {
+      "expectation_descriptor_hash": "sha256:90c1196cf3118f889f2c276293dc1d9f452edc6f7fc8204f80c00e6e97b035be",
+      "expected_subject_type": "PERFORMANCE_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "PERFORMANCE_RUN",
+      "durability_tier": null
+    },
+    "AT-FAULT-IO-001/ARTIFACT_ENOSPC": {
+      "expectation_descriptor_hash": "sha256:ddffef8f366fcfa2c5a427750117d4e31d0af37fef5e3903c01b6fde508bc284",
+      "expected_subject_type": "STORAGE_IO_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "STORAGE_WRITE_FAILED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "ARTIFACT_WRITE_ENOSPC",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-FAULT-IO-001/FSYNC_EIO": {
+      "expectation_descriptor_hash": "sha256:0c4c01c32d8e5f34eecc57177f24692e298ec61233b1209fc12f8581bc5ce1c3",
+      "expected_subject_type": "STORAGE_IO_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "STORAGE_WRITE_FAILED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "FILE_FSYNC_EIO",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-FAULT-IO-001/SQLITE_ENOSPC": {
+      "expectation_descriptor_hash": "sha256:f3dd2b2dce993ec66b24783788aa2b7b9c153f53afdbf9630d5243d8367cbab8",
+      "expected_subject_type": "STORAGE_IO_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "STORAGE_WRITE_FAILED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A",
+        "MVP1-D",
+        "MVP1-E"
+      ],
+      "fault_point": "SQLITE_COMMIT_ENOSPC",
+      "durability_tier": "T2_CACHE_DROP"
+    },
+    "AT-MIGRATION-001/BACKUP_RESTORE": {
+      "expectation_descriptor_hash": "sha256:a7b1a7b17bcf703535cfd9113b75d6cbac6e4b36aff267d3005eccd50765bdb7",
+      "expected_subject_type": "BACKUP_RESTORE_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "BACKUP_RESTORE",
+      "durability_tier": null
+    },
+    "AT-MIGRATION-001/FRESH_INSTALL": {
+      "expectation_descriptor_hash": "sha256:a76c9e25aa1cf5d6e7599177ad2392ee7a4a2981451289cef3ca04d8e3a857d4",
+      "expected_subject_type": "MIGRATION_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "MIGRATION",
+      "durability_tier": null
+    },
+    "AT-DRAIN-001/ACTIVE_RUN_BLOCKS": {
+      "expectation_descriptor_hash": "sha256:0580229330e33cb52625d1ee74091fec12d5d26462817ff3f73bfd6082dee43b",
+      "expected_subject_type": "DEPLOYMENT_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "DEPLOY_DRAIN_REQUIRED",
+      "expected_event_sequence": [
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "DEPLOY_PRECHECK",
+      "durability_tier": null
+    },
+    "AT-DRAIN-001/DRAINED_DEPLOY": {
+      "expectation_descriptor_hash": "sha256:ee03389b2ee29b718035f86f47cfb97f8afdee2b8417c47d13082bdd4c67b027",
+      "expected_subject_type": "DEPLOYMENT_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "DEPLOY_PRECHECK",
+      "durability_tier": null
+    },
+    "AT-GC-001/ORPHAN_CANDIDATE": {
+      "expectation_descriptor_hash": "sha256:fa65c745de25797d9e72ed65aae61e38643c5cbb0c703612a55060e2ed086657",
+      "expected_subject_type": "GC_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "GC_DRY_RUN",
+      "durability_tier": null
+    },
+    "AT-GC-001/RAW_RETENTION": {
+      "expectation_descriptor_hash": "sha256:99ebb06a634152acb1a2825f64a42613c98edbaedaa151c89c67beb331559ab1",
+      "expected_subject_type": "GC_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "ARTIFACT_PAYLOAD_DELETED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "GC_EXECUTE_APPROVED",
+      "durability_tier": null
+    },
+    "AT-GC-001/REFERENCED_KEEP": {
+      "expectation_descriptor_hash": "sha256:a93dab4e40f630bcb628cee648199e727e893bce746942a0a106ef08b4b4b0f4",
+      "expected_subject_type": "GC_RESULT",
+      "expected_state": "ACCEPTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B",
+        "MVP1-A",
+        "MVP0-C",
+        "MVP1-D"
+      ],
+      "fault_point": "GC_DRY_RUN",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/SCOPE_EXCEEDED": {
+      "expectation_descriptor_hash": "sha256:6a12693279e7e43a6c4d09a87f2775012a7dd4ab5d9e58d6d7508d3724bc6f52",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "APPROVAL_REQUIRED",
+      "expected_event_sequence": [
+        "PLAN_RESOLVED",
+        "POLICY_DECIDED",
+        "DELEGATION_REJECTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/SELF_MODIFICATION": {
+      "expectation_descriptor_hash": "sha256:67b2b6906d1e96239e2f9fc2a3e971249905da58b85d4390c860a01b1b80d3cf",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_POLICY",
+      "expected_error_code": "DELEGATION_SELF_MODIFICATION_DENIED",
+      "expected_event_sequence": [
+        "POLICY_DECIDED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/WIDEN_DENIED": {
+      "expectation_descriptor_hash": "sha256:eff2e9f2453e897449b9356775060b6de07d237376d13abdf4788f3902bce565",
+      "expected_subject_type": "DELEGATION_GRANT",
+      "expected_state": "ACTIVE",
+      "expected_error_code": "DELEGATION_SCOPE_EXCEEDED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/REVOKE_IMMEDIATE": {
+      "expectation_descriptor_hash": "sha256:5c562453487094d1e9bf37335a3b8013870bbee8cda0a9908a139a80c39483a4",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "APPROVAL_REQUIRED",
+      "expected_event_sequence": [
+        "DELEGATION_REVOKED",
+        "POLICY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/POLICY_HASH_CHANGED": {
+      "expectation_descriptor_hash": "sha256:f7e0b6733efb66d63403b79bfc09c087d29091e916884811f5d29b16d1743996",
+      "expected_subject_type": "DELEGATION_GRANT",
+      "expected_state": "INVALIDATED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "DELEGATION_INVALIDATED",
+        "POLICY_DECIDED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/PAID_NEVER_DELEGATED": {
+      "expectation_descriptor_hash": "sha256:4d750d4ca1f787352f1524b3fe1d79c608848a1ccbff81b049667e6fe4145995",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "DELEGATION_NOT_DELEGABLE_ACTION",
+      "expected_event_sequence": [],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP1-D"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/STALE_POLICY_NO_AUTO": {
+      "expectation_descriptor_hash": "sha256:e38fb2e80c0b7abc80dbd45915acf91fcf568795bb3c70f0deff4ec9701be3f3",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "POLICY_STALE_DETECTED",
+        "DELEGATION_REJECTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/REVOKE_BEFORE_EFFECT_LINEARIZATION": {
+      "expectation_descriptor_hash": "sha256:fb3db61e27cfa0c00e35d6a740b4ed97cf92b28f6ea303125bc189ea9858a112",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_CONFLICT",
+      "expected_error_code": "DELEGATION_REVOKED_MID_FLIGHT",
+      "expected_event_sequence": [
+        "DELEGATION_MATCHED",
+        "APPROVAL_CONSUMED",
+        "DELEGATION_REVOKED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/REVOKE_AFTER_EFFECT_LINEARIZATION": {
+      "expectation_descriptor_hash": "sha256:443b319232c7eafef2e78ed0c8ef2ebf4c672cbbafe819362cfd71611167fe95",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "READY",
+      "expected_error_code": "DELEGATION_REVOKED_AFTER_EFFECT_START",
+      "expected_event_sequence": [
+        "DELEGATION_MATCHED",
+        "APPROVAL_CONSUMED",
+        "DELEGATION_EFFECT_LINEARIZED",
+        "DELEGATION_REVOKED_AFTER_EFFECT_START"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/DERIVED_APPROVAL_IS_SINGLE_USE": {
+      "expectation_descriptor_hash": "sha256:ab4132d9f07c4532c5270910b8d992cf4052ea3877301b260476a39c460cb52f",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "BLOCKED_APPROVAL",
+      "expected_error_code": "APPROVAL_REPLAY",
+      "expected_event_sequence": [
+        "DELEGATION_MATCHED",
+        "APPROVAL_CONSUMED",
+        "APPROVAL_REPLAY_DENIED",
+        "ACTION_BLOCKED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/PREDICATE_FIELD_CHANGED": {
+      "expectation_descriptor_hash": "sha256:9a0a212e8ac71b91b9be564e85667c18c363fe200c4af8ac2144b8c4dd38498d",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "DELEGATION_SCOPE_EXCEEDED",
+      "expected_event_sequence": [
+        "PLAN_RESOLVED",
+        "POLICY_DECIDED",
+        "DELEGATION_REJECTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/TRUST_ANCHOR_ROLLBACK": {
+      "expectation_descriptor_hash": "sha256:b241444711e924dd803455e36173a34793db318575bb5c732af0e3edd15d0699",
+      "expected_subject_type": "DELEGATION_GRANT",
+      "expected_state": "INVALIDATED",
+      "expected_error_code": "DELEGATION_TRUST_ANCHOR_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/AUDIENCE_MISMATCH": {
+      "expectation_descriptor_hash": "sha256:5604bf960ab3cbab4dfb8afe3b3f74c0b47277e4b3de71b7542019e5f560bda5",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "DELEGATION_SUBJECT_MISMATCH",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/DESTRUCTIVE_NEVER_DELEGATED": {
+      "expectation_descriptor_hash": "sha256:cc5d0531b4fe6ccb7175b7773c8dc7838c48fa13e27a77eea8b820a253d5eb4d",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "WAITING_APPROVAL",
+      "expected_error_code": "DELEGATION_NOT_DELEGABLE_ACTION",
+      "expected_event_sequence": [],
+      "event_observation_policy": "REQUIRED_EMPTY",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-DELEGATION-001/AUDIT_TRAIL_COMPLETE": {
+      "expectation_descriptor_hash": "sha256:2b72dcad3f92fe0a6c11ed4c76eaf8a335294f207e496d1c24b3b8d9ef1d2673",
+      "expected_subject_type": "ACTION_ATTEMPT",
+      "expected_state": "READY",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "DELEGATION_MATCHED",
+        "APPROVAL_ISSUED",
+        "APPROVAL_CONSUMED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP1-A"
+      ],
+      "fault_point": "DELEGATION_RESOLUTION",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SECRET_REJECTED_NOT_MASKED": {
+      "expectation_descriptor_hash": "sha256:01308dedfff5d701820d85c4db1f579fdc80554b4897fac0c353beaa4f8fb151",
+      "expected_subject_type": "INPUT_READ_DECISION",
+      "expected_state": "DENIED",
+      "expected_error_code": null,
+      "expected_event_sequence": [
+        "INPUT_READ_STARTED",
+        "INPUT_ARTIFACT_CLASSIFIED",
+        "INPUT_READ_DENIED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SECOND_SCAN_IS_THE_GATE": {
+      "expectation_descriptor_hash": "sha256:5f8f90624f319ae668a21eb4e9d8e4754ce215e02e1c81cff5545463dab2af3a",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_VERIFICATION_FAILED",
+      "expected_event_sequence": [
+        "INPUT_MASKING_STARTED",
+        "INPUT_MASKING_SCAN1_CANDIDATES_READY",
+        "INPUT_MASKING_SPANS_PROPOSED",
+        "INPUT_MASKING_REJECTED"
+      ],
+      "event_observation_policy": null,
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SPAN_OUT_OF_RANGE": {
+      "expectation_descriptor_hash": "sha256:5f61ed97c6a33eb7dbeb735eca6c0b7e4b338511f1fd9ec33634f379b7a16b88",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_SPAN_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SPAN_OVERLAP_OR_NESTED": {
+      "expectation_descriptor_hash": "sha256:7644dae7c8d9676ec8fdbc4db93d7f229208748f1890f0d9f9d19c8873baa582",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_SPAN_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SPAN_UNSORTED": {
+      "expectation_descriptor_hash": "sha256:3fe567e3fc410e393ed70ac5bf3e00ee5e078307a95c3850b087cefe9f63a2a8",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_SPAN_INVALID",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SPAN_CATEGORY_UNKNOWN": {
+      "expectation_descriptor_hash": "sha256:80e29564f92192cb8fdea99e33129627f01b83d38306320b94e4a7add3d9b898",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_CATEGORY_UNKNOWN",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/MASK_RATIO_EXCEEDED": {
+      "expectation_descriptor_hash": "sha256:f9b37015a440046d16e008c9c0f8e93c2042d74fb57c92419117badd4cf109ae",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_RATIO_EXCEEDED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/MASKER_OUTPUT_MALFORMED": {
+      "expectation_descriptor_hash": "sha256:599cb2e2f4a4beb8fe5fd9b9f175b03ff2c0f34993b49df299c7b50a87b3b44e",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKER_OUTPUT_MALFORMED",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/MASKER_UNAVAILABLE_FAIL_CLOSED": {
+      "expectation_descriptor_hash": "sha256:dea9be4e1083abdc5086acd134a19ed4d0e11ebf24dd0aaa56e70432f2199dce",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKER_UNAVAILABLE",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/MASKER_ISOLATION_INCOMPLETE": {
+      "expectation_descriptor_hash": "sha256:472d5c42b9d61df2099b40b169041d48a2457b3e1134c27bb6f0da63a2b70ae6",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKER_ISOLATION_INCOMPLETE",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/UNICODE_NORMALIZATION": {
+      "expectation_descriptor_hash": "sha256:553915ec9d50573c8f126186bad0d195e3e83b31645365060bcf60c9ca277731",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/NORMALIZATION_PROFILE_MISMATCH": {
+      "expectation_descriptor_hash": "sha256:195dc67abaec679b28463144a0e0a7919b4290baac6bd2f1d05912e088c00cb0",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_NORMALIZATION_PROFILE_MISMATCH",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/UNICODE_PROFILE_CROSS_PYTHON": {
+      "expectation_descriptor_hash": "sha256:d8260768d338e76e7c4889bb87d34bc494b59ccd25a6c139fe20fde257688f14",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/UNICODE_PROFILE_ARTIFACT_MISSING": {
+      "expectation_descriptor_hash": "sha256:ea6afc5c9070e4855690d107461538fc4aed7c15c9d763ae21968719a5ab0d63",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_NORMALIZATION_ARTIFACT_MISSING",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/UNICODE_UCD14_ASSIGNED_GUARD": {
+      "expectation_descriptor_hash": "sha256:98f3ff10a2e397edae6b2c42072ce812281a3faf3b5a28529ac9db72bf380dee",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_UNSUPPORTED_CODEPOINT",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/GRAPHEME_SPLIT": {
+      "expectation_descriptor_hash": "sha256:bc737aa1ee99f86ac64d46e1d00cb1dde359e843d1c9ed1bd070f5a8322e10fc",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_GRAPHEME_SPLIT",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/MASK_RATIO_BOUNDARY": {
+      "expectation_descriptor_hash": "sha256:ac15df8a567f805efbcfcc6682c7fd4445643c3c50030e1c4e50dd9d0bdb6f22",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SCAN1_CANDIDATE_UNION": {
+      "expectation_descriptor_hash": "sha256:0f6585d02eff521ecdb2134d52cb1a80d0ed8eec44ffd9c848f4d5345c04cc77",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SPAN_CONTAINMENT_EXPANSION": {
+      "expectation_descriptor_hash": "sha256:862ed5d52afee7a10a5e9e3d1f1aad998d536736bb8822d940911515329f3f7c",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/SPAN_CONFLICT_PARTIAL": {
+      "expectation_descriptor_hash": "sha256:747c2d46f6d3ce12174e82a208f721bf8f897c02b2c0e2adf192acb7506296d1",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": "MASKING_SPAN_CONFLICT",
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/NATIONAL_ID_REJECTED_NOT_MASKED": {
+      "expectation_descriptor_hash": "sha256:52380063bc9afa26662c1f465f8fe0dad70797b5752fd918bb287c01faa59803",
+      "expected_subject_type": "INPUT_READ_DECISION",
+      "expected_state": "DENIED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/REWRITER_DETERMINISM": {
+      "expectation_descriptor_hash": "sha256:46e94a7fd82dc3033dd416771a1c970efa99740730ea5da29c9bddcd519600a3",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/NO_LLM_PATH": {
+      "expectation_descriptor_hash": "sha256:8678080c01ff66ba099740ca26e8f2b870215f7d4465030c8cac231d1bf536c8",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "CLEAN",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/PROMPT_INJECTION": {
+      "expectation_descriptor_hash": "sha256:f0b5b20f9f1d7633d323047bc8a589888957868347a2d763dc569be487f72481",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/NO_SECRET_IN_RECEIPT": {
+      "expectation_descriptor_hash": "sha256:7b6846ce50547433500403c3e29724f5c718e276a0c9515de97f9765bccc952f",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/NO_SECRET_IN_RECEIPT_REJECTED": {
+      "expectation_descriptor_hash": "sha256:aa98be2071cf3e040c6e7bd9d6683db9d5ef8be912fac5eb60508aa3cf8a399b",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "REJECTED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    },
+    "AT-MASKING-001/NO_AUTO_DOWNGRADE": {
+      "expectation_descriptor_hash": "sha256:ba0a9155c6192eeef5fd7ec69a40b5e154abab39330582fb5ee87d4e6f8831aa",
+      "expected_subject_type": "MASKING_RESULT",
+      "expected_state": "MASKED",
+      "expected_error_code": null,
+      "expected_event_sequence": [],
+      "event_observation_policy": "NOT_APPLICABLE",
+      "phase_scope": [
+        "MVP0-A",
+        "MVP0-B"
+      ],
+      "fault_point": "MASKING_PIPELINE",
+      "durability_tier": null
+    }
+  },
+  "gates": {
+    "MVP0A-GATE-01": {
+      "phase": "MVP0-A",
+      "condition": "WorkspaceがWSL2 Linux native FS上にあり、Foreign FSを拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-WSL-BOUNDARY-001"
+      ]
+    },
+    "MVP0A-GATE-02": {
+      "phase": "MVP0-A",
+      "condition": "MVP0-A割当のTest Manifestが全件PASS",
+      "test_refs_mode": "ALL_IN_SCOPE",
+      "test_refs": []
+    },
+    "MVP0A-GATE-03": {
+      "phase": "MVP0-A",
+      "condition": "RuntimeEnvelopeSpecとInvocationManifestをApproval前に固定",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PLAN-001"
+      ]
+    },
+    "MVP0A-GATE-04": {
+      "phase": "MVP0-A",
+      "condition": "argv／cwd／env／Executable／Model／Auth／Policy変更時の起動拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONFIG-001",
+        "AT-PLAN-001"
+      ]
+    },
+    "MVP0A-GATE-05": {
+      "phase": "MVP0-A",
+      "condition": "Approval署名、Nonce、Expiry、Revocation、Replay合格",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-001"
+      ]
+    },
+    "MVP0A-GATE-06": {
+      "phase": "MVP0-A",
+      "condition": "Approval同時Consumeで成功1件だけ",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-002"
+      ]
+    },
+    "MVP0A-GATE-07": {
+      "phase": "MVP0-A",
+      "condition": "許容Clock Skew超過でFail-Closed",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CLOCK-SKEW-001"
+      ]
+    },
+    "MVP0A-GATE-08": {
+      "phase": "MVP0-A",
+      "condition": "Fault Point 10点の全Crash Caseから手動DB改変なしで復旧または安全停止",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001"
+      ]
+    },
+    "MVP0A-GATE-09": {
+      "phase": "MVP0-A",
+      "condition": "ENOSPC／EIO Faultから部分Commitなしで復旧または安全停止",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-FAULT-IO-001"
+      ]
+    },
+    "MVP0A-GATE-10": {
+      "phase": "MVP0-A",
+      "condition": "Policy禁止下でFault Injection実行0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-FAULT-GUARD-001"
+      ]
+    },
+    "MVP0A-GATE-11": {
+      "phase": "MVP0-A",
+      "condition": "PREPARED_DURABLE前のEffect実行0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001"
+      ]
+    },
+    "MVP0A-GATE-12": {
+      "phase": "MVP0-A",
+      "condition": "EFFECT_UNKNOWNからの自動再実行0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001",
+        "AT-RUN-TERMINAL-001"
+      ]
+    },
+    "MVP0A-GATE-13": {
+      "phase": "MVP0-A",
+      "condition": "Receipt欠落／Ledger欠落を双方検出",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001",
+        "AT-EVENT-MAPPING-001"
+      ]
+    },
+    "MVP0A-GATE-14": {
+      "phase": "MVP0-A",
+      "condition": "Ledger Hash Chain改ざん検出",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-LEDGER-TAMPER-001"
+      ]
+    },
+    "MVP0A-GATE-15": {
+      "phase": "MVP0-A",
+      "condition": "Stale Fencing TokenによるCommit 0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-FENCE-001"
+      ]
+    },
+    "MVP0A-GATE-16": {
+      "phase": "MVP0-A",
+      "condition": "未照合Effectを持つRunの終端0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-RUN-TERMINAL-001"
+      ]
+    },
+    "MVP0A-GATE-17": {
+      "phase": "MVP0-A",
+      "condition": "Approval回避機構0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-001",
+        "AT-APPROVAL-UX-001"
+      ]
+    },
+    "MVP0A-GATE-18": {
+      "phase": "MVP0-A",
+      "condition": "承認既定表示7項目、差分表示、操作時間中央値30秒以下",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-UX-001"
+      ]
+    },
+    "MVP0A-GATE-19": {
+      "phase": "MVP0-A",
+      "condition": "重複Effect 0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001"
+      ]
+    },
+    "MVP0A-GATE-20": {
+      "phase": "MVP0-A",
+      "condition": "Workspace Escape 0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-INPUT-PATH-001",
+        "AT-PATH-001"
+      ]
+    },
+    "MVP0A-GATE-21": {
+      "phase": "MVP0-A",
+      "condition": "Symlink／Mount／特殊File／Virtual FS Input Read拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-INPUT-PATH-001"
+      ]
+    },
+    "MVP0A-GATE-22": {
+      "phase": "MVP0-A",
+      "condition": "Read CapabilityなしのTask／Context読取り0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-INPUT-PATH-001"
+      ]
+    },
+    "MVP0A-GATE-23": {
+      "phase": "MVP0-A",
+      "condition": "Artifact Put前のClassification／Secret Scan実施率100%",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001",
+        "AT-INPUT-PATH-001"
+      ]
+    },
+    "MVP0A-GATE-24": {
+      "phase": "MVP0-A",
+      "condition": "Untrusted入力のControl Role昇格0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001"
+      ]
+    },
+    "MVP0A-GATE-25": {
+      "phase": "MVP0-A",
+      "condition": "Token上限超過Provider呼出0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PLAN-001"
+      ]
+    },
+    "MVP0A-GATE-26": {
+      "phase": "MVP0-A",
+      "condition": "定義済みSecret CanaryのDB／Log／Artifact漏えい0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001"
+      ]
+    },
+    "MVP0A-GATE-27": {
+      "phase": "MVP0-A",
+      "condition": "LedgerからProjection再構築成功",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-EVENT-ORDER-001"
+      ]
+    },
+    "MVP0A-GATE-28": {
+      "phase": "MVP0-A",
+      "condition": "Release DecisionなしのRun完了0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-RUN-TERMINAL-001"
+      ]
+    },
+    "MVP0A-GATE-29": {
+      "phase": "MVP0-A",
+      "condition": "Plan非決定性を検出し停止",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PLAN-DETERMINISM-001"
+      ]
+    },
+    "MVP0A-GATE-30": {
+      "phase": "MVP0-A",
+      "condition": "26 Core Schema、Conditional、Cross-reference全件合格",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-SCHEMA-COMPLETE-001",
+        "AT-SCHEMA-CONDITIONAL-001"
+      ]
+    },
+    "MVP0A-GATE-31": {
+      "phase": "MVP0-A",
+      "condition": "Policy期限切れ動作がDecision Matrixと一致",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-POLICY-STALE-001"
+      ]
+    },
+    "MVP0A-GATE-32": {
+      "phase": "MVP0-A",
+      "condition": "Emergency Recovery範囲外操作0件、署名／Rollback検証",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-EMERGENCY-RECOVERY-001"
+      ]
+    },
+    "MVP0A-GATE-33": {
+      "phase": "MVP0-A",
+      "condition": "制御処理p50≤5秒、p95≤8秒",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PERF-001"
+      ]
+    },
+    "MVP0A-GATE-34": {
+      "phase": "MVP0-A",
+      "condition": "Migration、Backup／Restore、Integrity Check合格",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MIGRATION-001"
+      ]
+    },
+    "MVP0A-GATE-35": {
+      "phase": "MVP0-A",
+      "condition": "Active Run／承認待ちがあるDeployをDrainで拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DRAIN-001"
+      ]
+    },
+    "MVP0A-GATE-36": {
+      "phase": "MVP0-A",
+      "condition": "GC Dry-runが参照Artifactを削除対象にしない",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-GC-001"
+      ]
+    },
+    "MVP0A-GATE-37": {
+      "phase": "MVP0-A",
+      "condition": "Predicate外の自動承認0件。委任による委任の生成・拡大0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DELEGATION-001"
+      ]
+    },
+    "MVP0A-GATE-38": {
+      "phase": "MVP0-A",
+      "condition": "失効・縮小が即時反映され、拡大が新規承認なしに成立しない",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DELEGATION-001"
+      ]
+    },
+    "MVP0A-GATE-39": {
+      "phase": "MVP0-A",
+      "condition": "自動承認された全実行がDelegationGrantと生成元Runへ追跡可能",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DELEGATION-001"
+      ]
+    },
+    "MVP0A-GATE-40": {
+      "phase": "MVP0-A",
+      "condition": "マスク後の再スキャン不合格・変換不正・Masker不在で通過0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ]
+    },
+    "MVP0A-GATE-41": {
+      "phase": "MVP0-A",
+      "condition": "認証情報がMaskerへ渡らず、MaskingReceipt／Ledger／LogへSecret Canary漏えい0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001",
+        "AT-MASKING-001"
+      ]
+    },
+    "MVP0A-GATE-42": {
+      "phase": "MVP0-A",
+      "condition": "risky Grapheme codepoint・NATIONAL_ID・Normalization Profile不一致は全てFail-Closed",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ]
+    },
+    "MVP0A-GATE-43": {
+      "phase": "MVP0-A",
+      "condition": "Raw PII経路のMasker隔離不成立時にMasker呼出しと未マスク通過が0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ]
+    },
+    "MVP0A-GATE-44": {
+      "phase": "MVP0-A",
+      "condition": "Python 3.11／3.12でUCD14 Profile Hashと正規化Hashが一致し、Artifact欠落時はFail-Closed",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ]
+    },
+    "MVP0A-GATE-45": {
+      "phase": "MVP0-A",
+      "condition": "Mask ratioはLLM追加分だけに適用され、同一カテゴリContainment Expansion以外のSpan衝突は0件通過",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ]
+    }
+  },
+  "error_codes": {
+    "HASH_PATTERN_INVALID": "VALIDATION_ERROR",
+    "FIXTURE_HASH_FORMAT_INVALID": "VALIDATION_ERROR",
+    "HASH_COLUMN_MISSING": "VALIDATION_ERROR",
+    "AMBIGUOUS_EXPECTED_STATE": "VALIDATION_ERROR",
+    "EXPECTED_STATE_SUBJECT_MISMATCH": "VALIDATION_ERROR",
+    "SCHEMA_CONDITIONAL_VIOLATION": "VALIDATION_ERROR",
+    "EVENT_ORDER_VIOLATION": "VALIDATION_ERROR",
+    "JOURNAL_REFERENCE_MISSING": "VALIDATION_ERROR",
+    "PHASE_LEDGER_EVENT_MISSING": "VALIDATION_ERROR",
+    "RUNTIME_SPEC_MISMATCH": "VALIDATION_ERROR",
+    "PLAN_NONDETERMINISTIC": "VALIDATION_ERROR",
+    "TOKEN_PROFILE_DRIFT_DETECTED": "VALIDATION_ERROR",
+    "PATH_OUTSIDE_CAPABILITY": "POLICY_DENIED",
+    "SYMLINK_DENIED": "POLICY_DENIED",
+    "MOUNT_CROSSING_DENIED": "POLICY_DENIED",
+    "SPECIAL_FILE_DENIED": "POLICY_DENIED",
+    "WORKSPACE_ON_FOREIGN_FS_DENIED": "POLICY_DENIED",
+    "CONTROL_DATA_ROLE_ESCALATION": "POLICY_DENIED",
+    "BLINDNESS_CONTEXT_LEAK": "POLICY_DENIED",
+    "SANDBOX_UNAVAILABLE": "POLICY_DENIED",
+    "POLICY_APPROVAL_BEFORE_SOD": "POLICY_DENIED",
+    "POLICY_STALE_NEW_ACTION_BLOCKED": "POLICY_DENIED",
+    "POLICY_STALE_EFFECT_BLOCKED": "POLICY_DENIED",
+    "POLICY_STALE_PAID_BLOCKED": "POLICY_DENIED",
+    "POLICY_STALE_EXTERNAL_EFFECT_BLOCKED": "POLICY_DENIED",
+    "POLICY_STALE_RECOVERY_ONLY": "POLICY_DENIED",
+    "APPROVAL_KEY_PERMISSION_INVALID": "POLICY_DENIED",
+    "FAULT_INJECTION_NOT_PERMITTED": "POLICY_DENIED",
+    "EMERGENCY_OPERATION_NOT_ALLOWED": "POLICY_DENIED",
+    "EMERGENCY_PROFILE_SIGNATURE_INVALID": "POLICY_DENIED",
+    "DEPLOY_DRAIN_REQUIRED": "POLICY_DENIED",
+    "APPROVAL_REQUIRED": "APPROVAL_REQUIRED",
+    "APPROVAL_INVALIDATED": "APPROVAL_REQUIRED",
+    "APPROVAL_REPLAY": "APPROVAL_REQUIRED",
+    "CLOCK_SKEW_EXCEEDED": "APPROVAL_REQUIRED",
+    "RELEASE_DECISION_REQUIRED": "APPROVAL_REQUIRED",
+    "STALE_FENCING_TOKEN": "CONFLICT",
+    "UNRECONCILED_EFFECT_PRESENT": "CONFLICT",
+    "LEDGER_CHAIN_TAMPERED": "CONFLICT",
+    "ARTIFACT_CONTENT_CONFLICT": "CONFLICT",
+    "APPROVAL_ISSUER_UNTRUSTED": "AUTHENTICATION_ERROR",
+    "APPROVAL_SUBJECT_MISMATCH": "AUTHENTICATION_ERROR",
+    "ENTITLEMENT_SNAPSHOT_INVALID": "ENTITLEMENT_ERROR",
+    "EFFECT_UNKNOWN": "EFFECT_UNKNOWN",
+    "REMOTE_INVOCATION_UNCERTAIN": "EFFECT_UNKNOWN",
+    "REMOTE_STATUS_UNKNOWN": "EFFECT_UNKNOWN",
+    "BUDGET_STATUS_UNKNOWN": "EFFECT_UNKNOWN",
+    "REMOTE_REGISTRY_NOT_DURABLE": "INTERNAL_ERROR",
+    "REMOTE_DISPATCH_STATE_NOT_DURABLE": "INTERNAL_ERROR",
+    "STORAGE_WRITE_FAILED": "INTERNAL_ERROR",
+    "MIGRATION_FAILED": "INTERNAL_ERROR",
+    "BACKUP_RESTORE_FAILED": "INTERNAL_ERROR",
+    "DELEGATION_SCOPE_EXCEEDED": "POLICY_DENIED",
+    "DELEGATION_SELF_MODIFICATION_DENIED": "POLICY_DENIED",
+    "DELEGATION_NOT_DELEGABLE_ACTION": "POLICY_DENIED",
+    "DELEGATION_EXPIRED": "APPROVAL_REQUIRED",
+    "DELEGATION_REVOKED": "APPROVAL_REQUIRED",
+    "DELEGATION_SIGNATURE_INVALID": "AUTHENTICATION_ERROR",
+    "DELEGATION_PREDICATE_AMBIGUOUS": "VALIDATION_ERROR",
+    "DELEGATION_TRUST_ANCHOR_INVALID": "AUTHENTICATION_ERROR",
+    "DELEGATION_SUBJECT_MISMATCH": "AUTHENTICATION_ERROR",
+    "DELEGATION_REVOKED_MID_FLIGHT": "CONFLICT",
+    "DELEGATION_REVOKED_AFTER_EFFECT_START": "CONFLICT",
+    "MASKING_VERIFICATION_FAILED": "POLICY_DENIED",
+    "MASKING_SPAN_INVALID": "VALIDATION_ERROR",
+    "MASKING_CATEGORY_UNKNOWN": "VALIDATION_ERROR",
+    "MASKING_RATIO_EXCEEDED": "POLICY_DENIED",
+    "MASKER_OUTPUT_MALFORMED": "VALIDATION_ERROR",
+    "MASKER_UNAVAILABLE": "POLICY_DENIED",
+    "MASKING_GRAPHEME_SPLIT": "VALIDATION_ERROR",
+    "MASKING_NORMALIZATION_PROFILE_MISMATCH": "VALIDATION_ERROR",
+    "MASKING_NORMALIZATION_ARTIFACT_MISSING": "VALIDATION_ERROR",
+    "MASKING_UNSUPPORTED_CODEPOINT": "VALIDATION_ERROR",
+    "MASKING_SPAN_CONFLICT": "VALIDATION_ERROR",
+    "MASKER_ISOLATION_INCOMPLETE": "POLICY_DENIED",
+    "CONTEXT_BUDGET_EXCEEDED": "VALIDATION_ERROR"
+  },
+  "event_types": [
+    "RUN_CREATED",
+    "INPUT_READ_CAPABILITY_ISSUED",
+    "INPUT_READ_STARTED",
+    "INPUT_READ_DENIED",
+    "INPUT_ARTIFACT_CLASSIFIED",
+    "INTENT_CREATED",
+    "CAPABILITY_SNAPSHOT_CAPTURED",
+    "RUNTIME_SPEC_RESOLVED",
+    "INVOCATION_MANIFEST_RESOLVED",
+    "PLAN_RESOLVED",
+    "PLAN_NONDETERMINISTIC",
+    "POLICY_DECIDED",
+    "APPROVAL_ISSUED",
+    "APPROVAL_CONSUMED",
+    "APPROVAL_REPLAY_DENIED",
+    "ACTION_CLAIMED",
+    "LEASE_ACQUIRED",
+    "RUNTIME_ATTESTED",
+    "RUNTIME_SPEC_MISMATCH",
+    "ACTION_STARTED",
+    "REMOTE_INVOCATION_PREPARED",
+    "REMOTE_REQUEST_DISPATCHING",
+    "REMOTE_ID_RECORDED",
+    "REMOTE_INVOCATION_RUNNING",
+    "REMOTE_INVOCATION_COMPLETED",
+    "REMOTE_INVOCATION_RECONCILED",
+    "REMOTE_INVOCATION_UNCERTAIN",
+    "OUTBOX_PREPARED",
+    "OUTBOX_DISPATCHING",
+    "OUTBOX_ACCEPTED",
+    "OUTBOX_SENT",
+    "OUTBOX_EFFECT_CONFIRMED",
+    "OUTBOX_RECONCILED",
+    "OUTBOX_STATUS_UNKNOWN",
+    "MANUAL_RECONCILIATION_ENQUEUED",
+    "BUDGET_RESERVATION_PREPARED",
+    "BUDGET_RESERVED",
+    "BUDGET_CONSUMING",
+    "BUDGET_RECONCILIATION_PENDING",
+    "BUDGET_SETTLED",
+    "BUDGET_RELEASED",
+    "BUDGET_RESERVATION_EXPIRED",
+    "BUDGET_STATUS_UNKNOWN",
+    "POLICY_STALE_DETECTED",
+    "POLICY_STALE_ACTION_BLOCKED",
+    "POLICY_STALE_RECOVERY_ONLY",
+    "EFFECT_CONFLICT_DETECTED",
+    "ACTION_PREPARED",
+    "EXECUTION_ATTEMPTED",
+    "EFFECT_OBSERVED",
+    "EFFECT_RECEIPT_STORED",
+    "ACTION_COMMITTED",
+    "ACTION_FAILED",
+    "ACTION_BLOCKED",
+    "CANCEL_REQUESTED",
+    "CANCEL_CONFIRMED",
+    "CANCEL_UNKNOWN",
+    "EFFECT_UNKNOWN",
+    "FENCING_REJECTED",
+    "RECOVERY_STARTED",
+    "RECOVERY_DECIDED",
+    "EVALUATION_COMPLETED",
+    "RELEASE_DECIDED",
+    "DELEGATION_CREATED",
+    "DELEGATION_MATCHED",
+    "DELEGATION_REJECTED",
+    "DELEGATION_NARROWED",
+    "DELEGATION_REVOKED",
+    "DELEGATION_EXPIRED",
+    "DELEGATION_INVALIDATED",
+    "DELEGATION_REVALIDATED",
+    "DELEGATION_EFFECT_LINEARIZED",
+    "DELEGATION_REVOKED_AFTER_EFFECT_START",
+    "INPUT_MASKING_STARTED",
+    "INPUT_MASKING_SCAN1_CANDIDATES_READY",
+    "INPUT_MASKING_SPANS_PROPOSED",
+    "INPUT_MASKING_COMPLETED",
+    "INPUT_MASKING_REJECTED",
+    "ARTIFACT_PAYLOAD_DELETED"
+  ],
+  "core_schemas": [
+    "EventEnvelope",
+    "Run",
+    "ActionIntent",
+    "ActionAttempt",
+    "ExecutionPlan",
+    "RuntimeEnvelopeSpec",
+    "InvocationManifest",
+    "TokenBudgetPolicy",
+    "TokenProfileSnapshot",
+    "ContextFragment",
+    "ContextBundle",
+    "ContextSelectionReceipt",
+    "PolicyDecision",
+    "ApprovalGrant",
+    "Lease",
+    "RuntimeAttestation",
+    "ArtifactManifest",
+    "EffectReceipt",
+    "OperationJournal",
+    "InputReadCapability",
+    "DelegationGrant",
+    "MaskingReceipt",
+    "Conversation",
+    "ConversationMessage",
+    "ConversationSnapshot",
+    "ApprovalConsumeResult"
+  ],
+  "core_schema_versions": [
+    {
+      "schema_name": "EventEnvelope",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/EventEnvelope/1.0.0.schema.json",
+      "content_hash": "sha256:9034baae1e3d9670c40963c503fc9a4d98d55e92c136fc9f6d286abca1294a06",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "Run",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/Run/1.0.0.schema.json",
+      "content_hash": "sha256:7e129e0000369a717e4f43659b1a1cec62da100270e9fc655b4c53df5c297d9c",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ActionIntent",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ActionIntent/1.0.0.schema.json",
+      "content_hash": "sha256:a9356a51f5374b61151547ab090b82b2cfabb0f02571c5d5e38ec7233b61ea18",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ActionAttempt",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ActionAttempt/1.0.0.schema.json",
+      "content_hash": "sha256:cd8284b8c34a01b5f72786cff6be655eea52a16ffd90629525271c096f67e26a",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ExecutionPlan",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ExecutionPlan/1.0.0.schema.json",
+      "content_hash": "sha256:a53ed9e9d1f606ab04a85fab3004948a05e1defcfce61434d6d4b8a6871ab5a6",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "RuntimeEnvelopeSpec",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/RuntimeEnvelopeSpec/1.0.0.schema.json",
+      "content_hash": "sha256:bc378c3a4ee870ff505a50454f9c8cf068ca25db5b2f1b6168fb33b279e44904",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "InvocationManifest",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/InvocationManifest/1.0.0.schema.json",
+      "content_hash": "sha256:36c24e05fc56a0b6b7e3ed2ef7772c4d5ef0da9e24bf96c3da0a7ac3a2238ef3",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "TokenBudgetPolicy",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/TokenBudgetPolicy/1.0.0.schema.json",
+      "content_hash": "sha256:db17b2a3d6dd46952c1b5e655f1555b7aa6ec026a2f580e0c5dca4a741ffcc87",
+      "read_only": true,
+      "active_write": false
+    },
+    {
+      "schema_name": "TokenBudgetPolicy",
+      "schema_version": "2.0.0",
+      "path": "schemas/core/TokenBudgetPolicy/2.0.0.schema.json",
+      "content_hash": "sha256:c9dbc1cf2bc80323dd66ab5da363783e9ec4cce088def345ce0d4c6b80edc60b",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "TokenProfileSnapshot",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/TokenProfileSnapshot/1.0.0.schema.json",
+      "content_hash": "sha256:a2fc099c6238bb0238bcd71aef754f963e8cb60742ebaa5dbcee66e538c98d15",
+      "read_only": true,
+      "active_write": false
+    },
+    {
+      "schema_name": "TokenProfileSnapshot",
+      "schema_version": "2.0.0",
+      "path": "schemas/core/TokenProfileSnapshot/2.0.0.schema.json",
+      "content_hash": "sha256:354cd38f58d248e4dfc390f07e908a370d31fcbeb001527afa299893e99a2d69",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ContextFragment",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ContextFragment/1.0.0.schema.json",
+      "content_hash": "sha256:0121b45f602f4d838830610986a3bfdfc1a281c72b71601dcf6e3b973ea73344",
+      "read_only": true,
+      "active_write": false
+    },
+    {
+      "schema_name": "ContextFragment",
+      "schema_version": "2.0.0",
+      "path": "schemas/core/ContextFragment/2.0.0.schema.json",
+      "content_hash": "sha256:add831f27632abd91a4bdac13121ea7114ec8814bfb2a0a7a896533f9e58aee1",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ContextBundle",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ContextBundle/1.0.0.schema.json",
+      "content_hash": "sha256:d75ac5cd3f2864dfc8e7e4531623e939a8b43821fea9dc0b12104e8915753198",
+      "read_only": true,
+      "active_write": false
+    },
+    {
+      "schema_name": "ContextBundle",
+      "schema_version": "2.0.0",
+      "path": "schemas/core/ContextBundle/2.0.0.schema.json",
+      "content_hash": "sha256:0024276f5158d8e6b0d58f96577c8f506000fe358d2dc36690395b9d230b508b",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ContextSelectionReceipt",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ContextSelectionReceipt/1.0.0.schema.json",
+      "content_hash": "sha256:e993e5150e8a1e963780edbb39f4823bf675670a8881b38447382a283d92d451",
+      "read_only": true,
+      "active_write": false
+    },
+    {
+      "schema_name": "ContextSelectionReceipt",
+      "schema_version": "2.0.0",
+      "path": "schemas/core/ContextSelectionReceipt/2.0.0.schema.json",
+      "content_hash": "sha256:dd72473843bb82b8130100e8e41c80a76c2719dc305185aa9625ad91e07baf5d",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "PolicyDecision",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/PolicyDecision/1.0.0.schema.json",
+      "content_hash": "sha256:78aebd4d2cefbbdad9bf52e3960a3eea35e960792659552c7a6f5a9bed2aefe7",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ApprovalGrant",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ApprovalGrant/1.0.0.schema.json",
+      "content_hash": "sha256:0ed75687b9359b6b6862585e774874057c565f4c40bf280e4df6bd97e986fa8b",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "Lease",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/Lease/1.0.0.schema.json",
+      "content_hash": "sha256:b6e8a6ed5d951f510e17b027d654c453e3dbb7cae27da0485ee0e401732a7584",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "RuntimeAttestation",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/RuntimeAttestation/1.0.0.schema.json",
+      "content_hash": "sha256:4350131dd260b7502a8769a5b898688505b5284c8265fbb239de38d937bab53d",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ArtifactManifest",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ArtifactManifest/1.0.0.schema.json",
+      "content_hash": "sha256:aa86fa755b8252db861d8714eb7381e5b25f360ea78c7e8c1a26be4bf8aa05e8",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "EffectReceipt",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/EffectReceipt/1.0.0.schema.json",
+      "content_hash": "sha256:ca84e6f9e72c55dd76997811355ce20af6df9ad670955e89750b6c8932a3ec89",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "OperationJournal",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/OperationJournal/1.0.0.schema.json",
+      "content_hash": "sha256:ba8ac802663dcd2efe98edacd7448ea2c6fdc8aac81df7c1e25de5795e402060",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "InputReadCapability",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/InputReadCapability/1.0.0.schema.json",
+      "content_hash": "sha256:02a6f66547fb1883b03f5277521c42378f9645062e755fde1bf491b18f56195d",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "DelegationGrant",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/DelegationGrant/1.0.0.schema.json",
+      "content_hash": "sha256:09ba7b75dec27141f98eb81e08d8e336d32b7d6ce351e16e4e217a3f5fe6842a",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "MaskingReceipt",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/MaskingReceipt/1.0.0.schema.json",
+      "content_hash": "sha256:cc442b6fb71065f330ebeb7ff6e31a65d4df92731ca8495378058610c5ec6401",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "Conversation",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/Conversation/1.0.0.schema.json",
+      "content_hash": "sha256:baa53c07530b4d625317cb972091a32c9f41d72767ebbd8688138be077862719",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ConversationMessage",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ConversationMessage/1.0.0.schema.json",
+      "content_hash": "sha256:d349d9ce367b7eb4f54a1b9c4e80b61387d3f9b427854002937248c0ac63e9b5",
+      "read_only": true,
+      "active_write": false
+    },
+    {
+      "schema_name": "ConversationMessage",
+      "schema_version": "2.0.0",
+      "path": "schemas/core/ConversationMessage/2.0.0.schema.json",
+      "content_hash": "sha256:46e5008842a2e4ba3990f1be42541c8f759a1cdbefc28d8acf55d4335db97606",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ConversationSnapshot",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ConversationSnapshot/1.0.0.schema.json",
+      "content_hash": "sha256:b6cf11900f1d35c96519331944788224c615745b107b443b1d22c68824f67d9a",
+      "read_only": false,
+      "active_write": true
+    },
+    {
+      "schema_name": "ApprovalConsumeResult",
+      "schema_version": "1.0.0",
+      "path": "schemas/core/ApprovalConsumeResult/1.0.0.schema.json",
+      "content_hash": "sha256:d54659abc7a19e8bd110d52cf0f224f9067de4915db6e3159bd0319cf6b24e71",
+      "read_only": false,
+      "active_write": true
+    }
+  ],
+  "schema_catalog_hash": "sha256:e16da61678433a0913bad62733d940581c6ea1227f2cea29d9e6fd72af8dea00",
+  "core_schema_active_write_versions": {
+    "EventEnvelope": "1.0.0",
+    "Run": "1.0.0",
+    "ActionIntent": "1.0.0",
+    "ActionAttempt": "1.0.0",
+    "ExecutionPlan": "1.0.0",
+    "RuntimeEnvelopeSpec": "1.0.0",
+    "InvocationManifest": "1.0.0",
+    "TokenBudgetPolicy": "2.0.0",
+    "TokenProfileSnapshot": "2.0.0",
+    "ContextFragment": "2.0.0",
+    "ContextBundle": "2.0.0",
+    "ContextSelectionReceipt": "2.0.0",
+    "PolicyDecision": "1.0.0",
+    "ApprovalGrant": "1.0.0",
+    "Lease": "1.0.0",
+    "RuntimeAttestation": "1.0.0",
+    "ArtifactManifest": "1.0.0",
+    "EffectReceipt": "1.0.0",
+    "OperationJournal": "1.0.0",
+    "InputReadCapability": "1.0.0",
+    "DelegationGrant": "1.0.0",
+    "MaskingReceipt": "1.0.0",
+    "Conversation": "1.0.0",
+    "ConversationMessage": "2.0.0",
+    "ConversationSnapshot": "1.0.0",
+    "ApprovalConsumeResult": "1.0.0"
+  },
+  "state_namespaces": {
+    "ACTION_ATTEMPT": [
+      "PLANNING",
+      "WAITING_POLICY",
+      "WAITING_APPROVAL",
+      "READY",
+      "CLAIMED",
+      "LEASED",
+      "RUNTIME_VERIFIED",
+      "RUNNING",
+      "PREPARED_DURABLE",
+      "EFFECT_IN_FLIGHT",
+      "EFFECT_VERIFIED",
+      "RECEIPT_DURABLE",
+      "SUCCEEDED",
+      "FAILED_RETRYABLE",
+      "FAILED_PERMANENT",
+      "BLOCKED_POLICY",
+      "BLOCKED_APPROVAL",
+      "BLOCKED_CONFLICT",
+      "CANCELLED",
+      "CANCEL_UNKNOWN",
+      "EFFECT_UNKNOWN"
+    ],
+    "RUN": [
+      "CREATED",
+      "PLANNING",
+      "WAITING_APPROVAL",
+      "READY",
+      "RUNNING",
+      "RECOVERING",
+      "WAITING_RELEASE",
+      "COMPLETED",
+      "BLOCKED",
+      "BLOCKED_REPAIR_REQUIRED",
+      "CANCELLING",
+      "CANCELLED",
+      "FAILED"
+    ],
+    "APPROVAL_GRANT": [
+      "NOT_REQUIRED",
+      "REQUESTED",
+      "ISSUED",
+      "CONSUMED",
+      "EXPIRED",
+      "REVOKED",
+      "INVALIDATED",
+      "REPLAY_DENIED"
+    ],
+    "APPROVAL_CONSUME_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "REMOTE_INVOCATION_REGISTRY": [
+      "PREPARED_DURABLE",
+      "REQUEST_DISPATCHING",
+      "REMOTE_ID_RECORDED",
+      "REMOTE_INVOCATION_UNCERTAIN",
+      "RECONCILED"
+    ],
+    "OUTBOX_RECORD": [
+      "PREPARED_DURABLE",
+      "DISPATCHING",
+      "RECONCILED",
+      "MANUAL_RECONCILIATION"
+    ],
+    "BUDGET_RESERVATION": [
+      "RESERVED",
+      "PENDING_RECONCILIATION",
+      "SETTLED",
+      "STATUS_UNKNOWN"
+    ],
+    "INPUT_READ_DECISION": [
+      "ALLOWED",
+      "DENIED"
+    ],
+    "SCHEMA_VALIDATION_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "SCHEMA_SUITE_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "MANIFEST_VALIDATION_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "EVENT_APPEND_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "PLAN_COMPARISON": [
+      "ASSERTIONS_SATISFIED",
+      "ASSERTIONS_FAILED"
+    ],
+    "REPAIR_DECISION": [
+      "REPAIR_REQUIRED",
+      "REPAIRED",
+      "EFFECT_UNKNOWN"
+    ],
+    "LEDGER_CHAIN_VERIFICATION": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "APPROVAL_UI_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "STATIC_ANALYSIS_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "UX_MEASUREMENT_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "EMERGENCY_RECOVERY_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "PERFORMANCE_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "STORAGE_IO_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "MIGRATION_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "BACKUP_RESTORE_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "DEPLOYMENT_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "GC_RESULT": [
+      "ACCEPTED",
+      "REJECTED"
+    ],
+    "DELEGATION_GRANT": [
+      "ACTIVE",
+      "EXPIRED",
+      "REVOKED",
+      "SUPERSEDED",
+      "INVALIDATED"
+    ],
+    "MASKING_RESULT": [
+      "CLEAN",
+      "MASKED",
+      "REJECTED"
+    ]
+  },
+  "totals": {
+    "case_count": 128,
+    "test_id_count": 39,
+    "gate_count": 45,
+    "error_code_count": 76,
+    "event_type_count": 79,
+    "core_schema_count": 26,
+    "core_schema_version_count": 32,
+    "state_namespace_count": 27
+  },
+  "registry_snapshot_hash": "sha256:03ce54570cb2ecac655877c6c6bd5484ece060f13a465e02e30426c0b5b96343"
+}

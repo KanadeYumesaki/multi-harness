@@ -1,0 +1,111 @@
+# Required Evidence Area の正本（Owner Decision DEC-U-EVIDENCE-SCOPE、設計書 v1.12 §26.2）。
+#
+# v1.11以前は tools/build_registry_snapshot.py の REQUIRED_EVIDENCE_AREAS が
+# 「Scopeによらず必須」の定数だった。§26.1 は「Release Scopeは判定の入力である」と定め、
+# Case集合・Gate集合・test_manifest_hash は既にScope別へ導出されていたのに、
+# Evidence領域だけがその外に取り残されていた。
+#
+# 結果、MVP0-A には「対応するCaseが1件も無いのに充足を要求される領域」が残った。
+# 承認UIはMVP0-Bで実装するため（§4.1.1）、MVP0-A では approval_ux を満たせない。
+#
+# ここが正本である。件数もScope割当もコードへ書かない（不変条件#18）。
+#
+# phase_scope: その領域を必須とする Release Scope。実装対象Phaseだけを書く。
+#   参照仕様Phase（MVP1-B / MVP1-C / MVP1-E / MVP2-A / MVP2-B /
+#   BLIND_REVIEWER / ENTERPRISE）はRelease Scopeとして指定できないため書かない。
+# human_measured: 人が測った記録であること。§26.6 の reused_from 可否判定にのみ使う。
+#   この項目に他の意味を持たせない。
+# reuse_bound_subtree: human_measured=true のとき必須。再利用を無効化する Subtree。
+
+evidence_areas:
+  - area: spec_lint
+    evidence_path: source/spec-lint-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: source_static_analysis
+    evidence_path: source/static-analysis.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: environment
+    evidence_path: environment/runtime-environment.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: core_schema_suite
+    evidence_path: schema/schema-suite-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: sqlite_migration
+    evidence_path: migration/migration-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: backup_restore
+    evidence_path: migration/backup-restore-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: linux_safe_reader
+    evidence_path: filesystem/safe-reader-corpus-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: runtime_attestation
+    evidence_path: runtime/runtime-attestation.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: fault_injection_recovery
+    evidence_path: fault/fault-matrix-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: performance
+    evidence_path: performance/performance-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  # 人手計測。承認UIを人が操作して測る記録であり、UIの実在を前提とする。
+  # MVP0-A には承認するべき実作業がなく、承認UIも存在しない（§4.1.1）。
+  # よって MVP0-A の Required 集合から外す。**領域そのものは消さない。**
+  # 消すと「その検証はもう要らない」という意味になる。要らないのではなく、
+  # MVP0-A の時点では対象が存在しないだけである。
+  #
+  # AT-APPROVAL-UX-001/NO_BYPASS は MVP0-A の Case として残るが、
+  # あれは SOURCE_SCAN であってUX計測ではない。
+  # NO_BYPASS を根拠にこの領域をPASSにしない（DEC-U-EVIDENCE-SCOPE §0.1）。
+  - area: approval_ux
+    evidence_path: approval/approval-ux-report.json
+    human_measured: true
+    reuse_bound_subtree: src/harness/presentation/cli
+    phase_scope: [MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  - area: secret_canary
+    evidence_path: security/secret-canary-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  # Unit層で検証したCaseの領域（Owner Decision DCR-1、設計書 v1.15 §26.2）。
+  #
+  # Orchestration層のCaseとは別領域として数える。同じ領域へ混ぜると、Ledgerを
+  # 観測して作用を確かめたCaseと、StateとError Codeだけで閉じたCaseが同じ重みで
+  # 充足に数えられる。何を検証したEvidenceなのかを後から区別できる形にしておく。
+  #
+  # phase_scope は実装Phase全体とする。Unit Caseはどの実装Phaseにも現れるため、
+  # Scopeを絞ると後続Phaseで足し忘れが黙って「数えない」へ倒れる。
+  #
+  # 領域が重ならないことは Case Evidence の evidence_kind が保証する。
+  # 1件のEvidenceは UNIT と ORCHESTRATION のどちらか一方だけを名乗る（§26.2.1）。
+  - area: unit_case_suite
+    evidence_path: cases/unit-case-suite-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]
+
+  # v1.7新設。GO判定器そのものの否定系試験。
+  - area: verifier_self_test
+    evidence_path: tooling/verifier-self-test-report.json
+    human_measured: false
+    phase_scope: [MVP0-A, MVP0-B, MVP1-A, MVP0-C, MVP1-D]

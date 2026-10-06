@@ -1,0 +1,166 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/DelegationGrant/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approver_subject_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "approver_tenant_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "audience": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "authentication_context_class": {
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "created_from_action_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_from_run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "delegation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "delegation_schema_version": {
+      "type": "string"
+    },
+    "expires_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "issued_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "issuer_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "issuer_key_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "max_uses": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "not_before": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "predicate": {
+      "type": "object"
+    },
+    "predicate_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "reconfirm_after_uses": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "revocation_epoch": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "DelegationGrant"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "signature": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "EXPIRED",
+        "REVOKED",
+        "SUPERSEDED",
+        "INVALIDATED"
+      ],
+      "type": "string"
+    },
+    "store_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "use_count": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "delegation_id",
+    "delegation_schema_version",
+    "predicate",
+    "predicate_hash",
+    "created_from_run_id",
+    "created_from_action_id",
+    "approver_subject_id",
+    "approver_tenant_id",
+    "issued_at",
+    "not_before",
+    "expires_at",
+    "use_count",
+    "reconfirm_after_uses",
+    "revocation_epoch",
+    "status",
+    "audience",
+    "issuer_id",
+    "issuer_key_id",
+    "signature",
+    "store_version"
+  ],
+  "title": "DelegationGrant",
+  "type": "object"
+}

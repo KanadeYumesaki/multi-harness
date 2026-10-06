@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fde-harness/runtime-go-manifest-v1.2.schema.json",
+  "title": "Runtime GO Evidence Manifest v1.2",
+  "description": "件数はRelease Scopeに依存するため const で固定しない。件数と必要集合の正本は registry-snapshot.json であり、Verifierがそこから導出した値と突合する。v1.0では 36/37/86 を const で固定していたため、Scope単位判定が表現できなかった。",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "design_version",
+    "design_sha256",
+    "release_scope",
+    "registry_snapshot_hash",
+    "implementation_repository",
+    "implementation_commit_sha",
+    "source_tree_clean",
+    "runtime_environment",
+    "schema_set_hash",
+    "migration_head",
+    "test_manifest_hash",
+    "expected_gate_count",
+    "expected_test_id_count",
+    "expected_case_count",
+    "test_cases",
+    "gates",
+    "required_evidence_areas",
+    "skipped_count",
+    "xfail_count",
+    "release_decision"
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullableSha256": {
+      "anyOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "relativeEvidencePath": {
+      "description": "evidence-root相対。絶対Path、ドライブレター、.. を禁止する。",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?![A-Za-z]:)(?!\\\\)(?!.*(^|/)\\.\\.(/|$)).+$"
+        },
+        { "type": "null" }
+      ]
+    },
+    "status": {
+      "enum": ["UNVERIFIED", "PASS", "FAIL", "BLOCKED", "SKIPPED", "XFAIL"]
+    },
+    "evidenceBearing": {
+      "type": "object",
+      "required": ["status", "evidence_manifest_hash", "evidence_path"],
+      "properties": {
+        "status": { "$ref": "#/$defs/status" },
+        "evidence_manifest_hash": { "$ref": "#/$defs/nullableSha256" },
+        "evidence_path": { "$ref": "#/$defs/relativeEvidencePath" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "PASS" } } },
+          "then": {
+            "properties": {
+              "evidence_manifest_hash": { "$ref": "#/$defs/sha256" },
+              "evidence_path": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "manifest_version": { "const": "1.2" },
+    "design_version": { "const": "1.7" },
+    "design_sha256": { "$ref": "#/$defs/sha256" },
+    "release_scope": {
+      "description": "参照仕様Phaseは指定できない。",
+      "enum": ["MVP0-A", "MVP0-B", "MVP1-A", "MVP0-C", "MVP1-D"]
+    },
+    "registry_snapshot_hash": { "$ref": "#/$defs/sha256" },
+    "implementation_repository": { "type": ["string", "null"] },
+    "implementation_commit_sha": {
+      "anyOf": [
+        { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        { "type": "null" }
+      ]
+    },
+    "source_tree_clean": { "type": ["boolean", "null"] },
+    "source_subtree_hashes": {
+      "description": "§26.6の再認定でEvidence再利用を宣言する場合に必須。",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/nullableSha256" }
+    },
+    "runtime_environment": {
+      "type": "object",
+      "required": [
+        "environment_manifest_path",
+        "environment_manifest_hash",
+        "is_wsl2",
+        "workspace_on_linux_native_fs",
+        "python_version"
+      ],
+      "properties": {
+        "environment_manifest_path": { "$ref": "#/$defs/relativeEvidencePath" },
+        "environment_manifest_hash": { "$ref": "#/$defs/nullableSha256" },
+        "is_wsl2": { "type": ["boolean", "null"] },
+        "workspace_on_linux_native_fs": { "type": ["boolean", "null"] },
+        "python_version": {
+          "description": "ADR-003により3.11以上。Verifierが数値比較する。",
+          "anyOf": [
+            { "type": "string", "pattern": "^3\\.(1[1-9]|[2-9][0-9])(\\.[0-9]+)?$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "schema_set_hash": { "$ref": "#/$defs/nullableSha256" },
+    "migration_head": { "type": ["string", "null"] },
+    "test_manifest_hash": {
+      "description": "Registry導出のScope別値と一致しなければならない。",
+      "$ref": "#/$defs/nullableSha256"
+    },
+    "expected_gate_count": { "type": "integer", "minimum": 0 },
+    "expected_test_id_count": { "type": "integer", "minimum": 0 },
+    "expected_case_count": { "type": "integer", "minimum": 0 },
+    "test_cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [{ "$ref": "#/$defs/evidenceBearing" }],
+        "type": "object",
+        "required": ["test_id", "case_id", "input_fixture_hash"],
+        "properties": {
+          "test_id": { "type": "string", "pattern": "^AT-[A-Z0-9\\-]+$" },
+          "case_id": { "type": "string", "minLength": 1 },
+          "expectation_descriptor_hash": { "$ref": "#/$defs/nullableSha256" },
+          "input_fixture_hash": { "$ref": "#/$defs/nullableSha256" }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [{ "$ref": "#/$defs/evidenceBearing" }],
+        "type": "object",
+        "required": ["gate_id"],
+        "properties": {
+          "gate_id": { "type": "string", "minLength": 1 },
+          "condition": { "type": "string" },
+          "test_refs_mode": { "enum": ["EXPLICIT", "ALL_IN_SCOPE"] },
+          "test_refs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "required_evidence_areas": {
+      "description": "必須集合はregistry-snapshot.jsonが正本。空配列にしても要件は消えない。",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [{ "$ref": "#/$defs/evidenceBearing" }],
+        "type": "object",
+        "required": ["area"],
+        "properties": {
+          "area": { "type": "string", "minLength": 1 },
+          "reused_from": {
+            "description": "§26.6。人手計測領域のみ許可。",
+            "type": "object",
+            "required": ["release_id", "bound_subtree_hash"],
+            "properties": {
+              "release_id": { "type": "string", "minLength": 1 },
+              "bound_subtree_hash": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "skipped_count": { "type": "integer", "const": 0 },
+    "xfail_count": { "type": "integer", "const": 0 },
+    "release_decision": {
+      "enum": ["BLOCKED_EVIDENCE_MISSING", "RUNTIME_GO", "RUNTIME_NO_GO"]
+    }
+  },
+  "additionalProperties": true
+}

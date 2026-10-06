@@ -1,0 +1,1585 @@
+{
+  "_comment": "Template。実行結果から試験Harnessが更新する。人手でHashを転記しない。",
+  "manifest_version": "1.2",
+  "design_version": "1.24",
+  "design_sha256": "sha256:a08b25ed8e48df23a1ec75b4aa3e6c063d2a9a68dc9ff8e17b6f2930e78c64e3",
+  "release_scope": "MVP0-A",
+  "registry_snapshot_hash": "sha256:cc72803dc9b795cc93d4f1de2f5674a875f67b9e3bc4b3afbef42335f2c847ed",
+  "implementation_repository": null,
+  "implementation_commit_sha": null,
+  "source_tree_clean": null,
+  "source_subtree_hashes": {},
+  "runtime_environment": {
+    "environment_manifest_path": "environment/runtime-environment.json",
+    "environment_manifest_hash": null,
+    "is_wsl2": null,
+    "workspace_on_linux_native_fs": null,
+    "python_version": null
+  },
+  "schema_set_hash": null,
+  "migration_head": null,
+  "test_manifest_hash": "sha256:9f5621559fac79e8d1f8a43b268950d269ffa4c449a019030ab377165b8ac707",
+  "expected_gate_count": 45,
+  "expected_test_id_count": 31,
+  "expected_case_count": 108,
+  "test_cases": [
+    {
+      "test_id": "AT-APPROVAL-001",
+      "case_id": "REPLAY",
+      "expectation_descriptor_hash": "sha256:a44e84d1d4486d1874e95fbe80f717fd082cd9b74c3ff1680110d9e2a0e15ceb",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-APPROVAL-001/REPLAY/evidence.json"
+    },
+    {
+      "test_id": "AT-APPROVAL-002",
+      "case_id": "CONCURRENT_LOSER",
+      "expectation_descriptor_hash": "sha256:353eac89c4d61f87ad1912fc61a64fac513de57bcf74970185af6916836fecea",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-APPROVAL-002/CONCURRENT_LOSER/evidence.json"
+    },
+    {
+      "test_id": "AT-APPROVAL-002",
+      "case_id": "CONCURRENT_WINNER",
+      "expectation_descriptor_hash": "sha256:41fa7fae842a7ae9f0029e9718967f9ffcc61992641c68fece260854bdff30d3",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-APPROVAL-002/CONCURRENT_WINNER/evidence.json"
+    },
+    {
+      "test_id": "AT-APPROVAL-UX-001",
+      "case_id": "NO_BYPASS",
+      "expectation_descriptor_hash": "sha256:093b73609a5cdb674ec56c01628225106c998168b1735489abf90d6cad7710d1",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-APPROVAL-UX-001/NO_BYPASS/evidence.json"
+    },
+    {
+      "test_id": "AT-CLOCK-SKEW-001",
+      "case_id": "EXCEEDED",
+      "expectation_descriptor_hash": "sha256:94ef96984d156e7e3cb7ace0d668b1952cc2359bbd64f2a2dd34fa527ac2b735",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CLOCK-SKEW-001/EXCEEDED/evidence.json"
+    },
+    {
+      "test_id": "AT-CONFIG-001",
+      "case_id": "DRIFT",
+      "expectation_descriptor_hash": "sha256:71ed8d44da03eb64199f9c4866b27518fef48d5cb4ff65e799d6dadc11a04b96",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CONFIG-001/DRIFT/evidence.json"
+    },
+    {
+      "test_id": "AT-CONTROL-DATA-001",
+      "case_id": "ARTIFACT_INSTRUCTION",
+      "expectation_descriptor_hash": "sha256:0ebe42161fffce51eca0f054abdd23de3dd9095952e0e8383bfec88e2e8b35ae",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CONTROL-DATA-001/ARTIFACT_INSTRUCTION/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "AFTER_EXECUTION_EXPECTED_HASH",
+      "expectation_descriptor_hash": "sha256:d993d656f4b42f68dcd84be3f039171105335b01a2b9c4c4435e0f7360e6219a",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/AFTER_EXECUTION_EXPECTED_HASH/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "AFTER_EXECUTION_UNKNOWN",
+      "expectation_descriptor_hash": "sha256:93f1bc5fe7bdbeddf236121412b272c15c8af169bf208921d13a9907251192e8",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/AFTER_EXECUTION_UNKNOWN/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "AFTER_OBSERVED",
+      "expectation_descriptor_hash": "sha256:e09b4c5549305b44a33c35717b92fbdd536f059890fc6bcba122a121f398a587",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/AFTER_OBSERVED/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "AFTER_PREPARED_ABSENCE_PROVEN",
+      "expectation_descriptor_hash": "sha256:9137c43dd1f6682badfca762230097bce5cd301701327aeb61ce5397a0dd3ce6",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/AFTER_PREPARED_ABSENCE_PROVEN/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "AFTER_RECEIPT",
+      "expectation_descriptor_hash": "sha256:7546e0772bc341c7d127e2ea274ff0cd7710b1218a3604bfa1523c234073c74a",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/AFTER_RECEIPT/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "AFTER_REPLACE",
+      "expectation_descriptor_hash": "sha256:6a6db7ed0d9e2d358466c405115252dc29c53a31809067d2b277120009ff3013",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/AFTER_REPLACE/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "BEFORE_EXECUTION",
+      "expectation_descriptor_hash": "sha256:33afc74628a55797908755bf42fa94767e328152e1d4a420664c577fcf8084a7",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/BEFORE_EXECUTION/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "BEFORE_PREPARED",
+      "expectation_descriptor_hash": "sha256:a6dbedafabe5a64398ceb138604f6bc9ac107cbd81ea4cae2808bef386ec8129",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/BEFORE_PREPARED/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "BEFORE_RECEIPT",
+      "expectation_descriptor_hash": "sha256:bd69678037b5dbbf79b9f163dfd2676d7a1a136af757a7fe014ff284b027cf6d",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/BEFORE_RECEIPT/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "LEDGER_APPEND",
+      "expectation_descriptor_hash": "sha256:e5115da2001319349104362b4a15a677f235eae29582a23a90f75aa8e626edbe",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/LEDGER_APPEND/evidence.json"
+    },
+    {
+      "test_id": "AT-CRASH-001",
+      "case_id": "TEMP_BEFORE_FSYNC",
+      "expectation_descriptor_hash": "sha256:7080748934b601985b96021f553970cb3d3a9e4d73279b979ff9bb2a7f34cca9",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-CRASH-001/TEMP_BEFORE_FSYNC/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "AUDIENCE_MISMATCH",
+      "expectation_descriptor_hash": "sha256:5604bf960ab3cbab4dfb8afe3b3f74c0b47277e4b3de71b7542019e5f560bda5",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/AUDIENCE_MISMATCH/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "AUDIT_TRAIL_COMPLETE",
+      "expectation_descriptor_hash": "sha256:2b72dcad3f92fe0a6c11ed4c76eaf8a335294f207e496d1c24b3b8d9ef1d2673",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/AUDIT_TRAIL_COMPLETE/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "DERIVED_APPROVAL_IS_SINGLE_USE",
+      "expectation_descriptor_hash": "sha256:ab4132d9f07c4532c5270910b8d992cf4052ea3877301b260476a39c460cb52f",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/DERIVED_APPROVAL_IS_SINGLE_USE/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "DESTRUCTIVE_NEVER_DELEGATED",
+      "expectation_descriptor_hash": "sha256:cc5d0531b4fe6ccb7175b7773c8dc7838c48fa13e27a77eea8b820a253d5eb4d",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/DESTRUCTIVE_NEVER_DELEGATED/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "POLICY_HASH_CHANGED",
+      "expectation_descriptor_hash": "sha256:f7e0b6733efb66d63403b79bfc09c087d29091e916884811f5d29b16d1743996",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/POLICY_HASH_CHANGED/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "PREDICATE_FIELD_CHANGED",
+      "expectation_descriptor_hash": "sha256:9a0a212e8ac71b91b9be564e85667c18c363fe200c4af8ac2144b8c4dd38498d",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/PREDICATE_FIELD_CHANGED/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "REVOKE_AFTER_EFFECT_LINEARIZATION",
+      "expectation_descriptor_hash": "sha256:443b319232c7eafef2e78ed0c8ef2ebf4c672cbbafe819362cfd71611167fe95",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/REVOKE_AFTER_EFFECT_LINEARIZATION/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "REVOKE_BEFORE_EFFECT_LINEARIZATION",
+      "expectation_descriptor_hash": "sha256:fb3db61e27cfa0c00e35d6a740b4ed97cf92b28f6ea303125bc189ea9858a112",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/REVOKE_BEFORE_EFFECT_LINEARIZATION/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "REVOKE_IMMEDIATE",
+      "expectation_descriptor_hash": "sha256:5c562453487094d1e9bf37335a3b8013870bbee8cda0a9908a139a80c39483a4",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/REVOKE_IMMEDIATE/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "SCOPE_EXCEEDED",
+      "expectation_descriptor_hash": "sha256:6a12693279e7e43a6c4d09a87f2775012a7dd4ab5d9e58d6d7508d3724bc6f52",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/SCOPE_EXCEEDED/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "SELF_MODIFICATION",
+      "expectation_descriptor_hash": "sha256:67b2b6906d1e96239e2f9fc2a3e971249905da58b85d4390c860a01b1b80d3cf",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/SELF_MODIFICATION/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "STALE_POLICY_NO_AUTO",
+      "expectation_descriptor_hash": "sha256:e38fb2e80c0b7abc80dbd45915acf91fcf568795bb3c70f0deff4ec9701be3f3",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/STALE_POLICY_NO_AUTO/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "TRUST_ANCHOR_ROLLBACK",
+      "expectation_descriptor_hash": "sha256:b241444711e924dd803455e36173a34793db318575bb5c732af0e3edd15d0699",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/TRUST_ANCHOR_ROLLBACK/evidence.json"
+    },
+    {
+      "test_id": "AT-DELEGATION-001",
+      "case_id": "WIDEN_DENIED",
+      "expectation_descriptor_hash": "sha256:eff2e9f2453e897449b9356775060b6de07d237376d13abdf4788f3902bce565",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DELEGATION-001/WIDEN_DENIED/evidence.json"
+    },
+    {
+      "test_id": "AT-DRAIN-001",
+      "case_id": "ACTIVE_RUN_BLOCKS",
+      "expectation_descriptor_hash": "sha256:0580229330e33cb52625d1ee74091fec12d5d26462817ff3f73bfd6082dee43b",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DRAIN-001/ACTIVE_RUN_BLOCKS/evidence.json"
+    },
+    {
+      "test_id": "AT-DRAIN-001",
+      "case_id": "DRAINED_DEPLOY",
+      "expectation_descriptor_hash": "sha256:ee03389b2ee29b718035f86f47cfb97f8afdee2b8417c47d13082bdd4c67b027",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-DRAIN-001/DRAINED_DEPLOY/evidence.json"
+    },
+    {
+      "test_id": "AT-EMERGENCY-RECOVERY-001",
+      "case_id": "ALLOWLIST",
+      "expectation_descriptor_hash": "sha256:f682f1c39f35296addcd9b18fbf09abc08932a7b83dcc343c762606cabcc7915",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-EMERGENCY-RECOVERY-001/ALLOWLIST/evidence.json"
+    },
+    {
+      "test_id": "AT-EMERGENCY-RECOVERY-001",
+      "case_id": "BAD_SIGNATURE",
+      "expectation_descriptor_hash": "sha256:ba4793a6a7ab019d4627e80740b7334204ecdfe76f9966b603721d55cbfd3bd4",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-EMERGENCY-RECOVERY-001/BAD_SIGNATURE/evidence.json"
+    },
+    {
+      "test_id": "AT-EMERGENCY-RECOVERY-001",
+      "case_id": "DENYLIST",
+      "expectation_descriptor_hash": "sha256:2e20fa2fbf079d1641d64dfab616044cf5c26a941d894692ed96b073ce0818cb",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-EMERGENCY-RECOVERY-001/DENYLIST/evidence.json"
+    },
+    {
+      "test_id": "AT-EVENT-MAPPING-001",
+      "case_id": "LEDGER_EVENT_MISSING",
+      "expectation_descriptor_hash": "sha256:7f7bab2ac8026691f9b4192243f333d071e449764172a47e1a7988c6d9ea7d5f",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-EVENT-MAPPING-001/LEDGER_EVENT_MISSING/evidence.json"
+    },
+    {
+      "test_id": "AT-EVENT-ORDER-001",
+      "case_id": "ACTION_STARTED_MISSING",
+      "expectation_descriptor_hash": "sha256:9690426c57cc70c790412a80dc34018c2b07290b853e3a86ad8155ce6410bbd4",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-EVENT-ORDER-001/ACTION_STARTED_MISSING/evidence.json"
+    },
+    {
+      "test_id": "AT-EVENT-ORDER-001",
+      "case_id": "SEQUENCE_REGRESSION",
+      "expectation_descriptor_hash": "sha256:336e2423abf1a408e5f3d4e70857d3d63065e815d8ae9c94540a8b39359d776f",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-EVENT-ORDER-001/SEQUENCE_REGRESSION/evidence.json"
+    },
+    {
+      "test_id": "AT-FAULT-GUARD-001",
+      "case_id": "POLICY_DENIED",
+      "expectation_descriptor_hash": "sha256:c859a87a80466c2eed099a0033d9049917a0e0a33f63d9fac22a2383ae06cf02",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-FAULT-GUARD-001/POLICY_DENIED/evidence.json"
+    },
+    {
+      "test_id": "AT-FAULT-IO-001",
+      "case_id": "ARTIFACT_ENOSPC",
+      "expectation_descriptor_hash": "sha256:ddffef8f366fcfa2c5a427750117d4e31d0af37fef5e3903c01b6fde508bc284",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-FAULT-IO-001/ARTIFACT_ENOSPC/evidence.json"
+    },
+    {
+      "test_id": "AT-FAULT-IO-001",
+      "case_id": "FSYNC_EIO",
+      "expectation_descriptor_hash": "sha256:0c4c01c32d8e5f34eecc57177f24692e298ec61233b1209fc12f8581bc5ce1c3",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-FAULT-IO-001/FSYNC_EIO/evidence.json"
+    },
+    {
+      "test_id": "AT-FAULT-IO-001",
+      "case_id": "SQLITE_ENOSPC",
+      "expectation_descriptor_hash": "sha256:f3dd2b2dce993ec66b24783788aa2b7b9c153f53afdbf9630d5243d8367cbab8",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-FAULT-IO-001/SQLITE_ENOSPC/evidence.json"
+    },
+    {
+      "test_id": "AT-FENCE-001",
+      "case_id": "STALE_WORKER",
+      "expectation_descriptor_hash": "sha256:a66a47c61b866cc7fc7faae6c9b5b5038e8179f55ec5c43744ee25911d820310",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-FENCE-001/STALE_WORKER/evidence.json"
+    },
+    {
+      "test_id": "AT-GC-001",
+      "case_id": "ORPHAN_CANDIDATE",
+      "expectation_descriptor_hash": "sha256:fa65c745de25797d9e72ed65aae61e38643c5cbb0c703612a55060e2ed086657",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-GC-001/ORPHAN_CANDIDATE/evidence.json"
+    },
+    {
+      "test_id": "AT-GC-001",
+      "case_id": "RAW_RETENTION",
+      "expectation_descriptor_hash": "sha256:99ebb06a634152acb1a2825f64a42613c98edbaedaa151c89c67beb331559ab1",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-GC-001/RAW_RETENTION/evidence.json"
+    },
+    {
+      "test_id": "AT-GC-001",
+      "case_id": "REFERENCED_KEEP",
+      "expectation_descriptor_hash": "sha256:a93dab4e40f630bcb628cee648199e727e893bce746942a0a106ef08b4b4b0f4",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-GC-001/REFERENCED_KEEP/evidence.json"
+    },
+    {
+      "test_id": "AT-INPUT-PATH-001",
+      "case_id": "MOUNT_CROSSING",
+      "expectation_descriptor_hash": "sha256:47d4ac815b8fb976ace05264d3ac7ff631b5699b1c4300621fae2632e2934ecb",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-INPUT-PATH-001/MOUNT_CROSSING/evidence.json"
+    },
+    {
+      "test_id": "AT-INPUT-PATH-001",
+      "case_id": "SPECIAL_FILE",
+      "expectation_descriptor_hash": "sha256:129bf23d1d9d5fa0c44f5f4af9c5bf5ff613f8255a102b8401951d34a5b67bb7",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-INPUT-PATH-001/SPECIAL_FILE/evidence.json"
+    },
+    {
+      "test_id": "AT-INPUT-PATH-001",
+      "case_id": "SYMLINK",
+      "expectation_descriptor_hash": "sha256:a8261e49fb121a93510fc947a0cd97f9787c19f469b6c1a465e515a6cd275fb5",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-INPUT-PATH-001/SYMLINK/evidence.json"
+    },
+    {
+      "test_id": "AT-LEDGER-TAMPER-001",
+      "case_id": "ONE_BYTE",
+      "expectation_descriptor_hash": "sha256:617244f5362df8b0216d3a835be36a32157c869887bde320b415e31b5374dee6",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-LEDGER-TAMPER-001/ONE_BYTE/evidence.json"
+    },
+    {
+      "test_id": "AT-MANIFEST-SUBJECT-001",
+      "case_id": "MIXED_SUBJECT_STATE",
+      "expectation_descriptor_hash": "sha256:774cf937c59d893ffd94e0b72b298c96f5e9b2b472b865048adf84565d7884f5",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MANIFEST-SUBJECT-001/MIXED_SUBJECT_STATE/evidence.json"
+    },
+    {
+      "test_id": "AT-MANIFEST-SUBJECT-001",
+      "case_id": "VALID_TYPED_SUBJECT",
+      "expectation_descriptor_hash": "sha256:358726de2a24d7fd2f3e85fc4f46d5c4b251af875c9b15779ae392a8d5260ab6",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MANIFEST-SUBJECT-001/VALID_TYPED_SUBJECT/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "GRAPHEME_SPLIT",
+      "expectation_descriptor_hash": "sha256:bc737aa1ee99f86ac64d46e1d00cb1dde359e843d1c9ed1bd070f5a8322e10fc",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/GRAPHEME_SPLIT/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "MASKER_ISOLATION_INCOMPLETE",
+      "expectation_descriptor_hash": "sha256:472d5c42b9d61df2099b40b169041d48a2457b3e1134c27bb6f0da63a2b70ae6",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/MASKER_ISOLATION_INCOMPLETE/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "MASKER_OUTPUT_MALFORMED",
+      "expectation_descriptor_hash": "sha256:599cb2e2f4a4beb8fe5fd9b9f175b03ff2c0f34993b49df299c7b50a87b3b44e",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/MASKER_OUTPUT_MALFORMED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "MASKER_UNAVAILABLE_FAIL_CLOSED",
+      "expectation_descriptor_hash": "sha256:dea9be4e1083abdc5086acd134a19ed4d0e11ebf24dd0aaa56e70432f2199dce",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/MASKER_UNAVAILABLE_FAIL_CLOSED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "MASK_RATIO_BOUNDARY",
+      "expectation_descriptor_hash": "sha256:ac15df8a567f805efbcfcc6682c7fd4445643c3c50030e1c4e50dd9d0bdb6f22",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/MASK_RATIO_BOUNDARY/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "MASK_RATIO_EXCEEDED",
+      "expectation_descriptor_hash": "sha256:f9b37015a440046d16e008c9c0f8e93c2042d74fb57c92419117badd4cf109ae",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/MASK_RATIO_EXCEEDED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "NATIONAL_ID_REJECTED_NOT_MASKED",
+      "expectation_descriptor_hash": "sha256:52380063bc9afa26662c1f465f8fe0dad70797b5752fd918bb287c01faa59803",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/NATIONAL_ID_REJECTED_NOT_MASKED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "NORMALIZATION_PROFILE_MISMATCH",
+      "expectation_descriptor_hash": "sha256:195dc67abaec679b28463144a0e0a7919b4290baac6bd2f1d05912e088c00cb0",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/NORMALIZATION_PROFILE_MISMATCH/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "NO_AUTO_DOWNGRADE",
+      "expectation_descriptor_hash": "sha256:ba0a9155c6192eeef5fd7ec69a40b5e154abab39330582fb5ee87d4e6f8831aa",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/NO_AUTO_DOWNGRADE/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "NO_LLM_PATH",
+      "expectation_descriptor_hash": "sha256:8678080c01ff66ba099740ca26e8f2b870215f7d4465030c8cac231d1bf536c8",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/NO_LLM_PATH/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "NO_SECRET_IN_RECEIPT",
+      "expectation_descriptor_hash": "sha256:7b6846ce50547433500403c3e29724f5c718e276a0c9515de97f9765bccc952f",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/NO_SECRET_IN_RECEIPT/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "NO_SECRET_IN_RECEIPT_REJECTED",
+      "expectation_descriptor_hash": "sha256:aa98be2071cf3e040c6e7bd9d6683db9d5ef8be912fac5eb60508aa3cf8a399b",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/NO_SECRET_IN_RECEIPT_REJECTED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "PROMPT_INJECTION",
+      "expectation_descriptor_hash": "sha256:f0b5b20f9f1d7633d323047bc8a589888957868347a2d763dc569be487f72481",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/PROMPT_INJECTION/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "REWRITER_DETERMINISM",
+      "expectation_descriptor_hash": "sha256:46e94a7fd82dc3033dd416771a1c970efa99740730ea5da29c9bddcd519600a3",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/REWRITER_DETERMINISM/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SCAN1_CANDIDATE_UNION",
+      "expectation_descriptor_hash": "sha256:0f6585d02eff521ecdb2134d52cb1a80d0ed8eec44ffd9c848f4d5345c04cc77",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SCAN1_CANDIDATE_UNION/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SECOND_SCAN_IS_THE_GATE",
+      "expectation_descriptor_hash": "sha256:5f8f90624f319ae668a21eb4e9d8e4754ce215e02e1c81cff5545463dab2af3a",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SECOND_SCAN_IS_THE_GATE/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SECRET_REJECTED_NOT_MASKED",
+      "expectation_descriptor_hash": "sha256:01308dedfff5d701820d85c4db1f579fdc80554b4897fac0c353beaa4f8fb151",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SECRET_REJECTED_NOT_MASKED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SPAN_CATEGORY_UNKNOWN",
+      "expectation_descriptor_hash": "sha256:80e29564f92192cb8fdea99e33129627f01b83d38306320b94e4a7add3d9b898",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SPAN_CATEGORY_UNKNOWN/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SPAN_CONFLICT_PARTIAL",
+      "expectation_descriptor_hash": "sha256:747c2d46f6d3ce12174e82a208f721bf8f897c02b2c0e2adf192acb7506296d1",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SPAN_CONFLICT_PARTIAL/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SPAN_CONTAINMENT_EXPANSION",
+      "expectation_descriptor_hash": "sha256:862ed5d52afee7a10a5e9e3d1f1aad998d536736bb8822d940911515329f3f7c",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SPAN_CONTAINMENT_EXPANSION/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SPAN_OUT_OF_RANGE",
+      "expectation_descriptor_hash": "sha256:5f61ed97c6a33eb7dbeb735eca6c0b7e4b338511f1fd9ec33634f379b7a16b88",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SPAN_OUT_OF_RANGE/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SPAN_OVERLAP_OR_NESTED",
+      "expectation_descriptor_hash": "sha256:7644dae7c8d9676ec8fdbc4db93d7f229208748f1890f0d9f9d19c8873baa582",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SPAN_OVERLAP_OR_NESTED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "SPAN_UNSORTED",
+      "expectation_descriptor_hash": "sha256:3fe567e3fc410e393ed70ac5bf3e00ee5e078307a95c3850b087cefe9f63a2a8",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/SPAN_UNSORTED/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "UNICODE_NORMALIZATION",
+      "expectation_descriptor_hash": "sha256:553915ec9d50573c8f126186bad0d195e3e83b31645365060bcf60c9ca277731",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/UNICODE_NORMALIZATION/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "UNICODE_PROFILE_ARTIFACT_MISSING",
+      "expectation_descriptor_hash": "sha256:ea6afc5c9070e4855690d107461538fc4aed7c15c9d763ae21968719a5ab0d63",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/UNICODE_PROFILE_ARTIFACT_MISSING/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "UNICODE_PROFILE_CROSS_PYTHON",
+      "expectation_descriptor_hash": "sha256:d8260768d338e76e7c4889bb87d34bc494b59ccd25a6c139fe20fde257688f14",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/UNICODE_PROFILE_CROSS_PYTHON/evidence.json"
+    },
+    {
+      "test_id": "AT-MASKING-001",
+      "case_id": "UNICODE_UCD14_ASSIGNED_GUARD",
+      "expectation_descriptor_hash": "sha256:98f3ff10a2e397edae6b2c42072ce812281a3faf3b5a28529ac9db72bf380dee",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MASKING-001/UNICODE_UCD14_ASSIGNED_GUARD/evidence.json"
+    },
+    {
+      "test_id": "AT-MIGRATION-001",
+      "case_id": "BACKUP_RESTORE",
+      "expectation_descriptor_hash": "sha256:a7b1a7b17bcf703535cfd9113b75d6cbac6e4b36aff267d3005eccd50765bdb7",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MIGRATION-001/BACKUP_RESTORE/evidence.json"
+    },
+    {
+      "test_id": "AT-MIGRATION-001",
+      "case_id": "FRESH_INSTALL",
+      "expectation_descriptor_hash": "sha256:a76c9e25aa1cf5d6e7599177ad2392ee7a4a2981451289cef3ca04d8e3a857d4",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-MIGRATION-001/FRESH_INSTALL/evidence.json"
+    },
+    {
+      "test_id": "AT-PATH-001",
+      "case_id": "LINUX_ESCAPE",
+      "expectation_descriptor_hash": "sha256:122f863c0ac42eb66b5609858f7e939da41b5fdce02b9135569947e542d56c19",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-PATH-001/LINUX_ESCAPE/evidence.json"
+    },
+    {
+      "test_id": "AT-PERF-001",
+      "case_id": "CONTROL_OVERHEAD",
+      "expectation_descriptor_hash": "sha256:90c1196cf3118f889f2c276293dc1d9f452edc6f7fc8204f80c00e6e97b035be",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-PERF-001/CONTROL_OVERHEAD/evidence.json"
+    },
+    {
+      "test_id": "AT-PLAN-001",
+      "case_id": "TAMPER",
+      "expectation_descriptor_hash": "sha256:3ecd9b981c307e56af00f51b09ba0b6802a82f55cdba37e9a6ad84d64f68b925",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-PLAN-001/TAMPER/evidence.json"
+    },
+    {
+      "test_id": "AT-PLAN-DETERMINISM-001",
+      "case_id": "NONDETERMINISTIC_OUTPUT",
+      "expectation_descriptor_hash": "sha256:a22906fc23dd23e89f6a42374bc9ddcc28f158ff7aece83727d632f7ac286dfd",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-PLAN-DETERMINISM-001/NONDETERMINISTIC_OUTPUT/evidence.json"
+    },
+    {
+      "test_id": "AT-PLAN-DETERMINISM-001",
+      "case_id": "SAME_INPUT",
+      "expectation_descriptor_hash": "sha256:226b00f27fd07282cd0df7862f9527ec74ac6c7d0e252148670ea31396cce63f",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-PLAN-DETERMINISM-001/SAME_INPUT/evidence.json"
+    },
+    {
+      "test_id": "AT-POLICY-STALE-001",
+      "case_id": "INFLIGHT_ATTEMPTED",
+      "expectation_descriptor_hash": "sha256:45b7c7ae25b74fa104d9ec08a39d34a3c6ef445e8624bb179db65b4d057aaebc",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-POLICY-STALE-001/INFLIGHT_ATTEMPTED/evidence.json"
+    },
+    {
+      "test_id": "AT-POLICY-STALE-001",
+      "case_id": "NEW_EXTERNAL_EFFECT",
+      "expectation_descriptor_hash": "sha256:5551e02b8b4e297826c2037cac6114ab8d3bd1068a85c1658bea5fd41055a4e2",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-POLICY-STALE-001/NEW_EXTERNAL_EFFECT/evidence.json"
+    },
+    {
+      "test_id": "AT-POLICY-STALE-001",
+      "case_id": "NEW_LOCAL_READ",
+      "expectation_descriptor_hash": "sha256:49ae6fa81408ee3ac3699ce797ed569dad4374eaaa046ec26de9f3bbe86ff619",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-POLICY-STALE-001/NEW_LOCAL_READ/evidence.json"
+    },
+    {
+      "test_id": "AT-POLICY-STALE-001",
+      "case_id": "NEW_PAID",
+      "expectation_descriptor_hash": "sha256:d06bb2b936df06038535f988fd1cf298237dcf6b64b027a075c62c037d196721",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-POLICY-STALE-001/NEW_PAID/evidence.json"
+    },
+    {
+      "test_id": "AT-POLICY-STALE-001",
+      "case_id": "NEW_WORKSPACE_WRITE",
+      "expectation_descriptor_hash": "sha256:fafdea454df05e52f70d953a3a57f029e6e281ff7fd4b65c97ed8218c52e4225",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-POLICY-STALE-001/NEW_WORKSPACE_WRITE/evidence.json"
+    },
+    {
+      "test_id": "AT-RUN-TERMINAL-001",
+      "case_id": "NO_RELEASE",
+      "expectation_descriptor_hash": "sha256:2118e84b45a3d30f309d59bb116c811c26b73ab74f7af95013a725a752700761",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-RUN-TERMINAL-001/NO_RELEASE/evidence.json"
+    },
+    {
+      "test_id": "AT-RUN-TERMINAL-001",
+      "case_id": "UNRECONCILED_TO_CANCELLED",
+      "expectation_descriptor_hash": "sha256:d39058cc31acd50cd6e0c70ccdccd2dfcf538352e7ae8b61f4e9685ce9464c74",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-RUN-TERMINAL-001/UNRECONCILED_TO_CANCELLED/evidence.json"
+    },
+    {
+      "test_id": "AT-RUN-TERMINAL-001",
+      "case_id": "UNRECONCILED_TO_COMPLETED",
+      "expectation_descriptor_hash": "sha256:524bf0c172051650766ecfe7c42af03ff8359933611aed8aa6d80aba109f80ab",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-RUN-TERMINAL-001/UNRECONCILED_TO_COMPLETED/evidence.json"
+    },
+    {
+      "test_id": "AT-RUN-TERMINAL-001",
+      "case_id": "UNRECONCILED_TO_FAILED",
+      "expectation_descriptor_hash": "sha256:407c4cdfbedd7ea51e6896af707d5a379800547f84c8ed9bd26b2812408019fb",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-RUN-TERMINAL-001/UNRECONCILED_TO_FAILED/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-COMPLETE-001",
+      "case_id": "ALL_VALID",
+      "expectation_descriptor_hash": "sha256:7f37c998b20af6d5146556858a18571e4d17b21851fbe432d35d9381a82bb01d",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-COMPLETE-001/ALL_VALID/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-COMPLETE-001",
+      "case_id": "INVALID_HASH",
+      "expectation_descriptor_hash": "sha256:01a5f3f096aba3afe4f50c9926efb272052dcca1620bdf79d7f273b676c03451",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-COMPLETE-001/INVALID_HASH/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-COMPLETE-001",
+      "case_id": "MISSING_CROSS_REFERENCE",
+      "expectation_descriptor_hash": "sha256:6b348e1027f4ad4c0ec4581b825c7017fb15c9e97af54cec75bda5dd23e2136c",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-COMPLETE-001/MISSING_CROSS_REFERENCE/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-CONDITIONAL-001",
+      "case_id": "CONSUMED_MISSING_ATTEMPT",
+      "expectation_descriptor_hash": "sha256:0227eb1d8b211a80c74aba5382fe97a99730acfbf3900a1b922ad30372f32e26",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-CONDITIONAL-001/CONSUMED_MISSING_ATTEMPT/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-CONDITIONAL-001",
+      "case_id": "READY_VALID",
+      "expectation_descriptor_hash": "sha256:4add6ea8c4504b103d5866a3e251aea0577e41fb7eb13f118e1e09ba7d212617",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-CONDITIONAL-001/READY_VALID/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-CONDITIONAL-001",
+      "case_id": "RUNNING_MISSING_ATTESTATION",
+      "expectation_descriptor_hash": "sha256:656321f6b2c496359e58e53894516d46659283518dc78053801d1ab2be0b95d2",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-CONDITIONAL-001/RUNNING_MISSING_ATTESTATION/evidence.json"
+    },
+    {
+      "test_id": "AT-SCHEMA-CONDITIONAL-001",
+      "case_id": "SUCCEEDED_MISSING_RECEIPT",
+      "expectation_descriptor_hash": "sha256:9d5349697efc8a68ff1e2f2af8c95e79ad6e0afef523627a8709de83f1caadfa",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-SCHEMA-CONDITIONAL-001/SUCCEEDED_MISSING_RECEIPT/evidence.json"
+    },
+    {
+      "test_id": "AT-TEST-MANIFEST-001",
+      "case_id": "AMBIGUOUS_EXPECTED",
+      "expectation_descriptor_hash": "sha256:ed7636d11b1183055263ddbc9c4d1209154c611b12392a4d70d8494048635e83",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-TEST-MANIFEST-001/AMBIGUOUS_EXPECTED/evidence.json"
+    },
+    {
+      "test_id": "AT-TEST-MANIFEST-001",
+      "case_id": "HASH_COLUMN_MISSING",
+      "expectation_descriptor_hash": "sha256:210b05447683cd4756b56b384f67514e2ccd99d2a502446de0b196b5f16acc0b",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-TEST-MANIFEST-001/HASH_COLUMN_MISSING/evidence.json"
+    },
+    {
+      "test_id": "AT-TEST-MANIFEST-001",
+      "case_id": "HASH_FORMAT",
+      "expectation_descriptor_hash": "sha256:4b605e4d7e0d2d6579b722d5e1d256ffbbdb99784d2c0e5ba509bfd45aa84650",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-TEST-MANIFEST-001/HASH_FORMAT/evidence.json"
+    },
+    {
+      "test_id": "AT-WSL-BOUNDARY-001",
+      "case_id": "FOREIGN_FS",
+      "expectation_descriptor_hash": "sha256:bcb35daf70748332d7f47cf503800bc3caf4b896c8d4b7cdc6a6ab03ff066267",
+      "input_fixture_hash": null,
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tests/cases/AT-WSL-BOUNDARY-001/FOREIGN_FS/evidence.json"
+    }
+  ],
+  "gates": [
+    {
+      "gate_id": "MVP0A-GATE-01",
+      "condition": "WorkspaceがWSL2 Linux native FS上にあり、Foreign FSを拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-WSL-BOUNDARY-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-01.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-02",
+      "condition": "MVP0-A割当のTest Manifestが全件PASS",
+      "test_refs_mode": "ALL_IN_SCOPE",
+      "test_refs": [],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-02.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-03",
+      "condition": "RuntimeEnvelopeSpecとInvocationManifestをApproval前に固定",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PLAN-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-03.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-04",
+      "condition": "argv／cwd／env／Executable／Model／Auth／Policy変更時の起動拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONFIG-001",
+        "AT-PLAN-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-04.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-05",
+      "condition": "Approval署名、Nonce、Expiry、Revocation、Replay合格",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-05.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-06",
+      "condition": "Approval同時Consumeで成功1件だけ",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-002"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-06.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-07",
+      "condition": "許容Clock Skew超過でFail-Closed",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CLOCK-SKEW-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-07.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-08",
+      "condition": "Fault Point 10点の全Crash Caseから手動DB改変なしで復旧または安全停止",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-08.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-09",
+      "condition": "ENOSPC／EIO Faultから部分Commitなしで復旧または安全停止",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-FAULT-IO-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-09.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-10",
+      "condition": "Policy禁止下でFault Injection実行0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-FAULT-GUARD-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-10.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-11",
+      "condition": "PREPARED_DURABLE前のEffect実行0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-11.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-12",
+      "condition": "EFFECT_UNKNOWNからの自動再実行0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001",
+        "AT-RUN-TERMINAL-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-12.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-13",
+      "condition": "Receipt欠落／Ledger欠落を双方検出",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001",
+        "AT-EVENT-MAPPING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-13.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-14",
+      "condition": "Ledger Hash Chain改ざん検出",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-LEDGER-TAMPER-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-14.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-15",
+      "condition": "Stale Fencing TokenによるCommit 0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-FENCE-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-15.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-16",
+      "condition": "未照合Effectを持つRunの終端0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-RUN-TERMINAL-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-16.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-17",
+      "condition": "Approval回避機構0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-001",
+        "AT-APPROVAL-UX-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-17.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-18",
+      "condition": "承認既定表示7項目、差分表示、操作時間中央値30秒以下",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-APPROVAL-UX-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-18.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-19",
+      "condition": "重複Effect 0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CRASH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-19.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-20",
+      "condition": "Workspace Escape 0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-INPUT-PATH-001",
+        "AT-PATH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-20.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-21",
+      "condition": "Symlink／Mount／特殊File／Virtual FS Input Read拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-INPUT-PATH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-21.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-22",
+      "condition": "Read CapabilityなしのTask／Context読取り0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-INPUT-PATH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-22.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-23",
+      "condition": "Artifact Put前のClassification／Secret Scan実施率100%",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001",
+        "AT-INPUT-PATH-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-23.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-24",
+      "condition": "Untrusted入力のControl Role昇格0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-24.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-25",
+      "condition": "Token上限超過Provider呼出0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PLAN-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-25.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-26",
+      "condition": "定義済みSecret CanaryのDB／Log／Artifact漏えい0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-26.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-27",
+      "condition": "LedgerからProjection再構築成功",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-EVENT-ORDER-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-27.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-28",
+      "condition": "Release DecisionなしのRun完了0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-RUN-TERMINAL-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-28.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-29",
+      "condition": "Plan非決定性を検出し停止",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PLAN-DETERMINISM-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-29.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-30",
+      "condition": "25 Core Schema、Conditional、Cross-reference全件合格",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-SCHEMA-COMPLETE-001",
+        "AT-SCHEMA-CONDITIONAL-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-30.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-31",
+      "condition": "Policy期限切れ動作がDecision Matrixと一致",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-POLICY-STALE-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-31.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-32",
+      "condition": "Emergency Recovery範囲外操作0件、署名／Rollback検証",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-EMERGENCY-RECOVERY-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-32.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-33",
+      "condition": "制御処理p50≤5秒、p95≤8秒",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-PERF-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-33.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-34",
+      "condition": "Migration、Backup／Restore、Integrity Check合格",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MIGRATION-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-34.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-35",
+      "condition": "Active Run／承認待ちがあるDeployをDrainで拒否",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DRAIN-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-35.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-36",
+      "condition": "GC Dry-runが参照Artifactを削除対象にしない",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-GC-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-36.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-37",
+      "condition": "Predicate外の自動承認0件。委任による委任の生成・拡大0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DELEGATION-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-37.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-38",
+      "condition": "失効・縮小が即時反映され、拡大が新規承認なしに成立しない",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DELEGATION-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-38.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-39",
+      "condition": "自動承認された全実行がDelegationGrantと生成元Runへ追跡可能",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-DELEGATION-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-39.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-40",
+      "condition": "マスク後の再スキャン不合格・変換不正・Masker不在で通過0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-40.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-41",
+      "condition": "認証情報がMaskerへ渡らず、MaskingReceipt／Ledger／LogへSecret Canary漏えい0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-CONTROL-DATA-001",
+        "AT-MASKING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-41.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-42",
+      "condition": "risky Grapheme codepoint・NATIONAL_ID・Normalization Profile不一致は全てFail-Closed",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-42.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-43",
+      "condition": "Raw PII経路のMasker隔離不成立時にMasker呼出しと未マスク通過が0件",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-43.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-44",
+      "condition": "Python 3.11／3.12でUCD14 Profile Hashと正規化Hashが一致し、Artifact欠落時はFail-Closed",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-44.json"
+    },
+    {
+      "gate_id": "MVP0A-GATE-45",
+      "condition": "Mask ratioはLLM追加分だけに適用され、同一カテゴリContainment Expansion以外のSpan衝突は0件通過",
+      "test_refs_mode": "EXPLICIT",
+      "test_refs": [
+        "AT-MASKING-001"
+      ],
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "gates/MVP0A-GATE-45.json"
+    }
+  ],
+  "required_evidence_areas": [
+    {
+      "area": "backup_restore",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "migration/backup-restore-report.json"
+    },
+    {
+      "area": "core_schema_suite",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "schema/schema-suite-report.json"
+    },
+    {
+      "area": "environment",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "environment/runtime-environment.json"
+    },
+    {
+      "area": "fault_injection_recovery",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "fault/fault-matrix-report.json"
+    },
+    {
+      "area": "linux_safe_reader",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "filesystem/safe-reader-corpus-report.json"
+    },
+    {
+      "area": "performance",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "performance/performance-report.json"
+    },
+    {
+      "area": "runtime_attestation",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "runtime/runtime-attestation.json"
+    },
+    {
+      "area": "secret_canary",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "security/secret-canary-report.json"
+    },
+    {
+      "area": "source_static_analysis",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "source/static-analysis.json"
+    },
+    {
+      "area": "spec_lint",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "source/spec-lint-report.json"
+    },
+    {
+      "area": "sqlite_migration",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "migration/migration-report.json"
+    },
+    {
+      "area": "unit_case_suite",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "cases/unit-case-suite-report.json"
+    },
+    {
+      "area": "verifier_self_test",
+      "status": "UNVERIFIED",
+      "evidence_manifest_hash": null,
+      "evidence_path": "tooling/verifier-self-test-report.json"
+    }
+  ],
+  "skipped_count": 0,
+  "xfail_count": 0,
+  "release_decision": "BLOCKED_EVIDENCE_MISSING"
+}

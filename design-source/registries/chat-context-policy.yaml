@@ -1,0 +1,119 @@
+# Chat Context Policyの正本。Owner Decision CP-1-A／CPM-1-A／CPM-2-A／CPM-3-A。
+#
+# 正本。
+# Role別のpriorityと選択順序を散文とコードへ直書きしない（不変条件#18）。
+#
+# CP-1-Aは「Hash対象のRegistryへChat用Mappingを足す」と決め、CPM-1-Aが置き場所を
+# `chat-context-policy.yaml`の新設と決めた。`route-policy.yaml`と同じ位置づけである。
+# このFileは`registry_snapshot_hash`の対象であり、改変が検知できる。
+#
+# **`src/harness/domain/_chat_context_policy_generated.py`はこのFileの生成物である。**
+# 再生成: python tools/generate_chat_context_policy_code.py
+# 整合検査: python tools/generate_chat_context_policy_code.py --check
+#
+# **このFileはProvider接続を含まない。** 経路の可否は`route-policy.yaml`が持つ。
+
+chat_context_policy_version: 1
+
+# ---------------------------------------------------------------------------
+# 1. 信頼境界の3段（CPM-2-A）
+# ---------------------------------------------------------------------------
+# CPM-2-Aは「信頼境界の3段で決める。区分は§1.16.4と`_CONTROL_ROLES`／
+# `_UNTRUSTED_ROLES`からそのまま導ける。**具体値は3段が区別できれば足りる**」と決めた。
+#
+# したがってpriorityは段の順位そのものである。3段あるので上から3・2・1になる。
+# §3.6の9段階へ個別に割り当てる案（CPM-2-C）は**選ばれていない**。9段階との写像を
+# ここで作らない。
+#
+# priorityの大小だけが意味を持つ。絶対値に意味を持たせない。
+trust_tiers:
+  - id: CONTROL
+    priority: 3
+    mandatory_capable: true
+    description: §1.16.4のControl Role。Z0 Control Planeの検証済みArtifactだけが名乗れる
+    derived_from: _CONTROL_ROLES
+  - id: INTERMEDIATE
+    priority: 2
+    mandatory_capable: false
+    description: Control でもUntrustedでもないRole。指示ではなく作業対象として扱う
+    derived_from: 7 Role から CONTROL と UNTRUSTED を除いた残り
+  - id: UNTRUSTED
+    priority: 1
+    mandatory_capable: false
+    description: §3.6 手順2の昇格拒否対象。本文に命令形式があってもControlへ上げない
+    derived_from: _UNTRUSTED_ROLES
+
+# ---------------------------------------------------------------------------
+# 2. Message Roleと段の写像
+# ---------------------------------------------------------------------------
+# §1.16.4の7 Roleを**漏れなく1回ずつ**書く。Role名をここで新設しない。
+# 生成器は7件・重複なし・§1.16.4の語彙と完全一致を検査し、外れればFail-Closedで止まる。
+#
+# 列挙順は§1.16.4の記載順である。並べ替えても意味は変わらない（写像は`role`で引く）。
+message_role_tiers:
+  - role: SYSTEM_CONTROL
+    tier: CONTROL
+  - role: DEVELOPER_CONTROL
+    tier: CONTROL
+  - role: USER_TASK
+    tier: INTERMEDIATE
+  - role: TOOL_DEFINITION
+    tier: INTERMEDIATE
+  - role: VERIFIED_REFERENCE_DATA
+    tier: INTERMEDIATE
+  - role: UNTRUSTED_ARTIFACT_DATA
+    tier: UNTRUSTED
+  - role: UNTRUSTED_PROVIDER_DATA
+    tier: UNTRUSTED
+
+# ---------------------------------------------------------------------------
+# 3. 順序
+# ---------------------------------------------------------------------------
+# 段が同じMessageどうしの順位（CPM-3-A）。新しいMessageほど高い。
+# 予算が足りないときに落ちるのは**古い発話**である。
+#
+# `fragment_id`昇順は決定論ではあるが会話の新しさと無関係であり、
+# **会話の優先順位として使わない**。CPM-3-Cは選ばれていない。
+intra_tier_order: SEQUENCE_NUMBER_DESC
+
+# Providerへ渡す最終Message列の順序。**選択順とは別である。**
+# 選択は新しい順に行い、送るときは会話の順に戻す。降順のまま送ると会話が逆さになる。
+final_message_order: SEQUENCE_NUMBER_ASC
+
+# ---------------------------------------------------------------------------
+# 4. 未解決の扱い（CP-3-B）
+# ---------------------------------------------------------------------------
+# priorityは§2の写像で解決する。mandatoryは呼出側がMessageごとに明示する。
+# **どちらも既定値を持たない。** CP-3-Cの「Registryで既定値を定義する」は選ばれていない。
+#
+# 1件でも解決できなければChat送信全体を拒否する。黙って候補から外さない
+# （CP-3-Aは選ばれていない）。部分送信・Retry・Fallback・Queue投入を行わない。
+unresolved_selection_input: REJECT_SEND
+
+# §2に無いrole値。既定の段へ落とさずFail-Closedで止める。
+unknown_message_role: REJECT_SEND
+
+# ---------------------------------------------------------------------------
+# 5. mandatoryとControl Authority
+# ---------------------------------------------------------------------------
+# `mandatory_capable: true`は「その段のRoleならmandatoryにできる」ではない。
+# **段はmandatoryの必要条件であって十分条件ではない。**
+#
+# §1.16.4はControl Roleを「Z0 Control Planeが生成し、署名、Policy Hash、Issuer、
+# Expiryを検証できるArtifact」だけに許す。下の4件を検証したArtifactが無い限り、
+# Control Roleであってもmandatory=trueにしない。
+mandatory_prerequisites:
+  - VERIFIED_SIGNATURE
+  - VERIFIED_POLICY_HASH
+  - VERIFIED_ISSUER
+  - VERIFIED_EXPIRY
+
+# Chat経路がControl Authorityを与える手段。**無い。**
+# Roleだけを根拠にControl Authorityを付与しない。Role変換による権限昇格を禁止する。
+# 検証経路が実装されるまでChatはmandatoryなMessageを作れない。
+# 迂回策を作らない（不変条件#11と同じ考え方）。
+control_authority_grant: NONE
+
+# Provider出力の扱い。常にUntrustedのままである。
+# 本文に命令形式が含まれていてもControl Roleへ昇格しない（§1.16.4）。
+provider_output_role: UNTRUSTED_PROVIDER_DATA

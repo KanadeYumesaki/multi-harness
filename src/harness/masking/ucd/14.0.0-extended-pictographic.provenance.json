@@ -1,0 +1,11 @@
+{
+  "artifact_bit_order": "CODEPOINT_ASCENDING_LSB0",
+  "artifact_format": "UCD14_EXTENDED_PICTOGRAPHIC_BITMAP_V1",
+  "artifact_sha256": "sha256:423a40891a4dfff16f2a922384ad862532836ceaec512512718720551c32ac5e",
+  "artifact_size_bytes": 139264,
+  "generator": "tools/build_extended_pictographic_bitmap.py",
+  "property": "Extended_Pictographic",
+  "source_sha256": "sha256:b597836124298b8f7fa076273802840cfc3271a25f5c397a082e120954b82c3c",
+  "source_url": "https://www.unicode.org/Public/14.0.0/ucd/emoji/emoji-data.txt",
+  "unicode_version": "14.0.0"
+}

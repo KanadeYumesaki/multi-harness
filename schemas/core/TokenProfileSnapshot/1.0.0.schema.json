@@ -1,0 +1,114 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/TokenProfileSnapshot/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "context_limit": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "estimate_assurance": {
+      "enum": [
+        "EXACT",
+        "CONSERVATIVE",
+        "UNKNOWN"
+      ],
+      "type": "string"
+    },
+    "expires_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "maximum_output_limit": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "model": {
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "retrieved_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "TokenProfileSnapshot"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "snapshot_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "tokenizer_name": {
+      "type": "string"
+    },
+    "tokenizer_version": {
+      "type": "string"
+    },
+    "vocabulary_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "snapshot_id",
+    "provider",
+    "model",
+    "tokenizer_name",
+    "tokenizer_version",
+    "context_limit",
+    "maximum_output_limit",
+    "estimate_assurance",
+    "retrieved_at",
+    "expires_at",
+    "snapshot_hash"
+  ],
+  "title": "TokenProfileSnapshot",
+  "type": "object"
+}

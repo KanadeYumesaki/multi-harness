@@ -1,0 +1,78 @@
+{
+  "planner_algorithm_version": "harness-planner/1.0",
+  "planner_identity": "harness-planner/mvp0a",
+  "authority_scope": "ACTION_EXECUTION",
+  "intent": {
+    "action_type": "LOCAL_FILE_PROPOSAL",
+    "data_classification": "SYNTHETIC",
+    "trust_level": "UNTRUSTED_INPUT",
+    "risk_level": "LOW",
+    "maximum_attempts": 1,
+    "timeout_seconds": 60
+  },
+  "runtime_envelope": {
+    "runtime_spec_version": "1.0.0",
+    "runtime_type": "MOCK_ADAPTER",
+    "launcher_version": "harness-launcher/1.0",
+    "executable_path": "__EXECUTABLE_PATH__",
+    "executable_sha256": "__EXECUTABLE_SHA256__",
+    "argv": [
+      "harness-mock-provider",
+      "--offline"
+    ],
+    "working_directory": "/workspace",
+    "workspace_id": "offline-demo",
+    "os_boundary": "LINUX",
+    "provider": "mock",
+    "adapter": "mock-adapter/1.0",
+    "auth_route": "NONE",
+    "model": "mock-model"
+  },
+  "invocation": {
+    "invocation_mode": "MOCK",
+    "provider": "mock",
+    "billing_mode": "FREE",
+    "expected_effect": "NONE",
+    "model": "mock-model"
+  },
+  "token_profile": {
+    "snapshot_id": "cc03-profile",
+    "provider": "mock",
+    "model": "mock-model",
+    "tokenizer_name": "harness-utf8-byte-upper-bound",
+    "tokenizer_version": "1.0.0",
+    "counting_adapter_version": "harness-token-counter/2",
+    "context_limit": 4096,
+    "maximum_output_limit": 1024,
+    "estimate_assurance": "CONSERVATIVE",
+    "overheads": {
+      "system_message_overhead": 3,
+      "developer_message_overhead": 0,
+      "tool_definition_overhead": 0,
+      "per_message_overhead": 2,
+      "structured_output_overhead": 0,
+      "streaming_frame_overhead": 0,
+      "retry_fallback_reservation": 0
+    },
+    "retrieved_at": "2026-09-05T00:00:00Z",
+    "expires_at": "2027-09-05T00:00:00Z"
+  },
+  "token_budget": {
+    "policy_id": "cc03-budget",
+    "total_tokens": 4000,
+    "reserved_output_tokens": 16,
+    "reserved_tool_tokens": 0,
+    "compression_max_depth": 1
+  },
+  "actions": [
+    {
+      "action_type": "LOCAL_FILE_WRITE",
+      "normalized_inputs": {
+        "source": "task"
+      },
+      "normalized_outputs": {
+        "target_relative_path": "docs/out.md"
+      }
+    }
+  ]
+}

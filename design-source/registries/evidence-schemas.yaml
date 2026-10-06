@@ -1,0 +1,39 @@
+# Evidence文書のSchema版の正本（Owner Decision DCR-2／DCR-3、設計書 v1.15 §15.11）。
+#
+# Core Schema Catalog（schemas.yaml の core_schemas）とは別系統である。
+# core_schemas はDomain Objectの正本であり、Evidence文書はそこに含まれない。
+# したがってEvidence文書へFieldを足しても schema_catalog_hash は動かない。
+#
+# 一意Keyは (schema_name, schema_version)。schema_name 単独では一意でない。
+# 書込みは active_write_version へだけ行う。他の登録Versionは read_only: true。
+# §15.2 により Required Field追加はMajorであり、既存Versionのファイルを上書きしない。
+#
+# 1.2 は read_only として保持する。既存のDevelopment Evidenceは1.2のまま残し、
+# 黙って2.0へ変換しない。変換すると、1.2の時点では観測していなかった
+# event_observation を、観測していたかのように書き足すことになる（§15.11.2）。
+#
+# 2.0 も同じ理由で read_only として保持する（Owner Decision DEC-EVT-PRED-B / B-1）。
+# 2.0 の時点でも Head は観測していたが Evidence本体へ載っていない。後から書き足せば
+# 「そのとき Evidence へ記録していた」という誤った主張になる。既存Evidenceは
+# 2.0 のまま検証し、3.0 は次の生成分から使う。
+
+evidence_schemas:
+  - schema_name: CaseEvidence
+    active_write_version: 3.0
+    versions:
+      - version: 1.2
+        path: schemas/evidence/CaseEvidence/1.2.schema.json
+        read_only: true
+        retired_reason: >-
+          evidence_kind と event_observation を持たない。Event観測の有無を
+          Evidence単体から読めないため、Release判定の入力として受理しない。
+      - version: 2.0
+        path: schemas/evidence/CaseEvidence/2.0.schema.json
+        read_only: true
+        retired_reason: >-
+          ledger_head_before と ledger_head_after を持たない。観測はしていたが
+          Evidence本体へ載らず、拒否時にHeadが動いていないことをRelease判定から
+          確かめられない。既存Evidenceは2.0のまま残し、3.0へ変換しない。
+      - version: 3.0
+        path: schemas/evidence/CaseEvidence/3.0.schema.json
+        read_only: false

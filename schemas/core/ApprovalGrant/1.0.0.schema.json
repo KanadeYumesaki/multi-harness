@@ -1,0 +1,399 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/ApprovalGrant/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ISSUED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "consumed_at"
+              ]
+            },
+            {
+              "required": [
+                "consumed_by_actor_id"
+              ]
+            },
+            {
+              "required": [
+                "attempt_id"
+              ]
+            },
+            {
+              "required": [
+                "revoked_at"
+              ]
+            },
+            {
+              "required": [
+                "invalidated_at"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "CONSUMED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "consumed_at",
+          "consumed_by_actor_id",
+          "attempt_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "REVOKED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "consumed_at"
+              ]
+            },
+            {
+              "required": [
+                "consumed_by_actor_id"
+              ]
+            }
+          ]
+        },
+        "required": [
+          "revoked_at",
+          "revoked_by_actor_id",
+          "revocation_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "INVALIDATED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "invalidated_at",
+          "invalidation_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "EXPIRED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "consumed_at"
+              ]
+            },
+            {
+              "required": [
+                "consumed_by_actor_id"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "approval_mode": {
+            "const": "POLICY_DELEGATED"
+          }
+        },
+        "required": [
+          "approval_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "delegation_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "approval_mode": {
+            "const": "HUMAN"
+          }
+        },
+        "required": [
+          "approval_mode"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "delegation_id"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "properties": {
+    "action_scope": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "approval_mode": {
+      "enum": [
+        "HUMAN",
+        "POLICY_DELEGATED"
+      ],
+      "type": "string"
+    },
+    "approver_subject_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "approver_tenant_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "attempt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "authentication_context_class": {
+      "type": "string"
+    },
+    "authentication_time": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "consumed_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "consumed_by_actor_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "delegation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "execution_plan_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "expires_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "grant_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "invalidated_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "invalidation_reason": {
+      "type": "string"
+    },
+    "issued_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "issuer_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "issuer_key_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "maximum_clock_skew_seconds": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "mfa_performed": {
+      "type": "boolean"
+    },
+    "nonce": {
+      "minLength": 8,
+      "type": "string"
+    },
+    "not_before": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "plan_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "revocation_epoch": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "revocation_reason": {
+      "type": "string"
+    },
+    "revoked_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "revoked_by_actor_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "ApprovalGrant"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "signature": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "signature_algorithm": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "NOT_REQUIRED",
+        "REQUESTED",
+        "ISSUED",
+        "CONSUMED",
+        "EXPIRED",
+        "REVOKED",
+        "INVALIDATED",
+        "REPLAY_DENIED"
+      ],
+      "type": "string"
+    },
+    "store_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "use_count": {
+      "const": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "grant_id",
+    "plan_content_hash",
+    "execution_plan_hash",
+    "action_scope",
+    "approver_subject_id",
+    "approver_tenant_id",
+    "authentication_context_class",
+    "mfa_performed",
+    "authentication_time",
+    "issued_at",
+    "not_before",
+    "expires_at",
+    "maximum_clock_skew_seconds",
+    "nonce",
+    "use_count",
+    "revocation_epoch",
+    "issuer_id",
+    "issuer_key_id",
+    "signature_algorithm",
+    "signature",
+    "status",
+    "store_version"
+  ],
+  "title": "ApprovalGrant",
+  "type": "object"
+}

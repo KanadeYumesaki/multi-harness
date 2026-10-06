@@ -1,0 +1,476 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/ActionAttempt/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "PLANNING"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "plan_content_hash"
+              ]
+            },
+            {
+              "required": [
+                "execution_plan_hash"
+              ]
+            },
+            {
+              "required": [
+                "worker_id"
+              ]
+            },
+            {
+              "required": [
+                "claim_id"
+              ]
+            },
+            {
+              "required": [
+                "lease_id"
+              ]
+            },
+            {
+              "required": [
+                "fencing_token"
+              ]
+            },
+            {
+              "required": [
+                "runtime_attestation_hash"
+              ]
+            },
+            {
+              "required": [
+                "started_at"
+              ]
+            },
+            {
+              "required": [
+                "ended_at"
+              ]
+            },
+            {
+              "required": [
+                "receipt_ids"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "WAITING_POLICY",
+              "WAITING_APPROVAL",
+              "READY"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "plan_content_hash",
+          "execution_plan_hash"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "CLAIMED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "plan_content_hash",
+          "execution_plan_hash",
+          "worker_id",
+          "claim_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "LEASED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "plan_content_hash",
+          "execution_plan_hash",
+          "worker_id",
+          "claim_id",
+          "lease_id",
+          "fencing_token"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "RUNTIME_VERIFIED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "plan_content_hash",
+          "execution_plan_hash",
+          "worker_id",
+          "claim_id",
+          "lease_id",
+          "fencing_token",
+          "runtime_attestation_hash"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "RUNNING"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "plan_content_hash",
+          "execution_plan_hash",
+          "worker_id",
+          "claim_id",
+          "lease_id",
+          "fencing_token",
+          "runtime_attestation_hash",
+          "started_at"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "PREPARED_DURABLE",
+              "EFFECT_IN_FLIGHT",
+              "EFFECT_VERIFIED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "runtime_attestation_hash",
+          "started_at",
+          "fencing_token",
+          "operation_journal_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "RECEIPT_DURABLE"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "receipt_ids": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "runtime_attestation_hash",
+          "started_at",
+          "fencing_token",
+          "operation_journal_id",
+          "receipt_ids"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "SUCCEEDED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "receipt_ids": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "plan_content_hash",
+          "execution_plan_hash",
+          "runtime_attestation_hash",
+          "started_at",
+          "ended_at",
+          "receipt_ids"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "FAILED_RETRYABLE",
+              "FAILED_PERMANENT",
+              "BLOCKED_POLICY",
+              "BLOCKED_APPROVAL",
+              "BLOCKED_CONFLICT",
+              "CANCELLED",
+              "CANCEL_UNKNOWN",
+              "EFFECT_UNKNOWN"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "ended_at",
+          "error_classification"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "plan_content_hash"
+        ]
+      },
+      "then": {
+        "required": [
+          "execution_plan_hash"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "execution_plan_hash"
+        ]
+      },
+      "then": {
+        "required": [
+          "plan_content_hash"
+        ]
+      }
+    }
+  ],
+  "properties": {
+    "action_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "attempt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "attempt_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "claim_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "ended_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "error_classification": {
+      "type": "string"
+    },
+    "execution_plan_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "fencing_token": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "lease_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "operation_journal_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "plan_content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "receipt_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "runtime_attestation_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "ActionAttempt"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "started_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "PLANNING",
+        "WAITING_POLICY",
+        "WAITING_APPROVAL",
+        "READY",
+        "CLAIMED",
+        "LEASED",
+        "RUNTIME_VERIFIED",
+        "RUNNING",
+        "PREPARED_DURABLE",
+        "EFFECT_IN_FLIGHT",
+        "EFFECT_VERIFIED",
+        "RECEIPT_DURABLE",
+        "SUCCEEDED",
+        "FAILED_RETRYABLE",
+        "FAILED_PERMANENT",
+        "BLOCKED_POLICY",
+        "BLOCKED_APPROVAL",
+        "BLOCKED_CONFLICT",
+        "CANCELLED",
+        "CANCEL_UNKNOWN",
+        "EFFECT_UNKNOWN"
+      ],
+      "type": "string"
+    },
+    "store_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "worker_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "attempt_id",
+    "action_id",
+    "attempt_number",
+    "state",
+    "store_version"
+  ],
+  "title": "ActionAttempt",
+  "type": "object"
+}

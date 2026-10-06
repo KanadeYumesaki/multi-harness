@@ -1,0 +1,175 @@
+{
+  "manifest_version": "1.0",
+  "source_version": "1.25",
+  "source_hash": "sha256:cef978e653bbf16b0f3c1cf9b3125829c4d3fea742db2f93753016c64f889f31",
+  "source_file": "design-v1.25-runtime-go.md",
+  "registry_hashes": {
+    "chat-context-policy.yaml": "sha256:e621e6986aec2ff7f7797dbc6b2850a4b2dd5befc476d3e991b6f604ee363733",
+    "delegation-floor.yaml": "sha256:da70291bd91e134a0c4dc44c817133752e24ed7e1c4280549a6999000955607a",
+    "errors.yaml": "sha256:d785f23d05f61bdae7e975bafa6a697ef66cee00245c36ad43fbef4c5b1ef844",
+    "events.yaml": "sha256:938d45585efd955c3a6c83ebfa2d69db2ba4eed766495bc01fd8d30ad12f25d3",
+    "evidence-areas.yaml": "sha256:4b8b2f80c3a2e89484925131af83a36ac546afb2abee8cdf4c2e01fdb712e105",
+    "evidence-schemas.yaml": "sha256:d81bc2567df349b28741c8135a788966627f1a2c4bf7d76f1803f32adb1cdbca",
+    "filesystem-policy.yaml": "sha256:9b5b19d3673eaa507fc0f8f40af5cb6b74523922bc2e6a0596ab93f319fa1a99",
+    "gates.yaml": "sha256:88b7d5d559fc326637c2acfaeaa765b94d709f73de2ef59b2a903f6b82d4b148",
+    "masking-policy.yaml": "sha256:06695af16188c2717661eda006fead21b38f56ccb1843288dba223f1ce6db7ee",
+    "route-policy.yaml": "sha256:3c9ca877c05dab04bbf5ab0b470478d4c82ffeac16195c9a54ab165e56817046",
+    "schemas.yaml": "sha256:db46d4121545ae959d193ba399f930d955866a2d4564b5b7933b6030221ec2e0",
+    "states.yaml": "sha256:e68d5af890e9259219c24c8c159e981ca46ead5aa73eb91bfab8f7398efcfa92",
+    "tests.yaml": "sha256:9cc0eecfc171a70c48f94e72110f3c4aadb96b7b1525d39d519c5a2ec0f07d63"
+  },
+  "files": [
+    {
+      "path": "00-common.md",
+      "sha256": "sha256:5985194bf40d45ad2b120bfb21926233a04a058186abc37bdfd39478a12076b0"
+    },
+    {
+      "path": "01-canonical-hash.md",
+      "sha256": "sha256:0b9cd6e1d59593ec8e0f293902d11c341671f30c9d671e1900cf4ed0c93a92b8"
+    },
+    {
+      "path": "02-input-read.md",
+      "sha256": "sha256:0e6ac13854c774ff5e15a0a029d31438e2d3f8048a79c059c77fe7d401f63475"
+    },
+    {
+      "path": "03-token-profile.md",
+      "sha256": "sha256:31904081036673539b8c08480acb67c3ae5fa6376d7718b809c1dad53d217bfa"
+    },
+    {
+      "path": "10-mvp0a.md",
+      "sha256": "sha256:421cd64456762a8a9bfcf9dc501cf466fdd18011e6c3773ef8cb7f0e42170f73"
+    },
+    {
+      "path": "11-mvp0b.md",
+      "sha256": "sha256:eae9dbab557fca8847aeae1c36e6969a8dce8114f0a374498162b859248f2ad3"
+    },
+    {
+      "path": "12-mvp1a.md",
+      "sha256": "sha256:ef870378e6e3246c652cfa07613f1801f62a9b7b5aa44ff8de252059dc4c4ced"
+    },
+    {
+      "path": "13-mvp0c.md",
+      "sha256": "sha256:1fa585bd1104a729137fdd89813a54ea7b834233d25af64cbd5cc787f57b99fe"
+    },
+    {
+      "path": "14-mvp1d.md",
+      "sha256": "sha256:4818631c3aba78dfb2d0984ac848812c1cc7f3585e0d970daf658432665c60f7"
+    },
+    {
+      "path": "20-schemas/ActionAttempt.md",
+      "sha256": "sha256:b45b7b9a9ead615ad8f2dd7505d0f5bde9145a900a25618f3a540ef110c6114b"
+    },
+    {
+      "path": "20-schemas/ActionIntent.md",
+      "sha256": "sha256:00a86a92cadd37999e47c950913062a31f6e7882840161dd41be6fa50eee4aae"
+    },
+    {
+      "path": "20-schemas/ApprovalConsumeResult.md",
+      "sha256": "sha256:42d1fd1e40d899a5723454e4825d679330023538d73e832a0dfaafdf1772bfd7"
+    },
+    {
+      "path": "20-schemas/ApprovalGrant.md",
+      "sha256": "sha256:f5fe76b7fc2a59e7f5b111ab2b5518e30bc5a82bc1be32d52bb96eee525ad004"
+    },
+    {
+      "path": "20-schemas/ArtifactManifest.md",
+      "sha256": "sha256:469742d440cd4a7c9dcad0b5ac34183fcc0f4378902896d6511f43a49c609706"
+    },
+    {
+      "path": "20-schemas/ContextBundle.md",
+      "sha256": "sha256:9eb3dcd222d388a9cdda71e406165c64b4b2783902afcde6bb552670779c2942"
+    },
+    {
+      "path": "20-schemas/ContextFragment.md",
+      "sha256": "sha256:0fa80fc53b5a75a1917deccdb6cfcafe6cdc41c7006b5d3883d343fe338c9fbd"
+    },
+    {
+      "path": "20-schemas/ContextSelectionReceipt.md",
+      "sha256": "sha256:fe1b3e0670bb7aad1f130edd0593cedd466c1c7e95d0ced572e5cd78b6debd91"
+    },
+    {
+      "path": "20-schemas/Conversation.md",
+      "sha256": "sha256:de02e62e4956ead36680daf58f897f92a040891ed001e4ccadb65945172debb2"
+    },
+    {
+      "path": "20-schemas/ConversationMessage.md",
+      "sha256": "sha256:409e395f7daf635a5913bcbd95114c7a4c7b5b482ca2a59025c6501babed7188"
+    },
+    {
+      "path": "20-schemas/ConversationSnapshot.md",
+      "sha256": "sha256:ff23c5d619102c941f29282c79d582aa2f40a8f815777efff2a079b908a7234a"
+    },
+    {
+      "path": "20-schemas/DelegationGrant.md",
+      "sha256": "sha256:6f9d7aa68286ce9ad8bc017c60a54d151ca05297f10dbcecb0a077811673c3bf"
+    },
+    {
+      "path": "20-schemas/EffectReceipt.md",
+      "sha256": "sha256:bac4ad1bb3e2118f43b31619aa1ce128e89abc643a257250d30cb99ca68c563b"
+    },
+    {
+      "path": "20-schemas/EventEnvelope.md",
+      "sha256": "sha256:64f44c433f891988a1b0d3630361757d333b4ba63fd886642f1b5986fc2a913b"
+    },
+    {
+      "path": "20-schemas/ExecutionPlan.md",
+      "sha256": "sha256:a915310c52e07ddb520ada52f49f271c91e27c8e4d7affd09b476fbfccbe918c"
+    },
+    {
+      "path": "20-schemas/InputReadCapability.md",
+      "sha256": "sha256:9dbcedbf299ebccff9470a04c64832cdbd4d0dfe29691c80d59aac050a0600fb"
+    },
+    {
+      "path": "20-schemas/InvocationManifest.md",
+      "sha256": "sha256:c58268df627835f5b2f04f3dd65ad725892e5cdc1aa246c200371bc340dda625"
+    },
+    {
+      "path": "20-schemas/Lease.md",
+      "sha256": "sha256:1ca5ce93ebe31ff2c7e92b5eef1b868d28c073f712d28d9e8e2a4453d787f9c7"
+    },
+    {
+      "path": "20-schemas/MaskingReceipt.md",
+      "sha256": "sha256:dd9e014ece856ade3876a26f9270ec808c25ba0a524295c8542053b42632130c"
+    },
+    {
+      "path": "20-schemas/OperationJournal.md",
+      "sha256": "sha256:e022345855dd34dc1e79c89b37d6c8bc74817b4362e0bc138c9d10befdc62ccd"
+    },
+    {
+      "path": "20-schemas/PolicyDecision.md",
+      "sha256": "sha256:d9ebadf77b74521c9dbaa3cd6845bb928a8951272a83d54e25f2d74ad80f8107"
+    },
+    {
+      "path": "20-schemas/Run.md",
+      "sha256": "sha256:6fe16cd43f269006dc252bcae856058e17bbf918c78ea923bae5d91f9af71259"
+    },
+    {
+      "path": "20-schemas/RuntimeAttestation.md",
+      "sha256": "sha256:83ef0174918ce16ad143ae145c4a8a055baf03ed2faaacc6a39d64141b73a4e2"
+    },
+    {
+      "path": "20-schemas/RuntimeEnvelopeSpec.md",
+      "sha256": "sha256:e907a8585c8e076d58c0041f7ed4dbad3a429689197f5f866240ab15d7f21a81"
+    },
+    {
+      "path": "20-schemas/TokenBudgetPolicy.md",
+      "sha256": "sha256:06e724db1bb7bb13ab2e915383ca2b48a78e386b9f9d8bf57a1525cf2b727372"
+    },
+    {
+      "path": "20-schemas/TokenProfileSnapshot.md",
+      "sha256": "sha256:7b03724de26c52d97aefd791afd7b5c7f44f099f15a80f01c6c969cdec22f2e5"
+    },
+    {
+      "path": "30-policy-freshness.md",
+      "sha256": "sha256:6e64262a1e2e470e5c31c03d16b76ada8f88221a8d06c0d0748e5be2deaa09ad"
+    },
+    {
+      "path": "90-tests.md",
+      "sha256": "sha256:38b71ee54f8f7f596967bf99ec49cd750f8989af79d05df026b13686a21e2a12"
+    },
+    {
+      "path": "99-reference/reference-phases.md",
+      "sha256": "sha256:abbe7b01bb0df4611fd4ce074ad1b8bf9b40d8608c446efb58eb62d08692d252"
+    }
+  ]
+}

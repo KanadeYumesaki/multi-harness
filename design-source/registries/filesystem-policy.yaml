@@ -1,0 +1,89 @@
+# WorkspaceのFilesystem境界の正本。§0.1／§1.16.2、ADR-002、不変条件#12。
+#
+# 正本。種別名をコードへ直書きしない（不変条件#18）。
+#
+# 「Filesystem種別名は推測で固定せず、スパイクで実測した値とMount IDを
+# Runtime Attestationへ記録する」（§0.1）。したがってAllowlistは
+# **実測で確認した種別だけ**を載せ、増やすときはAttestationを根拠にする。
+
+filesystem_policy_version: 1
+
+# ---------------------------------------------------------------------------
+# 1. Workspaceを置いてよいFilesystem Type
+# ---------------------------------------------------------------------------
+# WSL2 Linux側のext4が本来の配置先。btrfs／xfsはLinux Nativeであり
+# 同じ耐久性前提が成り立つため許可する。
+allowed_filesystem_types:
+  - ext4
+  - btrfs
+  - xfs
+
+# CIとローカル試験でtmpfs上へWorkspaceを作る場合がある。恒久Workspaceとしては
+# 不可（再起動で消える）だが、試験用途では必要になる。
+# 既定では許可しない。許可はProcess起動時のOptionで明示する。
+test_only_filesystem_types:
+  - tmpfs
+
+# ---------------------------------------------------------------------------
+# 2. 明示的に拒否するFilesystem Type
+# ---------------------------------------------------------------------------
+# Allowlist方式なので本表が無くても拒否されるが、
+# 「意図して拒否している」ことを記録に残す。Error Messageの根拠にもなる。
+denied_filesystem_types:
+  - drvfs        # WSL2のWindows側Filesystem
+  - 9p           # WSL1／一部WSL2構成のWindows側
+  - virtiofs     # Hypervisor共有
+  - vboxsf       # VirtualBox共有
+  - cifs         # SMB
+  - smb3
+  - nfs
+  - nfs4
+  - fuse
+  - fuseblk
+  - overlay      # 明示AllowlistとMount Identity固定が無い限り不可
+  - overlayfs
+  - ecryptfs
+  - squashfs
+
+# ---------------------------------------------------------------------------
+# 3. Fail-Closed の方針
+# ---------------------------------------------------------------------------
+# 未知の種別は「新しいLinux FS」かもしれないが「未知の共有FS」かもしれない。
+# 区別できない以上、通してはならない。
+on_unknown_filesystem_type: REJECT
+on_mountinfo_unreadable: REJECT
+on_mount_not_found: REJECT
+# Mount Entry の major:minor と Workspace Root の st_dev が食い違う場合。
+# Path文字列から引いたMountと、実際に開いたDirectoryの実体が別物である。
+on_device_identity_mismatch: REJECT
+
+# ---------------------------------------------------------------------------
+# 4. Path文字列による事前拒否
+# ---------------------------------------------------------------------------
+# **これは補助にすぎない。** 主判定はFilesystem Typeである。
+# `/mnt` という名前のext4 Directoryを作れば文字列判定は回避できるし、
+# 逆に `/home/x/ws` が drvfs であることは文字列からは分からない。
+# 早期に明確な誤配置を弾くためだけに使う（§1.16.2「文字列Prefixだけで判定しない」）。
+denied_mount_point_prefixes:
+  - /mnt
+  - /media
+  - /cdrom
+
+# ---------------------------------------------------------------------------
+# 5. 検証を行う地点（§0.1）
+# ---------------------------------------------------------------------------
+enforcement_points:
+  - STARTUP
+  - WORKSPACE_REGISTRATION
+  - INPUT_READ_CAPABILITY_ISSUANCE
+
+# Runtime Attestationへ記録する項目。人手で入力しない。
+attestation_fields:
+  - mount_id
+  - parent_id
+  - major_minor
+  - root
+  - mount_point
+  - filesystem_type
+  - mount_options
+  - mount_source

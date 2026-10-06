@@ -1,0 +1,35 @@
+# Copyleft Licenseの例外登録。
+#
+# `tools/check_licenses.py` は AGPL / GPL-2 / GPL-3 を Fail-Closed で拒否する。
+# ここに載っているものだけが例外として通る。**理由が無い例外は通さない。**
+#
+# 例外が成立する条件は1つだけである。
+#
+#   その Package が実行時ロック（requirements.txt）に**入っていないこと**
+#
+# これは約束ではなく機械が確かめる。実行時ロックへ入った瞬間、例外は
+# 無効になって検査が落ちる。「Build時だけのつもりだった」が
+# 「いつの間にか配布物へ入っていた」に変わるのを、宣言ではなく構造で防ぐ。
+#
+# なぜBuild Toolingなら許すのか:
+#   GPLの伝播は**派生物の配布**で生じる。CIで実行するだけのProgramは
+#   本Harnessの派生物にならない。一方、実行時に import するLibraryは
+#   配布物の一部になる。両者を同じ棚に置くと、後者を止められなくなるか、
+#   前者のために例外を広げるかのどちらかになる。
+
+license_exceptions_version: 1
+
+exceptions:
+  - package: rfc3987
+    license: GPLv3+
+    scope: BUILD_TOOLING
+    required_by: cyclonedx-bom -> cyclonedx-python-lib -> jsonschema[format]
+    reason: >-
+      SBOM生成（CIの supply-chain Job）でのみ使う。Harnessのコードは
+      import しない。実行時ロックには入っていないことを本検査が毎回確かめる。
+      恒久策は jsonschema[format-nongpl] への切替えだが、extra を選ぶのは
+      cyclonedx-python-lib 側であり、こちらからは指定できない。
+    review_note: >-
+      2026-08-15 検出。それまで検査は colorama（win32 Marker付き）の
+      metadata を引きに行って PackageNotFoundError で落ちており、
+      **この違反へ到達したことが一度も無かった**。

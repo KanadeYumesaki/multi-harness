@@ -1,0 +1,641 @@
+# ADR-006／ADR-007 に伴うRegistry追加案（**未適用のDraft**）
+#
+# このファイルは design-source/registries/ の正本ではない。
+# 承認後に各正本YAMLへ取り込み、tools/build_registry_snapshot.py と
+# tools/generate_domain_registry_code.py を再実行する。
+# delegation-floor.yaml と masking-policy.yaml も任意の補助ファイルではなく、
+# snapshot／source hash／生成コード／Verifierの対象へ必ず統合する。
+#
+# 現行の正本件数（registry-snapshot.json の totals）
+#   event_type_count: 63 / error_code_count: 52 / state_namespace_count: 25
+#   core_schema_count: 20 / case_count: 86 / gate_count: 36
+#
+# 本Draft適用後の件数は build_registry_snapshot.py の出力を正とし、
+# ここにも本文にも手入力しない（不変条件#18）。
+
+snapshot_integration:
+  mode: MANDATORY
+  policy_registries:
+    - file: delegation-floor.yaml
+      snapshot_key: policy_registries.delegation_floor
+    - file: masking-policy.yaml
+      snapshot_key: policy_registries.masking_policy
+  canonicalization: JSON_SORTED_COMPACT_UTF8_V1
+  source_hash_required: true
+  generator_required: true
+  verifier_required: true
+  missing_policy_registry: FAIL_CLOSED
+
+# ---------------------------------------------------------------------------
+# events.yaml へ追記する Event Type
+# ---------------------------------------------------------------------------
+event_types_added:
+  # ADR-006 段階的委任
+  - DELEGATION_CREATED         # 人間の承認でDelegationGrantを発行した
+  - DELEGATION_MATCHED         # Predicateが成立し自動承認へ進んだ
+  - DELEGATION_REJECTED        # Predicate不成立。人間承認へ戻した
+  - DELEGATION_NARROWED        # 範囲を縮小し旧GrantをSUPERSEDEDにした
+  - DELEGATION_REVOKED         # 明示失効
+  - DELEGATION_EXPIRED         # 期限またはmax_uses到達
+  - DELEGATION_INVALIDATED     # policy/schema/token profile Hash変化による失効
+  - DELEGATION_REVALIDATED     # 最終Effect Gateでの再検証に成功（ADR-006 §5.4）
+  - DELEGATION_EFFECT_LINEARIZED # SQLite CASがEffect開始線形化点を確定
+  - DELEGATION_REVOKED_AFTER_EFFECT_START # 線形化後の失効を監査記録
+  # ADR-007 マスキング
+  - INPUT_MASKING_STARTED
+  - INPUT_MASKING_SCAN1_CANDIDATES_READY # 決定論Scan#1の候補Spanを確定
+  - INPUT_MASKING_SPANS_PROPOSED   # LLMがSpanを返した（本文は返さない）
+  - INPUT_MASKING_COMPLETED
+  - INPUT_MASKING_REJECTED
+
+# ---------------------------------------------------------------------------
+# errors.yaml へ追記する Error Code
+# ---------------------------------------------------------------------------
+error_codes_added:
+  # ADR-006
+  - error_code: DELEGATION_SCOPE_EXCEEDED
+    classification: POLICY_DENIED
+    note: Predicateの範囲外。narrowで部分集合になっていない場合も含む
+  - error_code: DELEGATION_SELF_MODIFICATION_DENIED
+    classification: POLICY_DENIED
+    note: 委任による委任の作成・拡大・変更（ADR-006 §6-9）
+  - error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    classification: POLICY_DENIED
+    note: 非委任床（有償・外部送信・Recovery・HIGH以上等）へ触れた
+  - error_code: DELEGATION_EXPIRED
+    classification: APPROVAL_REQUIRED
+  - error_code: DELEGATION_REVOKED
+    classification: APPROVAL_REQUIRED
+  - error_code: DELEGATION_SIGNATURE_INVALID
+    classification: AUTHENTICATION_ERROR
+  - error_code: DELEGATION_PREDICATE_AMBIGUOUS
+    classification: VALIDATION_ERROR
+    note: 同率に狭い複数Grantが一致。順序依存を避けるため不成立とする
+  - error_code: DELEGATION_TRUST_ANCHOR_INVALID
+    classification: AUTHENTICATION_ERROR
+    note: Trust Anchor不一致・Rotation未検証・Rollback検出（ADR-006 §7）
+  - error_code: DELEGATION_SUBJECT_MISMATCH
+    classification: AUTHENTICATION_ERROR
+    note: Audience／Tenant／Issuer不一致
+  - error_code: DELEGATION_REVOKED_MID_FLIGHT
+    classification: CONFLICT
+    note: >
+      Approval消費後・Effect確定前に失効を検出（ADR-006 §5.4）。
+      最終Effect GateのCASで検出しEffect実行前に停止する
+  - error_code: DELEGATION_REVOKED_AFTER_EFFECT_START
+    classification: CONFLICT
+    note: Effect線形化後に失効。外部Effectの結果確認またはReconciliationを要求
+  # ADR-007（Span提案方式。v1の MASKING_TRANSFORMATION_INVALID は廃案）
+  - error_code: MASKING_VERIFICATION_FAILED
+    classification: POLICY_DENIED
+    note: マスク後の決定論スキャン#2が不合格（過少マスク）
+  - error_code: MASKING_SPAN_INVALID
+    classification: VALIDATION_ERROR
+    note: 範囲外・逆転・重複・入れ子・Span数超過
+  - error_code: MASKING_CATEGORY_UNKNOWN
+    classification: VALIDATION_ERROR
+    note: masking-policy.yaml へ未登録のカテゴリ
+  - error_code: MASKING_RATIO_EXCEEDED
+    classification: POLICY_DENIED
+    note: マスク比率が上限超過。全文塗り潰しによる偽装の検出
+  - error_code: MASKER_OUTPUT_MALFORMED
+    classification: VALIDATION_ERROR
+    note: 非JSON・未知Field・source_normalized_hash不一致
+  - error_code: MASKER_UNAVAILABLE
+    classification: POLICY_DENIED
+    note: 停止・Timeout・隔離要件不成立。マスクなしで通さずFail-Closed
+  - error_code: MASKING_GRAPHEME_SPLIT
+    classification: VALIDATION_ERROR
+    note: Spanが保守的なGrapheme risky codepoint guardに該当するためReject
+  - error_code: MASKING_NORMALIZATION_PROFILE_MISMATCH
+    classification: VALIDATION_ERROR
+    note: NFC ProfileまたはUnicode data versionが入力とMaskerで不一致
+  - error_code: MASKING_NORMALIZATION_ARTIFACT_MISSING
+    classification: VALIDATION_ERROR
+    note: UCD 14.0割当済み符号位置集合Artifactが欠落・Hash不一致
+  - error_code: MASKING_UNSUPPORTED_CODEPOINT
+    classification: VALIDATION_ERROR
+    note: UCD 14.0未割当符号位置を正規化前に検出
+  - error_code: MASKING_SPAN_CONFLICT
+    classification: VALIDATION_ERROR
+    note: 同一カテゴリContainment以外の部分重複、複数候補包含、カテゴリ衝突
+  - error_code: MASKER_ISOLATION_INCOMPLETE
+    classification: POLICY_DENIED
+    note: egress／telemetry／prompt log／core dump／mlock等の強制条件未成立
+
+# ---------------------------------------------------------------------------
+# states.yaml へ追記する State名空間
+# ---------------------------------------------------------------------------
+state_namespaces_added:
+  DELEGATION_GRANT: [ACTIVE, EXPIRED, REVOKED, SUPERSEDED, INVALIDATED]
+  MASKING_RESULT: [CLEAN, MASKED, REJECTED]
+
+# requested／issued／consumed はLedger Eventであり、長寿命Stateへ追加しない。
+# Effect線形化はActionAttempt側の既存StateとEventで表現する。
+
+# ---------------------------------------------------------------------------
+# schemas.yaml へ追記する Core Schema
+# ---------------------------------------------------------------------------
+core_schemas_added:
+  - schema_name: DelegationGrant
+    schema_version: 1.0.0
+    path: schemas/core/DelegationGrant/1.0.0.schema.json
+  - schema_name: MaskingReceipt
+    schema_version: 1.0.0
+    path: schemas/core/MaskingReceipt/1.0.0.schema.json
+    required_fields:
+      - source_content_hash
+      - source_normalized_hash
+      - normalization_profile
+      - normalization_profile_artifact_hash
+      - scan1_candidate_span_count
+      - spans
+      - span_validation_result
+      - scan2_result
+      - masking_policy_version
+
+# 既存Schemaの変更（Minor）
+core_schemas_modified:
+  - schema_name: ApprovalGrant
+    change: |
+      approval_mode: HUMAN | POLICY_DELEGATED を必須追加。
+      delegation_id を Schema Conditional で追加
+      （approval_mode=POLICY_DELEGATED のとき必須、HUMAN のとき null）。
+    impacts: AT-SCHEMA-CONDITIONAL-001 へCase追加が必要
+  - schema_name: ContextSelectionReceipt
+    change: masking_receipt_ids（マスクを経たFragmentの参照）を追加
+  - schema_name: RuntimeEnvelopeSpec
+    change: masker_provider / masker_model / masker_model_digest / masker_instruction_hash /
+      normalization_profile / normalization_profile_artifact_hash /
+      masker_isolation_attestation_hash を追加
+
+# ---------------------------------------------------------------------------
+# tests.yaml へ追記する Acceptance Case
+# ---------------------------------------------------------------------------
+test_cases_added:
+  # --- ADR-006 委任の否定系（最重要） ---
+  - test_id: AT-DELEGATION-001
+    case_id: SCOPE_EXCEEDED
+    scenario: delegated_plan_outside_predicate_escalates_to_human
+    expected_event_sequence: [PLAN_RESOLVED, POLICY_DECIDED, DELEGATION_REJECTED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    expected_error_code: APPROVAL_REQUIRED
+    assertions:
+      - auto_approved_count == 0
+      - human_approval_required == true
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: SELF_MODIFICATION
+    scenario: delegation_cannot_create_or_widen_delegation
+    expected_event_sequence: [POLICY_DECIDED, ACTION_BLOCKED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: BLOCKED_POLICY
+    expected_error_code: DELEGATION_SELF_MODIFICATION_DENIED
+    assertions:
+      - delegation_created_count == 0
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: WIDEN_DENIED
+    scenario: narrow_rejects_predicate_that_is_not_a_subset
+    expected_subject_type: DELEGATION_GRANT
+    expected_state: ACTIVE
+    expected_error_code: DELEGATION_SCOPE_EXCEEDED
+    assertions:
+      - original_predicate_unchanged == true
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: REVOKE_IMMEDIATE
+    scenario: revoked_delegation_stops_auto_approval_at_once
+    expected_event_sequence: [DELEGATION_REVOKED, POLICY_DECIDED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    expected_error_code: APPROVAL_REQUIRED
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: POLICY_HASH_CHANGED
+    scenario: policy_change_invalidates_delegation
+    expected_event_sequence: [DELEGATION_INVALIDATED, POLICY_DECIDED]
+    expected_subject_type: DELEGATION_GRANT
+    expected_state: INVALIDATED
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: PAID_NEVER_DELEGATED
+    scenario: paid_execution_ignores_delegation
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    expected_error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    assertions:
+      - auto_approved_count == 0
+    phase_scope: [MVP1-D]
+
+  - test_id: AT-DELEGATION-001
+    case_id: STALE_POLICY_NO_AUTO
+    scenario: delegation_inactive_when_policy_not_current
+    expected_event_sequence: [POLICY_STALE_DETECTED, DELEGATION_REJECTED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: REVOKE_BEFORE_EFFECT_LINEARIZATION
+    scenario: revocation_wins_before_effect_linearization
+    expected_event_sequence: [DELEGATION_MATCHED, APPROVAL_CONSUMED, DELEGATION_REVOKED, ACTION_BLOCKED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: BLOCKED_CONFLICT
+    expected_error_code: DELEGATION_REVOKED_MID_FLIGHT
+    assertions:
+      - effect_attempts == 0
+      - target_hash == base_hash
+      - duplicate_effects == 0
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: REVOKE_AFTER_EFFECT_LINEARIZATION
+    scenario: effect_linearization_wins_before_revocation
+    expected_event_sequence: [DELEGATION_MATCHED, APPROVAL_CONSUMED, DELEGATION_EFFECT_LINEARIZED, DELEGATION_REVOKED_AFTER_EFFECT_START]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: READY
+    expected_error_code: DELEGATION_REVOKED_AFTER_EFFECT_START
+    assertions:
+      - effect_attempts == 1
+      - reconciliation_required == true
+      - duplicate_effects == 0
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: DERIVED_APPROVAL_IS_SINGLE_USE
+    scenario: derived_approval_cannot_be_replayed
+    expected_event_sequence: [DELEGATION_MATCHED, APPROVAL_CONSUMED, APPROVAL_REPLAY_DENIED, ACTION_BLOCKED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: BLOCKED_APPROVAL
+    expected_error_code: APPROVAL_REPLAY
+    assertions:
+      - delegation_grant_reused_as_execution_authority == false
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: PREDICATE_FIELD_CHANGED
+    scenario: any_invalidating_field_change_escalates_to_human
+    expected_event_sequence: [PLAN_RESOLVED, POLICY_DECIDED, DELEGATION_REJECTED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    expected_error_code: DELEGATION_SCOPE_EXCEEDED
+    assertions:
+      - checked_field_count == 16
+      - auto_approved_count == 0
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: TRUST_ANCHOR_ROLLBACK
+    scenario: delegation_signed_by_rotated_or_rolled_back_key_is_rejected
+    expected_subject_type: DELEGATION_GRANT
+    expected_state: INVALIDATED
+    expected_error_code: DELEGATION_TRUST_ANCHOR_INVALID
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: AUDIENCE_MISMATCH
+    scenario: delegation_from_another_workspace_is_rejected
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    expected_error_code: DELEGATION_SUBJECT_MISMATCH
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: DESTRUCTIVE_NEVER_DELEGATED
+    scenario: gc_backup_migration_key_and_policy_ops_ignore_delegation
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: WAITING_APPROVAL
+    expected_error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    assertions:
+      - auto_approved_count == 0
+    phase_scope: [MVP0-A, MVP1-A]
+
+  - test_id: AT-DELEGATION-001
+    case_id: AUDIT_TRAIL_COMPLETE
+    scenario: auto_approved_run_is_fully_traceable_to_delegation
+    expected_event_sequence: [DELEGATION_MATCHED, APPROVAL_ISSUED, APPROVAL_CONSUMED]
+    expected_subject_type: ACTION_ATTEMPT
+    expected_state: READY
+    assertions:
+      - approval_mode == POLICY_DELEGATED
+      - delegation_id_present == true
+      - created_from_run_id_resolvable == true
+    phase_scope: [MVP0-A, MVP1-A]
+
+  # --- ADR-007 マスキングの否定系 ---
+  - test_id: AT-MASKING-001
+    case_id: SECRET_REJECTED_NOT_MASKED
+    scenario: credentials_are_rejected_never_sent_to_masker
+    expected_event_sequence: [INPUT_READ_STARTED, INPUT_ARTIFACT_CLASSIFIED, INPUT_READ_DENIED]
+    expected_subject_type: INPUT_READ_DECISION
+    expected_state: DENIED
+    assertions:
+      - masker_invocation_count == 0
+      - artifact_persisted_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SECOND_SCAN_IS_THE_GATE
+    scenario: under_masked_output_is_rejected_by_scan2
+    expected_event_sequence: [INPUT_MASKING_STARTED, INPUT_MASKING_SPANS_PROPOSED, INPUT_MASKING_REJECTED]
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_VERIFICATION_FAILED
+    assertions:
+      - context_fragment_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SPAN_OUT_OF_RANGE
+    scenario: span_beyond_text_length_or_negative_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_SPAN_INVALID
+    assertions:
+      - rewriter_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SPAN_OVERLAP_OR_NESTED
+    scenario: unsupported_overlap_or_nesting_outside_single_candidate_containment_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_SPAN_INVALID
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SPAN_UNSORTED
+    scenario: spans_not_sorted_by_start_are_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_SPAN_INVALID
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SPAN_CATEGORY_UNKNOWN
+    scenario: unregistered_category_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_CATEGORY_UNKNOWN
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: MASK_RATIO_EXCEEDED
+    scenario: whole_document_masked_as_single_span_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_RATIO_EXCEEDED
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: MASKER_OUTPUT_MALFORMED
+    scenario: non_json_unknown_field_or_hash_mismatch_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKER_OUTPUT_MALFORMED
+    assertions:
+      - rewriter_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: MASKER_UNAVAILABLE_FAIL_CLOSED
+    scenario: masker_timeout_or_down_does_not_pass_unmasked_content
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKER_UNAVAILABLE
+    assertions:
+      - unmasked_fragment_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: MASKER_ISOLATION_INCOMPLETE
+    scenario: incomplete_masker_isolation_rejects_raw_pii_path
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKER_ISOLATION_INCOMPLETE
+    assertions:
+      - masker_invocation_count == 0
+      - unmasked_fragment_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: UNICODE_NORMALIZATION
+    scenario: span_offsets_stable_across_nfc_with_combining_and_non_bmp
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - masked_text_matches_expected == true
+      - no_codepoint_split == true
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: NORMALIZATION_PROFILE_MISMATCH
+    scenario: masker_profile_or_unicode_data_version_mismatch_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_NORMALIZATION_PROFILE_MISMATCH
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: UNICODE_PROFILE_CROSS_PYTHON
+    scenario: python_311_and_312_produce_same_ucd14_profile_hash
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - artifact_format_equal == true
+      - normalization_profile_artifact_hash_equal == true
+      - source_normalized_hash_equal == true
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: UNICODE_PROFILE_ARTIFACT_MISSING
+    scenario: missing_or_hash_mismatched_ucd14_assigned_bitmap_fails_closed
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_NORMALIZATION_ARTIFACT_MISSING
+    assertions:
+      - artifact_format_valid == false
+      - normalization_invocation_count == 0
+      - masker_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: UNICODE_UCD14_ASSIGNED_GUARD
+    scenario: codepoint_unassigned_in_ucd14_is_rejected_before_normalization
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_UNSUPPORTED_CODEPOINT
+    assertions:
+      - normalization_invocation_count == 0
+      - masker_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: GRAPHEME_SPLIT
+    scenario: risky_grapheme_codepoint_span_is_rejected_without_runtime_dependency
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_GRAPHEME_SPLIT
+    assertions:
+      - rewriter_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: MASK_RATIO_BOUNDARY
+    scenario: llm_additional_union_mask_ratio_boundary_is_deterministic
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - ratio_0_59_passes == true
+      - ratio_0_60_passes == true
+      - ratio_0_61_rejects == true
+      - deterministic_scan1_over_0_60_passes == true
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SCAN1_CANDIDATE_UNION
+    scenario: deterministic_scan_candidates_are_union_with_llm_additions
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - deterministic_candidate_spans_preserved == true
+      - llm_only_spans_are_additive == true
+      - deterministic_scan1_over_0_60_is_not_ratio_rejected == true
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SPAN_CONTAINMENT_EXPANSION
+    scenario: same_category_llm_span_containing_one_scan1_candidate_is_canonicalized
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - canonical_span_is_containing_span == true
+      - masked_content_is_deterministic == true
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: SPAN_CONFLICT_PARTIAL
+    scenario: partial_or_cross_category_overlap_is_rejected
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_SPAN_CONFLICT
+    assertions:
+      - rewriter_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: NATIONAL_ID_REJECTED_NOT_MASKED
+    scenario: national_id_is_rejected_before_masker_invocation
+    expected_subject_type: INPUT_READ_DECISION
+    expected_state: DENIED
+    assertions:
+      - masker_invocation_count == 0
+      - artifact_persisted_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: REWRITER_DETERMINISM
+    scenario: same_source_and_spans_always_produce_same_output
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - masked_content_hash_a == masked_content_hash_b
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: NO_LLM_PATH
+    scenario: clean_and_reject_paths_never_invoke_masker
+    expected_subject_type: MASKING_RESULT
+    expected_state: CLEAN
+    assertions:
+      - masker_invocation_count == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: PROMPT_INJECTION
+    scenario: instructions_inside_input_cannot_change_masking_policy
+    expected_subject_type: MASKING_RESULT
+    expected_state: REJECTED
+    expected_error_code: MASKING_VERIFICATION_FAILED
+    assertions:
+      - masking_policy_version_unchanged == true
+      - mask_tokens_unchanged == true
+      - reject_categories_unchanged == true
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: NO_SECRET_IN_RECEIPT
+    scenario: masking_receipt_contains_no_secret_value
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - canary_occurrences_in_receipt == 0
+      - canary_occurrences_in_ledger == 0
+      - canary_occurrences_in_logs == 0
+    phase_scope: [MVP0-A, MVP0-B]
+
+  - test_id: AT-MASKING-001
+    case_id: NO_AUTO_DOWNGRADE
+    scenario: masking_does_not_lower_data_classification
+    expected_subject_type: MASKING_RESULT
+    expected_state: MASKED
+    assertions:
+      - classification_after == classification_before
+    phase_scope: [MVP0-A, MVP0-B]
+
+# ---------------------------------------------------------------------------
+# gates.yaml へ追記する受入Gate
+# ---------------------------------------------------------------------------
+gates_added:
+  - gate_id: MVP0A-GATE-37
+    phase: MVP0-A
+    condition: Predicate外の自動承認0件。委任による委任の生成・拡大0件
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-DELEGATION-001]
+  - gate_id: MVP0A-GATE-38
+    phase: MVP0-A
+    condition: 失効・縮小が即時反映され、拡大が新規承認なしに成立しない
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-DELEGATION-001]
+  - gate_id: MVP0A-GATE-39
+    phase: MVP0-A
+    condition: 自動承認された全実行がDelegationGrantと生成元Runへ追跡可能
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-DELEGATION-001]
+  - gate_id: MVP0A-GATE-40
+    phase: MVP0-A
+    condition: マスク後の再スキャン不合格・変換不正・Masker不在で通過0件
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-MASKING-001]
+  - gate_id: MVP0A-GATE-41
+    phase: MVP0-A
+    condition: 認証情報がMaskerへ渡らず、MaskingReceipt／Ledger／LogへSecret Canary漏えい0件
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-MASKING-001, AT-CONTROL-DATA-001]
+  - gate_id: MVP0A-GATE-42
+    phase: MVP0-A
+    condition: risky Grapheme codepoint・NATIONAL_ID・Normalization Profile不一致は全てFail-Closed
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-MASKING-001]
+  - gate_id: MVP0A-GATE-43
+    phase: MVP0-A
+    condition: Raw PII経路のMasker隔離不成立時にMasker呼出しと未マスク通過が0件
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-MASKING-001]
+  - gate_id: MVP0A-GATE-44
+    phase: MVP0-A
+    condition: Python 3.11／3.12でUCD14 Profile Hashと正規化Hashが一致し、Artifact欠落時はFail-Closed
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-MASKING-001]
+  - gate_id: MVP0A-GATE-45
+    phase: MVP0-A
+    condition: Mask ratioはLLM追加分だけに適用され、同一カテゴリContainment Expansion以外のSpan衝突は0件通過
+    test_refs_mode: EXPLICIT
+    test_refs: [AT-MASKING-001]

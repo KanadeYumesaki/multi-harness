@@ -1,0 +1,184 @@
+{
+  "cases": [
+    {
+      "name": "ascii",
+      "source_normalized_hash": "sha256:1c4f028619901481d45c8038382e6c88012e4833c03d3920c912de9ae8b65c03",
+      "text_codepoints": [
+        "U+0070",
+        "U+006C",
+        "U+0061",
+        "U+0069",
+        "U+006E",
+        "U+0020",
+        "U+0061",
+        "U+0073",
+        "U+0063",
+        "U+0069",
+        "U+0069",
+        "U+0020",
+        "U+0074",
+        "U+0065",
+        "U+0078",
+        "U+0074"
+      ]
+    },
+    {
+      "name": "japanese",
+      "source_normalized_hash": "sha256:1b37f453a64e0c17a881ae8b0c6984b77c6ef52eed57917ebbf342c455b54933",
+      "text_codepoints": [
+        "U+56DB",
+        "U+534A",
+        "U+671F",
+        "U+306E",
+        "U+58F2",
+        "U+4E0A",
+        "U+3092",
+        "U+90E8",
+        "U+9580",
+        "U+5225",
+        "U+306B",
+        "U+96C6",
+        "U+8A08",
+        "U+3057",
+        "U+3066",
+        "U+304F",
+        "U+3060",
+        "U+3055",
+        "U+3044",
+        "U+3002"
+      ]
+    },
+    {
+      "name": "composed_e_acute",
+      "source_normalized_hash": "sha256:6460d75715b203aafffc6192298ea8109f492bf0c6fcd86e918e7d9e2b59c243",
+      "text_codepoints": [
+        "U+00E9",
+        "U+006D",
+        "U+0069",
+        "U+006C",
+        "U+0065"
+      ]
+    },
+    {
+      "name": "decomposed_e_acute",
+      "source_normalized_hash": "sha256:6460d75715b203aafffc6192298ea8109f492bf0c6fcd86e918e7d9e2b59c243",
+      "text_codepoints": [
+        "U+0065",
+        "U+0301",
+        "U+006D",
+        "U+0069",
+        "U+006C",
+        "U+0065"
+      ]
+    },
+    {
+      "name": "hangul_jamo",
+      "source_normalized_hash": "sha256:23d79a89b554716e0e83e2cffb2b9d1dbe0fb815f2fbf9a81920f5669f9c9f51",
+      "text_codepoints": [
+        "U+1100",
+        "U+1161",
+        "U+11A8"
+      ]
+    },
+    {
+      "name": "hangul_syllable",
+      "source_normalized_hash": "sha256:23d79a89b554716e0e83e2cffb2b9d1dbe0fb815f2fbf9a81920f5669f9c9f51",
+      "text_codepoints": [
+        "U+AC01"
+      ]
+    },
+    {
+      "name": "combining_order_a",
+      "source_normalized_hash": "sha256:7b835afcd89efabdbba1305e38319e3f73c06e01b74c7ab09a4aef16beaac0d3",
+      "text_codepoints": [
+        "U+0071",
+        "U+0307",
+        "U+0323"
+      ]
+    },
+    {
+      "name": "combining_order_b",
+      "source_normalized_hash": "sha256:7b835afcd89efabdbba1305e38319e3f73c06e01b74c7ab09a4aef16beaac0d3",
+      "text_codepoints": [
+        "U+0071",
+        "U+0323",
+        "U+0307"
+      ]
+    },
+    {
+      "name": "cjk_compatibility",
+      "source_normalized_hash": "sha256:f9ea2f1a6dd82d2eb53d525384a49b34b33b869261ffccbbf70f0fb6d8dbc57f",
+      "text_codepoints": [
+        "U+F9D1",
+        "U+8449"
+      ]
+    },
+    {
+      "name": "fullwidth",
+      "source_normalized_hash": "sha256:2aac8368159456734b6c7bdc908bab3aaa4fb845299a4aed469541d804eac0bb",
+      "text_codepoints": [
+        "U+FF21",
+        "U+FF22",
+        "U+FF23"
+      ]
+    },
+    {
+      "name": "emoji_zwj",
+      "source_normalized_hash": "sha256:0e74e5f79f78be7c632c8d88780736de1d0a5f2b95f755544d9cc360386450a9",
+      "text_codepoints": [
+        "U+0078",
+        "U+1F468",
+        "U+200D",
+        "U+1F469",
+        "U+0078"
+      ]
+    },
+    {
+      "name": "variation_selector",
+      "source_normalized_hash": "sha256:43f85b41cd4d41d35bb9774ab5f56b5a903ca25b7b305e1e44ec592553c95873",
+      "text_codepoints": [
+        "U+845B",
+        "U+FE00"
+      ]
+    },
+    {
+      "name": "supplementary_plane",
+      "source_normalized_hash": "sha256:1aad9105df5a912694cec0eadf0c7ddfe83c2a71a83b4bb15c7afa1db610d637",
+      "text_codepoints": [
+        "U+20BB7",
+        "U+2A6B2"
+      ]
+    },
+    {
+      "name": "mixed",
+      "source_normalized_hash": "sha256:d4c375f047ac1bd440f1a46c3a0feae07623cd248931eb358d6f071edbc1966e",
+      "text_codepoints": [
+        "U+00E9",
+        "U+006D",
+        "U+0069",
+        "U+006C",
+        "U+0065",
+        "U+0040",
+        "U+0065",
+        "U+0078",
+        "U+0061",
+        "U+006D",
+        "U+0070",
+        "U+006C",
+        "U+0065",
+        "U+002E",
+        "U+0063",
+        "U+006F",
+        "U+006D",
+        "U+0020",
+        "U+3078",
+        "U+9023",
+        "U+7D61",
+        "U+0020",
+        "U+AC01"
+      ]
+    }
+  ],
+  "profile_artifact_sha256": "sha256:e20aa132de7eb03a7638ba85c7c0c54a547ed5a481e902eecd55009dca6599ea",
+  "profile_id": "NFC_CODEPOINT_V3"
+}

@@ -1,0 +1,117 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/TokenBudgetPolicy/2.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "compression_depth_limit": {
+      "maximum": 2,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "maximum_context_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "maximum_input_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "overflow_policy": {
+      "enum": [
+        "FAIL_CLOSED"
+      ],
+      "type": "string"
+    },
+    "policy_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "policy_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "required_fragment_types": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "reserved_output_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "reserved_tool_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "retry_reservation": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "safety_margin_tokens": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "schema_name": {
+      "const": "TokenBudgetPolicy"
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "policy_id",
+    "policy_hash",
+    "maximum_input_tokens",
+    "maximum_context_tokens",
+    "reserved_output_tokens",
+    "reserved_tool_tokens",
+    "safety_margin_tokens",
+    "retry_reservation",
+    "compression_depth_limit",
+    "overflow_policy",
+    "required_fragment_types"
+  ],
+  "title": "TokenBudgetPolicy",
+  "type": "object"
+}

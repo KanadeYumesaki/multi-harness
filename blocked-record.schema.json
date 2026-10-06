@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fde-harness/blocked-record-v1.schema.json",
+  "title": "BLOCKED Record",
+  "description": "BLOCKED Recordの正規形。record_versionでEvidence参照の形式を切り替える。1.0は文字列配列（Hashを持たない）、1.1は{path, sha256, hash_provenance, hash_observed_at}のObject配列。既存1.0 Recordを読めなくしないため、旧形式の受理を維持する。",
+  "type": "object",
+  "required": ["record_version", "blocker_id", "task_id", "release_scope", "category", "status", "observed", "next_action", "owner", "created_at", "design_sha256", "registry_snapshot_hash"],
+  "properties": {
+    "record_version": {"enum": ["1.0", "1.1"]},
+    "blocker_id": {"type": "string", "pattern": "^BLK-[0-9]{8}-[A-Z0-9-]+$"},
+    "task_id": {"type": "string", "minLength": 1},
+    "release_scope": {"enum": ["MVP0-A", "MVP0-B", "MVP1-A", "MVP0-C", "MVP1-D"]},
+    "category": {"enum": ["SPEC_CLARIFICATION", "ENVIRONMENT", "DEPENDENCY", "SUT_FAILURE", "HARNESS_FAILURE", "SECURITY", "DECISION_REQUIRED"]},
+    "status": {"enum": ["OPEN", "RESOLVED", "CANCELLED"]},
+    "observed": {"type": "object", "required": ["summary", "command", "exit_code"], "properties": {"summary": {"type": "string", "minLength": 1}, "command": {"type": "array", "items": {"type": "string"}}, "exit_code": {"type": "integer"}, "evidence_paths": {"type": "array"}}},
+    "next_action": {"type": "object", "required": ["action", "acceptance"], "properties": {"action": {"type": "string", "minLength": 1}, "acceptance": {"type": "array", "minItems": 1, "items": {"type": "string"}}, "required_decision": {"type": ["string", "null"]}}},
+    "owner": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+    "resolved_at": {"type": ["string", "null"]},
+    "design_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "registry_snapshot_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "supersedes": {"type": ["string", "null"], "pattern": "^BLK-[0-9]{8}-[A-Z0-9-]+$", "description": "設計書HashまたはRegistry Snapshotが変わったため再発行した場合の旧blocker_id（BLOCKED-RECOVERY.md 再開条件3）。旧Recordを書き換えず、後継側から辿れるようにする。"},
+    "resolution": {"type": ["object", "null"]}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$comment": "record_version 1.0（旧形式）。Evidence参照はPath文字列だけで、参照先の中身が差し替わっても検出できない。読取り互換のためだけに残す。",
+      "if": {"required": ["record_version"], "properties": {"record_version": {"const": "1.0"}}},
+      "then": {"properties": {"observed": {"properties": {"evidence_paths": {"type": "array", "items": {"type": "string", "minLength": 1}}}}}}
+    },
+    {
+      "$comment": "record_version 1.1（現行）。各EvidenceのSHA-256と、そのHashをいつどういう根拠で得たかを持つ（Owner Decision C-Q4）。",
+      "if": {"required": ["record_version"], "properties": {"record_version": {"const": "1.1"}}},
+      "then": {"properties": {"observed": {"properties": {"evidence_paths": {"type": "array", "items": {"$ref": "#/$defs/evidence_reference"}}}}}}
+    }
+  ],
+  "$defs": {
+    "evidence_reference": {
+      "type": "object",
+      "required": ["path", "sha256", "hash_provenance", "hash_observed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"},
+        "hash_provenance": {
+          "enum": ["MEASURED_AT_CREATION", "UNKNOWN"],
+          "description": "MEASURED_AT_CREATION=本Record作成時に実測したHash。UNKNOWN=作成時点のHashが残っておらず復元できない。後から測った値をMEASURED_AT_CREATIONと書かない。"
+        },
+        "hash_observed_at": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"}
+      },
+      "allOf": [
+        {
+          "$comment": "UNKNOWNはHashを持たない。null以外を書くと『不明』と『実測』が混ざる。",
+          "if": {"properties": {"hash_provenance": {"const": "UNKNOWN"}}},
+          "then": {"properties": {"sha256": {"type": "null"}, "hash_observed_at": {"type": "null"}}}
+        },
+        {
+          "$comment": "実測を主張するなら、値と観測時刻の両方を持つ。",
+          "if": {"properties": {"hash_provenance": {"const": "MEASURED_AT_CREATION"}}},
+          "then": {"properties": {"sha256": {"type": "string"}, "hash_observed_at": {"type": "string"}}}
+        }
+      ]
+    }
+  }
+}

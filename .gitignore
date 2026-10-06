@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Runtime の出力先。**Root直下だけを対象にする。**
+# 先頭の / を付けないと、深さを問わず evidence/ という名のDirectoryすべてに
+# 当たる。schemas/evidence/ のような正本まで黙って追跡対象から外れる。
+/evidence/
+/release/
+# `pip install -e .` が作る。CIは同じJobの後段で
+# `package_release_zip.py --verify` を実行し、そこは clean な Git 木を
+# 要求する。追跡対象のままだと**インストールした時点で必ず落ちる**。
+*.egg-info/
+# 試験のたびに変わる。追跡すると差分がノイズで埋まる。
+.coverage
+.coverage.*
+
+# Local operator secrets/state are never source artifacts. Tracked files remain auditable.
+.env
+.env.*
+!.env.example
+/auth.json
+/credentials.json
+/state/
+/cas/
+/cli-runtime-profile.json
+/sbom.json
+
+# Local inputs for historical audit tools; never distribute.
+.local-audit-inputs/

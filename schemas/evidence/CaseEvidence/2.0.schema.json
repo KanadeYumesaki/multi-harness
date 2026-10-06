@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fde-harness.local/schemas/evidence/CaseEvidence/2.0.schema.json",
+  "title": "Case Evidence v2.0",
+  "description": "Runtime GO 判定の Case 単位 Evidence。evidence_kind が層を、event_observation が Ledger 観測の有無をEvidence 単体から読める形で持つ（設計書 v1.15 §26.2.1）。Required Field 追加と event_sequence の意味変更のため、§15.2 により Major 版として発行した。",
+  "type": "object",
+  "required": [
+    "evidence_schema_version",
+    "case_id",
+    "test_id",
+    "gate_ids",
+    "status",
+    "mismatched_fields",
+    "implementation_commit_sha",
+    "design_sha256",
+    "registry_snapshot_hash",
+    "schema_catalog_hash",
+    "fault_injection",
+    "source_tree_clean",
+    "input_fixture_path",
+    "input_fixture_hash",
+    "environment_manifest_hash",
+    "expected",
+    "observed",
+    "side_effects",
+    "test_node_ids",
+    "producer",
+    "evidence_hash",
+    "evidence_kind",
+    "event_observation",
+    "event_observation_policy"
+  ],
+  "properties": {
+    "evidence_schema_version": {
+      "const": "2.0"
+    },
+    "evidence_kind": {
+      "enum": [
+        "UNIT",
+        "ORCHESTRATION"
+      ],
+      "description": "検証した層。**領域所属ではない。** どの Evidence Area へ数えるかは evidence-areas.yaml と Registry が決める。"
+    },
+    "event_observation_policy": {
+      "enum": [
+        "REQUIRED_EMPTY",
+        "NOT_APPLICABLE",
+        null
+      ],
+      "description": "Registry が宣言した Event 観測 Policy を写したもの。Verifier は Release 束縛の Snapshot と照合する。**欠落を値へ変換しない。** 期待Event列が非空の Case は null である。"
+    },
+    "event_observation": {
+      "enum": [
+        "OBSERVED",
+        "OBSERVED_EMPTY",
+        "NOT_APPLICABLE"
+      ],
+      "description": "OBSERVED: Ledger を観測し Event 列を取得した。OBSERVED_EMPTY: Ledger を観測し Event 列が空だった。NOT_APPLICABLE: Event 観測を要求しない Unit Case である。**未観測を 0 件観測へ変換しない。**"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "test_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "mismatched_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "implementation_commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "design_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "registry_snapshot_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "schema_catalog_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "fault_injection": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "source_tree_clean": {
+      "const": true
+    },
+    "input_fixture_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_fixture_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "environment_manifest_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "expected": {
+      "type": "object",
+      "required": [
+        "state",
+        "error_code",
+        "event_sequence",
+        "expectation_descriptor_hash"
+      ],
+      "properties": {
+        "state": {
+          "type": "string"
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_sequence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expectation_descriptor_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "side_effects": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "test_node_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "producer": {
+      "const": "tools/emit_case_evidence.py"
+    },
+    "evidence_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "observed": {
+      "type": "object",
+      "required": [
+        "state",
+        "error_code",
+        "event_sequence",
+        "actual_subject_id"
+      ],
+      "properties": {
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "error_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "event_sequence": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "NOT_APPLICABLE のときだけ null。OBSERVED_EMPTY のときは [] であり null にしない。"
+        },
+        "actual_subject_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "title": "NOT_APPLICABLE では event_sequence を null にする",
+      "if": {
+        "properties": {
+          "event_observation": {
+            "const": "NOT_APPLICABLE"
+          }
+        },
+        "required": [
+          "event_observation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "observed": {
+            "properties": {
+              "event_sequence": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "OBSERVED_EMPTY では event_sequence を空配列にする",
+      "if": {
+        "properties": {
+          "event_observation": {
+            "const": "OBSERVED_EMPTY"
+          }
+        },
+        "required": [
+          "event_observation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "observed": {
+            "properties": {
+              "event_sequence": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "OBSERVED では非空の Event 列を要求する",
+      "if": {
+        "properties": {
+          "event_observation": {
+            "const": "OBSERVED"
+          }
+        },
+        "required": [
+          "event_observation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "observed": {
+            "properties": {
+              "event_sequence": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "REQUIRED_EMPTY は Orchestration の OBSERVED_EMPTY である",
+      "if": {
+        "properties": {
+          "event_observation_policy": {
+            "const": "REQUIRED_EMPTY"
+          }
+        },
+        "required": [
+          "event_observation_policy"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence_kind": {
+            "const": "ORCHESTRATION"
+          },
+          "event_observation": {
+            "const": "OBSERVED_EMPTY"
+          }
+        }
+      }
+    },
+    {
+      "title": "NOT_APPLICABLE は Unit の NOT_APPLICABLE である",
+      "if": {
+        "properties": {
+          "event_observation_policy": {
+            "const": "NOT_APPLICABLE"
+          }
+        },
+        "required": [
+          "event_observation_policy"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence_kind": {
+            "const": "UNIT"
+          },
+          "event_observation": {
+            "const": "NOT_APPLICABLE"
+          }
+        }
+      }
+    },
+    {
+      "title": "ORCHESTRATION は常に Ledger 観測を要求する",
+      "if": {
+        "properties": {
+          "evidence_kind": {
+            "const": "ORCHESTRATION"
+          }
+        },
+        "required": [
+          "evidence_kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event_observation": {
+            "enum": [
+              "OBSERVED",
+              "OBSERVED_EMPTY"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

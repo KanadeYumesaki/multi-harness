@@ -1,0 +1,166 @@
+# CI が Tier ごとに走らせる Test の正本。
+#
+# ## なぜ Workflow へ直書きしないか
+#
+# Suite の一覧を Workflow の YAML へ書くと、正本が 2 つ（`.github/workflows/ci.yml`
+# と `ci/github-actions-ci.yml`）になる。片方だけ直せば静かに食い違う。実際に
+# `tests/` 直下の 4 File はどちらの一覧にも入っておらず、**29 件が CI のどこでも
+# 走っていなかった**。
+#
+# ここを唯一の正本にし、`tools/ci_suites.py` が Tier から Path を出す。Workflow は
+# その出力を pytest へ渡すだけにする。
+#
+# ## Tier
+#
+# `tools/ci_scope.py` が決める層。名前を変えない。
+#
+# | Tier | いつ |
+# |---|---|
+# | `draft` | Draft PR |
+# | `ready` | Ready for Review の PR |
+# | `full` | `ci:full` ラベル／`workflow_dispatch`／main push／Release tag／Release 候補／影響範囲不明 |
+# | `deep` | schedule（nightly） |
+#
+# ## group
+#
+# 正本の Workflow は Coverage 計測と Integration を別 Step に分ける。実物は
+# Infrastructure 層の Coverage を実態に合わせるため 1 Step にまとめている。
+# どちらからも同じ正本を読めるよう、group で切れるようにしてある。
+#
+# ## optional
+#
+# `true` は「MVP0-A ではまだ存在しない Suite」である。存在しない Path を pytest へ
+# 渡すと「引数が無い」で落ち、CI が恒常的に赤くなって警報として機能しなくなる。
+# **存在するものだけを渡す。** Suite を新設した時点で自動的に対象へ入る。
+
+version: 1
+
+tier_order: [draft, ready, full, deep]
+
+# ---------------------------------------------------------------------------
+# pytest が収集して走らせる Suite
+# ---------------------------------------------------------------------------
+suites:
+  - path: tests/unit
+    group: coverage
+    tiers: [draft, ready, full, deep]
+    optional: false
+    why: 単体試験。どの層でも回す
+
+  - path: tests/property
+    group: coverage
+    tiers: [draft, ready, full, deep]
+    optional: true
+    why: 正本が要求する Suite。MVP0-A では未作成
+
+  - path: tests/schema
+    group: coverage
+    tiers: [draft, ready, full, deep]
+    optional: true
+    why: 正本が要求する Suite。MVP0-A では未作成
+
+  - path: tests/spec_lint
+    group: coverage
+    tiers: [draft, ready, full, deep]
+    optional: false
+    why: 正本・生成物・層規則の静的検査。壊れたら全体が信用できない
+
+  - path: tests/integration
+    group: integration
+    tiers: [draft, ready, full, deep]
+    optional: false
+    why: SQLite／Filesystem／Masking／UI の統合。Infrastructure 層の実行経路
+
+  - path: tests/contract
+    group: integration
+    tiers: [draft, ready, full, deep]
+    optional: true
+    why: 正本が要求する Suite。MVP0-A では未作成
+
+  - path: tests/private_history
+    group: coverage
+    tiers: [draft, ready, full, deep]
+    optional: true
+    why: >-
+      非公開の回答・Block Record・監査記録そのものを確かめる試験と、配布コピーを
+      書き出す非公開側 Tool の試験。非公開側にだけ置き、公開用の配布コピーには
+      収録しない（docs/PUBLIC-VERIFICATION.md）。
+      存在する木では他の Suite と同じ Tier で走らせる
+
+  # -------------------------------------------------------------------------
+  # `tests/` 直下の Test File。**どの Suite Directory にも属さないため、
+  # Path を並べる方式では取りこぼされていた。**
+  # -------------------------------------------------------------------------
+  - path: tests/test_schema_registry_unification.py
+    group: coverage
+    tiers: [ready, full]
+    optional: false
+    why: >-
+      Schema Registry の統一性。Core Schema の重複定義や取り違えを検出する。
+      Draft では回さないが、Ready 以降では必ず回す
+
+  - path: tests/test_apply_design_v18_paths.py
+    group: coverage
+    tiers: [ready, full]
+    optional: false
+    why: >-
+      設計書の適用経路。設計 Path の取り違えを検出する。
+      Draft では回さないが、Ready 以降では必ず回す
+
+  - path: tests/test_recovery_candidates.py
+    group: coverage
+    tiers: [ready, full]
+    optional: false
+    why: >-
+      Recovery 候補の判定。未終端 Stream の自動復帰可否に関わる安全性である。
+      Draft では回さないが、Ready 以降では必ず回す
+
+  - path: tests/test_package_release_zip.py
+    group: coverage
+    tiers: [ready, full]
+    optional: false
+    why: >-
+      Release Package の検証。Task の初期割当は Full/Release 専用だったが、
+      `docs/CI-POLICY.md` は Ready for Review でも「全 pytest」を回すと定めている。
+      既存 Policy に従い Ready にも入れる。実測 1.4 秒で、Ready の負担にならない。
+      Draft には入れない（Release Package の検証を Draft ごとに繰り返さない）
+
+  # -------------------------------------------------------------------------
+  # deep 専用。nightly Job が狙い撃ちで走らせる。
+  # **主 Step の Path 集合へは入れない。** 入れると full の主 Step と nightly の
+  # 両方で走り、同じ Test を二重に実行することになる。
+  # -------------------------------------------------------------------------
+  - path: tests/security_corpus
+    group: deep
+    tiers: [full, deep]
+    optional: true
+    why: Filesystem Corpus。nightly が走らせる。MVP0-A では未作成
+
+  - path: tests/crash
+    group: deep
+    tiers: [full, deep]
+    optional: true
+    why: Fault Injection と Crash。nightly が走らせる。MVP0-A では未作成
+
+# ---------------------------------------------------------------------------
+# pytest ではなく `python <file>` として直接実行される Test
+#
+# どちらも `__main__` ブロックを持ち、その中で自分の Test を全部走らせる。
+# pytest でも収集できるが、CI では spec-foundation Job が直接起動している。
+# **「pytest から見えない」ことと「走っていない」ことは違う。** 走っている方を
+# 記録し、Coverage の計算へ入れる。
+# ---------------------------------------------------------------------------
+scripts:
+  - path: tests/test_verify_runtime_go.py
+    tiers: [ready, full]
+    command: python tests/test_verify_runtime_go.py
+    why: >-
+      Runtime GO Verifier 本体の試験。`ruff` の除外対象でもあり、
+      Verifier を触った Task では CLAUDE.md が単体実行を要求する
+
+  - path: tests/test_hardening_contracts.py
+    tiers: [ready, full]
+    command: python tests/test_hardening_contracts.py
+    why: >-
+      Verifier 改ざん検出・CI 境界・Block Record の往復。
+      pytest が無い環境でも走らせられるよう直接実行の形を保つ

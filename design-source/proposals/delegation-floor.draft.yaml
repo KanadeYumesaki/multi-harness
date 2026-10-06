@@ -1,0 +1,96 @@
+# 非委任床（Delegationがあっても常に人間承認）の正本案。ADR-006 §6。
+#
+# **未適用のDraft。** 承認後 design-source/registries/delegation-floor.yaml とする。
+# Delegation Resolver は本Registryを読んで評価し、条件をコードへ直書きしない（不変条件#18）。
+# 評価はPredicate照合より**先**に行い、1つでも該当すれば即不成立とする。
+#
+# fail_closed_on_unknown: 判定に必要な情報が欠落・判定不能な場合の既定。
+#   true = 委任不成立（人間承認へ戻す）。全項目でtrueとする。
+
+floor_version: 1
+
+evaluation_order: BEFORE_PREDICATE_MATCH
+fail_closed_on_unknown: true
+
+rules:
+  - rule_id: FLOOR-01-PAID
+    condition: billing_mode != FREE
+    reason: Paid Execution
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: >
+      §9.7によりPaid ExecutionはEnterprise SoD Gate合格まで HUMAN_APPROVAL_ONLY。
+      単独開発では同Gateへ到達し得ない。
+
+  - rule_id: FLOOR-02-EXTERNAL-EFFECT
+    condition: expected_effect == EXTERNAL_EFFECT
+    reason: External Effect
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: 外部送信は取り消せない。MVP1-Eは参照仕様。
+
+  - rule_id: FLOOR-03-SECRET
+    condition: secret_findings_count > 0 OR credential_detected == true
+    reason: Secret / Credential
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: 認証情報を含む入力は自動経路へ乗せない。ADR-007でも即Reject。
+
+  - rule_id: FLOOR-04-POLICY-STALE
+    condition: policy_freshness != CURRENT
+    reason: Policy stale
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: >
+      §14.4.1。LKG_WITHIN_TTL も委任不可とする。
+      Policyが最新でない状態で自動承認すると、失効した規則で実行が進む。
+
+  - rule_id: FLOOR-05-RECOVERY
+    condition: operation_class IN [RECOVERY, RECONCILIATION, REPAIR, EMERGENCY, CANCEL]
+    reason: Recovery / Reconciliation
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: >
+      §3.10。復旧は状態判定を伴う。EFFECT_UNKNOWN からの自動再実行は
+      不変条件#9および Gate 12 が禁止する。
+
+  - rule_id: FLOOR-06-RISK
+    condition: risk_level IN [HIGH, CRITICAL]
+    reason: HIGH / CRITICAL Risk
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: §3.8.2によりHIGH以上はEffectを持つAction単位の承認を要する。
+
+  - rule_id: FLOOR-07-DELEGATION-META
+    condition: action_type IN [DELEGATION_CREATE, DELEGATION_WIDEN, DELEGATION_MODIFY]
+    reason: DelegationGrant作成・拡大・変更
+    error_code: DELEGATION_SELF_MODIFICATION_DENIED
+    rationale: >
+      委任によって委任を作れると範囲が無限に拡大する。本ADRで最も重要な床。
+      revoke と narrow（縮小）は安全方向のため承認不要で許可する。
+
+  - rule_id: FLOOR-08-DESTRUCTIVE
+    condition: action_type IN [
+        FILE_DELETE, DIRECTORY_DELETE, GC_EXECUTE, BACKUP_RESTORE,
+        MIGRATION_APPLY, DEPLOY_DRAIN, KEY_ROTATE, KEY_REVOKE,
+        POLICY_UPDATE, TRUST_ANCHOR_UPDATE, LEDGER_EXPORT ]
+    reason: 破壊的操作・特権操作
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: >
+      取り消せない操作と、統制自体を変更する操作。
+      GCとBackup復元はArtifactを失う。鍵・Policy・Trust Anchorの変更は
+      委任機構そのものの前提を書き換える。
+
+  - rule_id: FLOOR-09-MASKING-REJECT
+    condition: masking_decision == REJECT
+    reason: マスキング拒否を含む入力
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: ADR-007。Scan#1またはScan#2で拒否された入力は自動経路へ乗せない。
+
+  - rule_id: FLOOR-10-ABNORMAL-STATE
+    condition: attempt_state IN [EFFECT_UNKNOWN, CANCEL_UNKNOWN, BLOCKED_CONFLICT]
+        OR last_error_code IN [RUNTIME_SPEC_MISMATCH, PLAN_NONDETERMINISTIC]
+    reason: 異常状態
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: 状態が判定できない場合は推測せず停止する（不変条件#9、§6迷ったときの既定）。
+
+  - rule_id: FLOOR-11-CLASSIFICATION
+    condition: effective_classification IN [RESTRICTED, SECRET]
+        OR classification_known == false
+    reason: 機密度上限超過・分類不能
+    error_code: DELEGATION_NOT_DELEGABLE_ACTION
+    rationale: §1.13。分類不明は RESTRICTED + UNKNOWN として Fail-Closed。

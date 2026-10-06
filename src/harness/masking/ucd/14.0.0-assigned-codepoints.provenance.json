@@ -1,0 +1,15 @@
+{
+  "artifact_format": "UCD14_ASSIGNED_BITMAP_V1",
+  "artifact_bit_order": "CODEPOINT_ASCENDING_LSB0",
+  "artifact_size_bytes": 139264,
+  "artifact_sha256": "sha256:e20aa132de7eb03a7638ba85c7c0c54a547ed5a481e902eecd55009dca6599ea",
+  "unicode_data_version": "14.0.0",
+  "source_url": "https://www.unicode.org/Public/14.0.0/ucd/UnicodeData.txt",
+  "source_sha256": "sha256:36018e68657fdcb3485f636630ffe8c8532e01c977703d2803f5b89d6c5feafb",
+  "assigned_codepoint_count": 282230,
+  "excluded_categories": [
+    "Cs"
+  ],
+  "generated_at": "2026-08-07T01:18:57Z",
+  "generator": "tools/build_ucd_assigned_bitmap.py"
+}

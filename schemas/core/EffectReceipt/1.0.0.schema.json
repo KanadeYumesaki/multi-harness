@@ -1,0 +1,232 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/EffectReceipt/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "effect_type": {
+            "const": "REMOTE_INVOCATION"
+          }
+        },
+        "required": [
+          "effect_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "remote_invocation_registry_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "effect_type": {
+            "const": "EXTERNAL_DISPATCH"
+          }
+        },
+        "required": [
+          "effect_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "outbox_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "effect_type": {
+            "const": "BUDGET_RESERVATION"
+          }
+        },
+        "required": [
+          "effect_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "budget_reservation_id"
+        ]
+      }
+    }
+  ],
+  "properties": {
+    "action_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "attempt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "before_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "budget_reservation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "confirmation_level": {
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "durability_level": {
+      "type": "string"
+    },
+    "effect_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "effect_subject_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "effect_subject_type": {
+      "type": "string"
+    },
+    "effect_type": {
+      "enum": [
+        "WORKSPACE_WRITE",
+        "REMOTE_INVOCATION",
+        "EXTERNAL_DISPATCH",
+        "BUDGET_RESERVATION"
+      ],
+      "type": "string"
+    },
+    "execution_attempted_event_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "expected_after_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "fencing_token": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "observation_method": {
+      "type": "string"
+    },
+    "observed_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "observed_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "operation_journal_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "outbox_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "prepared_event_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "provider_receipt_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "receipt_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "receipt_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "remote_invocation_registry_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "remote_object_reference_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "EffectReceipt"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "target_resource_identity": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "usage_evidence_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "receipt_id",
+    "effect_id",
+    "operation_journal_id",
+    "action_id",
+    "attempt_id",
+    "effect_type",
+    "effect_subject_type",
+    "effect_subject_id",
+    "target_resource_identity",
+    "before_hash",
+    "expected_after_hash",
+    "observed_hash",
+    "observation_method",
+    "confirmation_level",
+    "fencing_token",
+    "prepared_event_id",
+    "execution_attempted_event_id",
+    "observed_at",
+    "durability_level"
+  ],
+  "title": "EffectReceipt",
+  "type": "object"
+}

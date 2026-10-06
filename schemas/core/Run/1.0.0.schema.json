@@ -1,0 +1,112 @@
+{
+  "$id": "https://fde-harness.local/schemas/core/Run/1.0.0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "causation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "content_hash": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "correlation_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "created_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "created_by": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "ended_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "type": "string"
+    },
+    "producer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "record_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "risk_level": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_name": {
+      "const": "Run"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sequence_number": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "state": {
+      "enum": [
+        "CREATED",
+        "PLANNING",
+        "WAITING_APPROVAL",
+        "READY",
+        "RUNNING",
+        "RECOVERING",
+        "WAITING_RELEASE",
+        "COMPLETED",
+        "BLOCKED",
+        "BLOCKED_REPAIR_REQUIRED",
+        "CANCELLING",
+        "CANCELLED",
+        "FAILED"
+      ],
+      "type": "string"
+    },
+    "store_version": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "task_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "unreconciled_effect_carried_to_run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "unresolved_action_count": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "record_id",
+    "created_at",
+    "producer",
+    "content_hash",
+    "task_id",
+    "state",
+    "created_by",
+    "unresolved_action_count",
+    "risk_level",
+    "store_version"
+  ],
+  "title": "Run",
+  "type": "object"
+}

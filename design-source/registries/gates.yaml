@@ -1,0 +1,323 @@
+gates:
+- gate_id: MVP0A-GATE-01
+  phase: MVP0-A
+  condition: WorkspaceがWSL2 Linux native FS上にあり、Foreign FSを拒否
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-WSL-BOUNDARY-001
+  test_refs_raw: AT-WSL-BOUNDARY-001
+- gate_id: MVP0A-GATE-02
+  phase: MVP0-A
+  condition: MVP0-A割当のTest Manifestが全件PASS
+  test_refs_mode: ALL_IN_SCOPE
+  test_refs: []
+  test_refs_raw: Manifest全体
+- gate_id: MVP0A-GATE-03
+  phase: MVP0-A
+  condition: RuntimeEnvelopeSpecとInvocationManifestをApproval前に固定
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-PLAN-001
+  test_refs_raw: AT-PLAN-001
+- gate_id: MVP0A-GATE-04
+  phase: MVP0-A
+  condition: argv／cwd／env／Executable／Model／Auth／Policy変更時の起動拒否
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CONFIG-001
+  - AT-PLAN-001
+  test_refs_raw: AT-PLAN-001, AT-CONFIG-001
+- gate_id: MVP0A-GATE-05
+  phase: MVP0-A
+  condition: Approval署名、Nonce、Expiry、Revocation、Replay合格
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-APPROVAL-001
+  test_refs_raw: AT-APPROVAL-001
+- gate_id: MVP0A-GATE-06
+  phase: MVP0-A
+  condition: Approval同時Consumeで成功1件だけ
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-APPROVAL-002
+  test_refs_raw: AT-APPROVAL-002
+- gate_id: MVP0A-GATE-07
+  phase: MVP0-A
+  condition: 許容Clock Skew超過でFail-Closed
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CLOCK-SKEW-001
+  test_refs_raw: AT-CLOCK-SKEW-001
+- gate_id: MVP0A-GATE-08
+  phase: MVP0-A
+  condition: Fault Point 10点の全Crash Caseから手動DB改変なしで復旧または安全停止
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CRASH-001
+  test_refs_raw: AT-CRASH-001
+- gate_id: MVP0A-GATE-09
+  phase: MVP0-A
+  condition: ENOSPC／EIO Faultから部分Commitなしで復旧または安全停止
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-FAULT-IO-001
+  test_refs_raw: AT-FAULT-IO-001
+- gate_id: MVP0A-GATE-10
+  phase: MVP0-A
+  condition: Policy禁止下でFault Injection実行0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-FAULT-GUARD-001
+  test_refs_raw: AT-FAULT-GUARD-001
+- gate_id: MVP0A-GATE-11
+  phase: MVP0-A
+  condition: PREPARED_DURABLE前のEffect実行0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CRASH-001
+  test_refs_raw: AT-CRASH-001
+- gate_id: MVP0A-GATE-12
+  phase: MVP0-A
+  condition: EFFECT_UNKNOWNからの自動再実行0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CRASH-001
+  - AT-RUN-TERMINAL-001
+  test_refs_raw: AT-CRASH-001, AT-RUN-TERMINAL-001
+- gate_id: MVP0A-GATE-13
+  phase: MVP0-A
+  condition: Receipt欠落／Ledger欠落を双方検出
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CRASH-001
+  - AT-EVENT-MAPPING-001
+  test_refs_raw: AT-EVENT-MAPPING-001, AT-CRASH-001
+- gate_id: MVP0A-GATE-14
+  phase: MVP0-A
+  condition: Ledger Hash Chain改ざん検出
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-LEDGER-TAMPER-001
+  test_refs_raw: AT-LEDGER-TAMPER-001
+- gate_id: MVP0A-GATE-15
+  phase: MVP0-A
+  condition: Stale Fencing TokenによるCommit 0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-FENCE-001
+  test_refs_raw: AT-FENCE-001
+- gate_id: MVP0A-GATE-16
+  phase: MVP0-A
+  condition: 未照合Effectを持つRunの終端0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-RUN-TERMINAL-001
+  test_refs_raw: AT-RUN-TERMINAL-001
+- gate_id: MVP0A-GATE-17
+  phase: MVP0-A
+  condition: Approval回避機構0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-APPROVAL-001
+  - AT-APPROVAL-UX-001
+  test_refs_raw: AT-APPROVAL-001, AT-APPROVAL-UX-001
+- gate_id: MVP0A-GATE-18
+  phase: MVP0-A
+  condition: 承認既定表示7項目、差分表示、操作時間中央値30秒以下
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-APPROVAL-UX-001
+  test_refs_raw: AT-APPROVAL-UX-001
+- gate_id: MVP0A-GATE-19
+  phase: MVP0-A
+  condition: 重複Effect 0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CRASH-001
+  test_refs_raw: AT-CRASH-001
+- gate_id: MVP0A-GATE-20
+  phase: MVP0-A
+  condition: Workspace Escape 0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-INPUT-PATH-001
+  - AT-PATH-001
+  test_refs_raw: AT-PATH-001, AT-INPUT-PATH-001
+- gate_id: MVP0A-GATE-21
+  phase: MVP0-A
+  condition: Symlink／Mount／特殊File／Virtual FS Input Read拒否
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-INPUT-PATH-001
+  test_refs_raw: AT-INPUT-PATH-001
+- gate_id: MVP0A-GATE-22
+  phase: MVP0-A
+  condition: Read CapabilityなしのTask／Context読取り0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-INPUT-PATH-001
+  test_refs_raw: AT-INPUT-PATH-001
+- gate_id: MVP0A-GATE-23
+  phase: MVP0-A
+  condition: Artifact Put前のClassification／Secret Scan実施率100%
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CONTROL-DATA-001
+  - AT-INPUT-PATH-001
+  test_refs_raw: AT-INPUT-PATH-001, AT-CONTROL-DATA-001
+- gate_id: MVP0A-GATE-24
+  phase: MVP0-A
+  condition: Untrusted入力のControl Role昇格0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CONTROL-DATA-001
+  test_refs_raw: AT-CONTROL-DATA-001
+- gate_id: MVP0A-GATE-25
+  phase: MVP0-A
+  condition: Token上限超過Provider呼出0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-PLAN-001
+  test_refs_raw: AT-PLAN-001
+- gate_id: MVP0A-GATE-26
+  phase: MVP0-A
+  condition: 定義済みSecret CanaryのDB／Log／Artifact漏えい0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CONTROL-DATA-001
+  test_refs_raw: AT-CONTROL-DATA-001
+- gate_id: MVP0A-GATE-27
+  phase: MVP0-A
+  condition: LedgerからProjection再構築成功
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-EVENT-ORDER-001
+  test_refs_raw: AT-EVENT-ORDER-001
+- gate_id: MVP0A-GATE-28
+  phase: MVP0-A
+  condition: Release DecisionなしのRun完了0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-RUN-TERMINAL-001
+  test_refs_raw: AT-RUN-TERMINAL-001
+- gate_id: MVP0A-GATE-29
+  phase: MVP0-A
+  condition: Plan非決定性を検出し停止
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-PLAN-DETERMINISM-001
+  test_refs_raw: AT-PLAN-DETERMINISM-001
+- gate_id: MVP0A-GATE-30
+  phase: MVP0-A
+  condition: 26 Core Schema、Conditional、Cross-reference全件合格
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-SCHEMA-COMPLETE-001
+  - AT-SCHEMA-CONDITIONAL-001
+  test_refs_raw: AT-SCHEMA-CONDITIONAL-001, AT-SCHEMA-COMPLETE-001
+- gate_id: MVP0A-GATE-31
+  phase: MVP0-A
+  condition: Policy期限切れ動作がDecision Matrixと一致
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-POLICY-STALE-001
+  test_refs_raw: AT-POLICY-STALE-001
+- gate_id: MVP0A-GATE-32
+  phase: MVP0-A
+  condition: Emergency Recovery範囲外操作0件、署名／Rollback検証
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-EMERGENCY-RECOVERY-001
+  test_refs_raw: AT-EMERGENCY-RECOVERY-001
+- gate_id: MVP0A-GATE-33
+  phase: MVP0-A
+  condition: 制御処理p50≤5秒、p95≤8秒
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-PERF-001
+  test_refs_raw: AT-PERF-001
+- gate_id: MVP0A-GATE-34
+  phase: MVP0-A
+  condition: Migration、Backup／Restore、Integrity Check合格
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-MIGRATION-001
+  test_refs_raw: AT-MIGRATION-001
+- gate_id: MVP0A-GATE-35
+  phase: MVP0-A
+  condition: Active Run／承認待ちがあるDeployをDrainで拒否
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-DRAIN-001
+  test_refs_raw: AT-DRAIN-001
+- gate_id: MVP0A-GATE-36
+  phase: MVP0-A
+  condition: GC Dry-runが参照Artifactを削除対象にしない
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-GC-001
+  test_refs_raw: AT-GC-001
+- gate_id: MVP0A-GATE-37
+  phase: MVP0-A
+  condition: Predicate外の自動承認0件。委任による委任の生成・拡大0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-DELEGATION-001
+  test_refs_raw: AT-DELEGATION-001
+- gate_id: MVP0A-GATE-38
+  phase: MVP0-A
+  condition: 失効・縮小が即時反映され、拡大が新規承認なしに成立しない
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-DELEGATION-001
+  test_refs_raw: AT-DELEGATION-001
+- gate_id: MVP0A-GATE-39
+  phase: MVP0-A
+  condition: 自動承認された全実行がDelegationGrantと生成元Runへ追跡可能
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-DELEGATION-001
+  test_refs_raw: AT-DELEGATION-001
+- gate_id: MVP0A-GATE-40
+  phase: MVP0-A
+  condition: マスク後の再スキャン不合格・変換不正・Masker不在で通過0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-MASKING-001
+  test_refs_raw: AT-MASKING-001
+- gate_id: MVP0A-GATE-41
+  phase: MVP0-A
+  condition: 認証情報がMaskerへ渡らず、MaskingReceipt／Ledger／LogへSecret Canary漏えい0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-CONTROL-DATA-001
+  - AT-MASKING-001
+  test_refs_raw: AT-CONTROL-DATA-001, AT-MASKING-001
+- gate_id: MVP0A-GATE-42
+  phase: MVP0-A
+  condition: risky Grapheme codepoint・NATIONAL_ID・Normalization Profile不一致は全てFail-Closed
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-MASKING-001
+  test_refs_raw: AT-MASKING-001
+- gate_id: MVP0A-GATE-43
+  phase: MVP0-A
+  condition: Raw PII経路のMasker隔離不成立時にMasker呼出しと未マスク通過が0件
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-MASKING-001
+  test_refs_raw: AT-MASKING-001
+- gate_id: MVP0A-GATE-44
+  phase: MVP0-A
+  condition: Python 3.11／3.12でUCD14 Profile Hashと正規化Hashが一致し、Artifact欠落時はFail-Closed
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-MASKING-001
+  test_refs_raw: AT-MASKING-001
+- gate_id: MVP0A-GATE-45
+  phase: MVP0-A
+  condition: Mask ratioはLLM追加分だけに適用され、同一カテゴリContainment Expansion以外のSpan衝突は0件通過
+  test_refs_mode: EXPLICIT
+  test_refs:
+  - AT-MASKING-001
+  test_refs_raw: AT-MASKING-001
