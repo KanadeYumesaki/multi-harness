@@ -207,13 +207,22 @@ def test_directory_is_denied(workspace: Path, reader: SafeInputReader) -> None:
     assert denial.error_code is ErrorCode.SPECIAL_FILE_DENIED
 
 
-def test_socket_is_denied(workspace: Path, reader: SafeInputReader) -> None:
+@pytest.mark.parametrize("long_parent", [False, True], ids=["short-parent", "long-parent"])
+def test_socket_is_denied(
+    workspace: Path, reader: SafeInputReader, monkeypatch: pytest.MonkeyPatch, long_parent: bool
+) -> None:
     import socket
 
+    relative_parent = Path("docs") / ("socket-fixture-" + "x" * 160 if long_parent else ".")
+    parent = workspace / relative_parent
+    parent.mkdir(exist_ok=True)
+    # AF_UNIX's sun_path is short even when the filesystem path is valid.
+    # Bind relative to its parent; the reader still receives the real socket path.
+    monkeypatch.chdir(parent)
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     try:
-        sock.bind(str(workspace / "docs" / "sock"))
-        denial = _denial(reader.open_read(CAPABILITY_ID, "docs/sock"))
+        sock.bind("sock")
+        denial = _denial(reader.open_read(CAPABILITY_ID, (relative_parent / "sock").as_posix()))
         assert denial.error_code is ErrorCode.SPECIAL_FILE_DENIED
     finally:
         sock.close()
