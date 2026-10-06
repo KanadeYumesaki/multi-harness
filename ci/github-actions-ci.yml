@@ -395,7 +395,38 @@ jobs:
       - name: rootless-cli-sandbox-preflight
         if: ${{ hashFiles('src/harness/**/*.py') != '' }}
         # Exercise a positive real-process path before the full suite; refusal is a failure.
-        run: python -m pytest tests/integration/workbench/test_workbench_service.py::test_launch_spec_carries_the_pre_execution_restrictions -q
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          import pytest
+          from harness.infrastructure.provider import cli_profiles
+          original_probe = cli_profiles._run_probe
+          def observe_probe(argv, spec):
+              result = original_probe(argv, spec)
+              if result.returncode:
+                  text = result.stderr.decode("utf-8", "replace").lower()
+                  categories = {
+                      "MOUNT_PRIVATE_DENIED": "could not make mounts private",
+                      "MOUNT_BIND_DENIED": "could not bind writable mount",
+                      "NAMESPACE_DENIED": "operation not permitted",
+                      "RUNTIME_LIBRARY_LOAD_FAILED": "shared libraries",
+                      "PYTHON_STDLIB_UNAVAILABLE": "encodings",
+                      "READ_OR_EXECUTE_DENIED": "permission denied",
+                  }
+                  print(json.dumps({
+                      "event": "synthetic_cli_preflight_failure",
+                      "returncode": result.returncode,
+                      "causes": [name for name, marker in categories.items() if marker in text],
+                      "python_in_system_tree": sys.base_prefix.startswith("/usr/"),
+                  }), flush=True)
+              return result
+          cli_profiles._run_probe = observe_probe
+          raise SystemExit(pytest.main([
+              "tests/integration/workbench/test_workbench_service.py::test_launch_spec_carries_the_pre_execution_restrictions",
+              "-q",
+          ]))
+          PY
 
       - name: unit-property-schema
         if: ${{ hashFiles('src/harness/**/*.py') != '' }}
