@@ -15,7 +15,7 @@
 | 判定 | このコピーでの状態 |
 |---|---|
 | ローカル検査（`run-checks.sh` の `LOCAL_OK`） | このコピー自身で実行できます。合成入力による契約試験です |
-| GitHub CI | [Actionsの対象Commitと結果](../../actions)を確認してください。ローカル検査とは別です |
+| GitHub CI | RepositoryのActionsタブで対象Commitと結果を確認してください。ローカル検査とは別です |
 | 実Providerへの送信・接続 | **未測定**です。試験は合成CLIと境界Probeの代役を使います |
 | Runtime GO | **未成立**です。WSL2実機のRelease Gateだけが生成できます |
 | Human Release | **未成立**です。人のRelease操作と信頼根の設定が必要です |
