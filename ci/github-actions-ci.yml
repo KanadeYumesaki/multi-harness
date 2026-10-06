@@ -312,12 +312,32 @@ jobs:
         # GO判定器の否定系試験。ここが落ちたら他の結果は信用できない
         run: python tests/test_verify_runtime_go.py
 
-      - name: release-zip-smoke
+      - name: source-preview-archive-smoke
         if: steps.scope.outputs.skip != 'true'
+        # Formal Release Packagerは合成Fixtureで検査し、公開ZIPはCommitの全Bytesと照合。
+        # 個人の保存Reportをコピーせず、Source PreviewをHuman Releaseと呼ばない。
         run: |
-          python tools/package_release_zip.py --source-root . --out /tmp/mvp0a-release.zip --verify
-          unzip -Z1 /tmp/mvp0a-release.zip | grep -F '/design-v1.25-runtime-go.md'
-          ! unzip -Z1 /tmp/mvp0a-release.zip | grep -E '/(\.mypy_cache|\.pytest_cache|__pycache__)/'
+          python -m pytest tests/test_package_release_zip.py -q
+          git archive --format=zip --prefix=source-preview/ --output="$RUNNER_TEMP/source-preview.zip" HEAD
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import zipfile
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(["git", *args], timeout=30)
+          head = git("rev-parse", "HEAD").decode().strip()
+          expected = [p.decode() for p in git("ls-tree", "-r", "-z", "--name-only", head).split(b"\0") if p]
+          with zipfile.ZipFile(Path(os.environ["RUNNER_TEMP"]) / "source-preview.zip") as archive:
+              names = [info.filename for info in archive.infolist() if not info.is_dir()]
+              if len(names) != len(expected) or set(names) != {"source-preview/" + p for p in expected}:
+                  raise SystemExit("SOURCE_ARCHIVE_FILE_LIST_MISMATCH")
+              for name in expected:
+                  if archive.read("source-preview/" + name) != git("show", head + ":" + name):
+                      raise SystemExit("SOURCE_ARCHIVE_BYTES_MISMATCH")
+          print(json.dumps({"source_commit": head, "verified_files": len(expected), "scope": "SOURCE_PREVIEW_NOT_RELEASE"}))
+          PY
 
       - name: review-hardening-self-test
         if: steps.scope.outputs.skip != 'true'

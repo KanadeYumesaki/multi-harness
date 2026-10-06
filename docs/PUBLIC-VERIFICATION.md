@@ -47,3 +47,11 @@
 公開版のLOCAL_OKは、GitHub CI・実Provider接続・Runtime GO・Human Releaseの成立を意味しません。
 公開用初期設定は単一SQLite DBに保存するWorkbenchの選択設定です。設定保存は送信・適用を承認しません。
 全検査が通っても、公開の可否はOwnerが `docs/PUBLICATION.md` の条件を確認して判断します。
+
+
+## CIが検査するZIP
+
+公開Source PreviewのZIPは、追跡済みのCommitだけから生成し、収録File一覧と全BytesをGit objectと照合します。
+未追跡のCacheや作業木のFileを含めません。これはSource配布の検査で、Release Manifestを作りません。
+正式Release Packagerの受理・拒否条件は、既存の合成Fixture試験を継続して実行します。
+元所有者の実装Reportを公開版へコピーしたり、存在しないRelease Reportを作ってGateを通したりしません。
