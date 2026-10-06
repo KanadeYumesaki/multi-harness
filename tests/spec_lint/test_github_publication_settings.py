@@ -708,3 +708,185 @@ def test_actual_policy_drift_is_detected_even_when_both_samples_pass() -> None:
         == "PASS"
     )
     assert inspection.configuration_snapshot(before) != inspection.configuration_snapshot(after)
+
+
+def test_public_update_requires_an_explicit_single_initial_root(tmp_path: Path) -> None:
+    repo = synthetic_repo(tmp_path)
+    initial = inspection.source_binding(repo)["commit"]
+    subprocess.run(  # noqa: S603 — fixed executable; synthetic Git fixture arguments.
+        [
+            "/usr/bin/git",
+            "-c",
+            "user.name=Synthetic",
+            "-c",
+            "user.email=synthetic@example.invalid",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "synthetic public maintenance",
+        ],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=10,
+    )
+    binding = inspection.source_binding(repo, initial)
+    assert binding["public_root_commit"] == initial
+    assert binding["history_commits"] == 2
+    contract = inspection.workflow_contract(ROOT)
+    observations = good_observations(contract, binding)
+    assert (
+        inspection.evaluate(
+            observations, contract, REPOSITORY, REPOSITORY_ID, binding, "public-update"
+        )["status"]
+        == "PASS"
+    )
+    # The initial-copy contract still rejects multi-commit input.
+    assert (
+        inspection.evaluate(
+            observations, contract, REPOSITORY, REPOSITORY_ID, binding, "public-copy"
+        )["status"]
+        == "BLOCKED"
+    )
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_HISTORY_ROOT_MISMATCH"):
+        inspection.source_binding(repo, binding["commit"])
+
+
+@pytest.mark.parametrize("invalid", ["main", "HEAD", "a" * 39, "a" * 41, "A" * 40, "--all"])
+def test_public_root_requires_a_full_literal_sha(tmp_path: Path, invalid: str) -> None:
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_ROOT_COMMIT_INVALID"):
+        inspection.source_binding(synthetic_repo(tmp_path), invalid)
+
+
+def test_public_update_rejects_a_second_root_from_unrelated_history(tmp_path: Path) -> None:
+    repo = synthetic_repo(tmp_path)
+    initial = inspection.source_binding(repo)["commit"]
+    git = [
+        "/usr/bin/git",
+        "-c",
+        "user.name=Synthetic",
+        "-c",
+        "user.email=synthetic@example.invalid",
+    ]
+    # A second root can share the exact same tree; bytes alone are insufficient.
+    tree = inspection.source_binding(repo)["tree"]
+    second = subprocess.run(  # noqa: S603 — fixed executable; synthetic Git fixture arguments.
+        [*git, "commit-tree", tree],
+        input="unrelated root\n",
+        text=True,
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=10,
+    ).stdout.strip()
+    subprocess.run(  # noqa: S603 — fixed executable; synthetic Git fixture arguments.
+        [*git, "merge", "--allow-unrelated-histories", "--no-edit", second],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=10,
+    )
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_HISTORY_ROOT_MISMATCH"):
+        inspection.source_binding(repo, initial)
+
+
+@pytest.mark.parametrize(
+    ("mode", "root"),
+    [("public-update", None), ("public-copy", "a" * 40), ("source-survey", "a" * 40)],
+)
+def test_root_mode_mismatch_is_rejected_before_any_github_get(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str, root: str | None
+) -> None:
+    def no_network(*args: object, **kwargs: object) -> object:
+        raise AssertionError("GitHub GET must not happen for invalid mode/root input")
+
+    monkeypatch.setattr(inspection, "GithubReader", no_network)
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_ROOT_REQUIRED_ONLY_FOR_UPDATE"):
+        inspection.run_inspection(
+            ROOT,
+            REPOSITORY,
+            REPOSITORY_ID,
+            mode,
+            Path("/usr/bin/gh"),
+            tmp_path / "out",
+            public_root_commit=root,
+        )
+
+
+def _synthetic_git(repo: Path, *args: str, input_text: str | None = None) -> str:
+    result = subprocess.run(  # noqa: S603 — fixed executable, synthetic fixture arguments.
+        [
+            "/usr/bin/git",
+            "-c",
+            "user.name=Synthetic",
+            "-c",
+            "user.email=synthetic@example.invalid",
+            *args,
+        ],
+        cwd=repo,
+        input=input_text,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=10,
+    )
+    return result.stdout.strip()
+
+
+@pytest.mark.parametrize("override", ["replace_ref", "legacy_graft"])
+def test_local_history_overrides_cannot_forge_public_root_before_github_get(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, override: str
+) -> None:
+    repo = synthetic_repo(tmp_path)
+    original = inspection.source_binding(repo)
+    unrelated = _synthetic_git(repo, "commit-tree", original["tree"], input_text="unrelated root\n")
+    _synthetic_git(repo, "update-ref", "refs/heads/main", unrelated)
+    if override == "replace_ref":
+        _synthetic_git(repo, "replace", "--graft", unrelated, original["commit"])
+    else:
+        (repo / ".git/info/grafts").write_text(unrelated + " " + original["commit"] + "\n")
+    # Establish the attack's precondition with real Git, rather than mocking the walk.
+    assert _synthetic_git(repo, "rev-list", "--max-parents=0", "HEAD") == original["commit"]
+    assert _synthetic_git(repo, "status", "--porcelain") == ""
+
+    def no_network(*args: object, **kwargs: object) -> object:
+        raise AssertionError("Forged ancestry must be rejected before GitHub GET")
+
+    monkeypatch.setattr(inspection, "GithubReader", no_network)
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_HISTORY_ROOT_MISMATCH"):
+        inspection.source_binding(repo, original["commit"])
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_HISTORY_ROOT_MISMATCH"):
+        inspection.run_inspection(
+            repo,
+            REPOSITORY,
+            REPOSITORY_ID,
+            "public-update",
+            Path("/usr/bin/gh"),
+            tmp_path / "evidence",
+            public_root_commit=original["commit"],
+        )
+
+
+def test_source_binding_reads_original_tree_despite_local_object_replacement(
+    tmp_path: Path,
+) -> None:
+    repo = synthetic_repo(tmp_path)
+    original = inspection.source_binding(repo)
+    entries = _synthetic_git(repo, "ls-tree", "HEAD")
+    blob = _synthetic_git(
+        repo, "hash-object", "-w", "--stdin", input_text="synthetic extra bytes\n"
+    )
+    replacement_tree = _synthetic_git(
+        repo,
+        "mktree",
+        input_text=entries + "\n100644 blob " + blob + "\tsynthetic-extra\n",
+    )
+    replacement = _synthetic_git(
+        repo, "commit-tree", replacement_tree, input_text="synthetic replacement object\n"
+    )
+    _synthetic_git(repo, "replace", original["commit"], replacement)
+    assert _synthetic_git(repo, "rev-parse", "HEAD^{tree}") == replacement_tree
+    assert replacement_tree != original["tree"]
+    assert _synthetic_git(repo, "--no-replace-objects", "status", "--porcelain") == ""
+    assert inspection.source_binding(repo) == original
+    assert inspection.source_binding(repo, original["commit"])["tree"] == original["tree"]

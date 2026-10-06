@@ -336,3 +336,53 @@ def test_no_step_declares_the_same_key_twice(path: Path) -> None:
         if lines[index].strip().startswith("if:") and lines[index + 1].strip().startswith("if:")
     ]
     assert duplicates == [], f"{path.name}: `if:` が連続している: {duplicates}"
+
+
+@pytest.mark.parametrize("path", WORKFLOWS, ids=lambda p: p.name)
+def test_coverage_threshold_cannot_round_a_shortfall_up_to_success(path: Path) -> None:
+    commands = [
+        command for _, _, command in _run_steps(_workflow(path)) if "--cov-fail-under" in command
+    ]
+    assert commands
+    for command in commands:
+        assert "--cov-fail-under=90" in command
+        assert "--cov-precision=2" in command
+
+
+@pytest.mark.parametrize("covered_body_lines,expected_rc", [(446, 1), (448, 0)])
+def test_actual_coverage_exit_code_rejects_the_observed_shortfall(
+    tmp_path: Path, covered_body_lines: int, expected_rc: int
+) -> None:
+    """An independent subject measures 89.6% and 90%, not a mocked plugin outcome."""
+    total_body_lines = 498
+    lines = ["def covered():"]
+    lines += ["    value = 1"] * (covered_body_lines - 1) + ["    return 1"]
+    lines += ["def uncalled():"]
+    lines += ["    value = 1"] * (total_body_lines - covered_body_lines - 1) + ["    return 1"]
+    (tmp_path / "synthetic_subject.py").write_text("\n".join(lines) + "\n")
+    (tmp_path / "test_subject.py").write_text(
+        "from synthetic_subject import covered\n"
+        "def test_observed_result():\n"
+        "    assert covered() == 1\n"
+    )
+    result = subprocess.run(  # noqa: S603 - synthetic subject, fixed test program and argv.
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "test_subject.py",
+            "--cov=synthetic_subject",
+            "--cov-report=term",
+            "--cov-fail-under=90",
+            "--cov-precision=2",
+            "-q",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == expected_rc, result.stdout + result.stderr
+    assert "1 passed" in result.stdout
+    assert ("Coverage failure" in result.stdout) is (expected_rc != 0)

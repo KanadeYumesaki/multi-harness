@@ -17,7 +17,7 @@
 | 非公開の回答・履歴・監査 | 除外。非公開側で保持 |
 | 要判断 | 除外。公開するにはOwnerの判断が必要 |
 
-新しい履歴は1 Commitだけで、作者・日時は固定値です。開発Repositoryの既存履歴は含めません。
+初回の新しい履歴は1 Commitで、作者・日時は固定値です。その後の公開版の保守履歴は初回Rootへ束縛して検査し、開発Repositoryの既存履歴は含めません。
 
 ## 試験が確かめるもの
 
@@ -47,3 +47,41 @@
 公開版のLOCAL_OKは、GitHub CI・実Provider接続・Runtime GO・Human Releaseの成立を意味しません。
 公開用初期設定は単一SQLite DBに保存するWorkbenchの選択設定です。設定保存は送信・適用を承認しません。
 全検査が通っても、公開の可否はOwnerが `docs/PUBLICATION.md` の条件を確認して判断します。
+
+
+## CIが検査するZIP
+
+公開Source PreviewのZIPは、追跡済みのCommitだけから生成し、収録File一覧と全BytesをGit objectと照合します。
+未追跡のCacheや作業木のFileを含めません。これはSource配布の検査で、Release Manifestを作りません。
+正式Release Packagerの受理・拒否条件は、既存の合成Fixture試験を継続して実行します。
+元所有者の実装Reportを公開版へコピーしたり、存在しないRelease Reportを作ってGateを通したりしません。
+
+
+## CIのLinux隔離試験
+
+実ProcessのMount／PID Namespaceを使うquality Jobは、Runnerを ubuntu-22.04 に固定します。
+全Suiteの前に、既存の正経路試験でCLIの実行前制限が成立することを確認します。
+必要な隔離が成立しないRunnerでは、そのJobが失敗します。全Suiteの件数や期待値は変更しません。
+
+Ubuntu 24.04以降の標準AppArmor Policyは、非特権User Namespace内のCapabilityを制限します。
+今回のGitHub標準Runnerでは、LauncherのMount操作が拒否されました。
+根拠は [UbuntuのRelease Notes](https://documentation.ubuntu.com/release-notes/24.04/) と実CIの失敗Logです。
+利用可能なRunnerと移行情報は [GitHubのRunner Images](https://github.com/actions/runner-images) で確認します。
+固定したRunnerの廃止時は、隔離操作が実測で成立する環境へ移行してから全検査を採り直します。
+Productionの起動Gate、Landlock、Namespace、Approvalは引き続き適用されます。
+
+
+GitHubの実診断では、setup-pythonの共有ライブラリー読込みが終了値127で失敗することを両Python版で確認しました。
+quality Jobでは選択済みのPythonを、一時Runnerの /usr/local 以下の専用System Runtimeへ同じBytesで配置します。
+共有ライブラリーは標準のLoaderへ登録し、RuntimeのBinaryとLibraryが元のBytesと一致することを確認します。
+依存はそのRuntimeへHash固定で導入します。Productionの許可Pathや環境変数の除去規則は保持します。
+Loaderの背景は [setup-pythonの公式Issue](https://github.com/actions/setup-python/issues/871) で確認できます。
+この配置処理はCI専用です。利用者のMachineへSystem設定を加える操作ではありません。
+
+quality Jobの全試験はカバレッジ計測付きです。実Runnerで旧時間上限に達したため、有限の時間枠を見直しています。
+試験対象と90%のカバレッジ基準は維持します。設定の読取り成功・書込み拒否も起動前に実プロセスで確認します。
+境界Probeは固定のOS PathへPythonがあると仮定せず、選択された実行体を使います。
+
+カバレッジは小数点以下2桁で判定し、90%未満を丸めて成功にしません。
+独立した合成Subjectで89.6%の拒否と90%の受理を実測する回帰試験を継続します。
+Process観測の合成PIDは実MachineのProcess表へアクセスせず、判定不能と消滅の条件を別々に試します。

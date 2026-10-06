@@ -84,7 +84,7 @@ jobs:
         env:
           CI_INPUT_0: ${{ github.event_name }}
           CI_INPUT_1: ${{ github.event.pull_request.draft }}
-          CI_INPUT_2: ${{ join(github.event.pull_request.labels.*.name, ",") }}
+          CI_INPUT_2: ${{ join(github.event.pull_request.labels.*.name, ',') }}
           CI_INPUT_3: ${{ github.ref }}
           CI_INPUT_4: ${{ github.head_ref }}
         run: |
@@ -129,7 +129,7 @@ jobs:
           cache-dependency-path: requirements-dev.txt
       - name: install-hash-locked-runtime-and-dev-tools
         run: |
-          pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --require-hashes -r requirements-dev.txt
       - name: fetch-protected-branch
         # 署名はCommitの出所を保証しない。保護Branchの祖先であることを
         # 別途確かめる。
@@ -223,8 +223,8 @@ jobs:
       - name: install-hash-locked-runtime-and-dev-tools
         if: steps.scope.outputs.skip != 'true'
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
 
       - name: registry-snapshot-sync
         if: steps.scope.outputs.skip != 'true'
@@ -312,12 +312,32 @@ jobs:
         # GO判定器の否定系試験。ここが落ちたら他の結果は信用できない
         run: python tests/test_verify_runtime_go.py
 
-      - name: release-zip-smoke
+      - name: source-preview-archive-smoke
         if: steps.scope.outputs.skip != 'true'
+        # Formal Release Packagerは合成Fixtureで検査し、公開ZIPはCommitの全Bytesと照合。
+        # 個人の保存Reportをコピーせず、Source PreviewをHuman Releaseと呼ばない。
         run: |
-          python tools/package_release_zip.py --source-root . --out /tmp/mvp0a-release.zip --verify
-          unzip -Z1 /tmp/mvp0a-release.zip | grep -F '/design-v1.25-runtime-go.md'
-          ! unzip -Z1 /tmp/mvp0a-release.zip | grep -E '/(\.mypy_cache|\.pytest_cache|__pycache__)/'
+          python -m pytest tests/test_package_release_zip.py -q
+          git archive --format=zip --prefix=source-preview/ --output="$RUNNER_TEMP/source-preview.zip" HEAD
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import zipfile
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(["git", *args], timeout=30)
+          head = git("rev-parse", "HEAD").decode().strip()
+          expected = [p.decode() for p in git("ls-tree", "-r", "-z", "--name-only", head).split(b"\0") if p]
+          with zipfile.ZipFile(Path(os.environ["RUNNER_TEMP"]) / "source-preview.zip") as archive:
+              names = [info.filename for info in archive.infolist() if not info.is_dir()]
+              if len(names) != len(expected) or set(names) != {"source-preview/" + p for p in expected}:
+                  raise SystemExit("SOURCE_ARCHIVE_FILE_LIST_MISMATCH")
+              for name in expected:
+                  if archive.read("source-preview/" + name) != git("show", head + ":" + name):
+                      raise SystemExit("SOURCE_ARCHIVE_BYTES_MISMATCH")
+          print(json.dumps({"source_commit": head, "verified_files": len(expected), "scope": "SOURCE_PREVIEW_NOT_RELEASE"}))
+          PY
 
       - name: review-hardening-self-test
         if: steps.scope.outputs.skip != 'true'
@@ -326,8 +346,10 @@ jobs:
   quality:
     name: quality (py${{ matrix.python }})
     needs: [plan]
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # The real rootless mount/PID tests require an image permitting namespace capabilities.
+    runs-on: ubuntu-22.04
+    # Full coverage reached the previous 25-minute cap; retain a finite job budget.
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -344,10 +366,33 @@ jobs:
           # 依存は hash 固定なので、Cache が古くて困ることが無い。
           cache: 'pip'
           cache-dependency-path: requirements-dev.txt
-      - name: install-hash-locked-runtime-and-dev-tools
+      - name: install-ci-python-in-system-runtime-tree
+        # The sandbox allows system runtime trees; setup-python's /opt libraries are outside them.
+        # Install the selected interpreter unchanged, rather than widening the production policy.
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          set -euo pipefail
+          ci_py_source="$(python -I -c 'import sys; print(sys.base_prefix)')"
+          ci_py_minor="$(python -I -c 'import sys; print(str(sys.version_info.major)+"."+str(sys.version_info.minor))')"
+          case "$ci_py_minor" in 3.11|3.12) ;; *) exit 2 ;; esac
+          case "$ci_py_source" in /opt/hostedtoolcache/Python/*/x64) ;; *) exit 2 ;; esac
+          ci_py_root="/usr/local/multi-harness-ci-python-$ci_py_minor"
+          ci_ldconf="/etc/ld.so.conf.d/multi-harness-ci-python-$ci_py_minor.conf"
+          test ! -e "$ci_py_root"
+          test ! -e "$ci_ldconf"
+          sudo cp -a -- "$ci_py_source" "$ci_py_root"
+          test -f "$ci_py_root/lib/libpython$ci_py_minor.so.1.0"
+          printf '%s\n' "$ci_py_root/lib" | sudo tee "$ci_ldconf" >/dev/null
+          sudo ldconfig
+          cmp -- "$ci_py_source/bin/python$ci_py_minor" "$ci_py_root/bin/python$ci_py_minor"
+          cmp -- "$ci_py_source/lib/libpython$ci_py_minor.so.1.0" "$ci_py_root/lib/libpython$ci_py_minor.so.1.0"
+          env -u LD_LIBRARY_PATH "$ci_py_root/bin/python" -I -c 'import sys; print(sys.version)'
+          printf '%s\n' "$ci_py_root/bin" >> "$GITHUB_PATH"
+
+      - name: install-hash-locked-runtime-and-dev-tools
+        # Bind pip to the selected interpreter; copied entrypoint shebangs keep their old prefix.
+        run: |
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
 
       - name: format-and-lint
         run: |
@@ -371,6 +416,43 @@ jobs:
         # §16.2の機械強制。散文規約をCIで実行可能にする
         run: python tools/check_forbidden_patterns.py src/
 
+      - name: rootless-cli-sandbox-preflight
+        if: ${{ hashFiles('src/harness/**/*.py') != '' }}
+        # Exercise a positive real-process path before the full suite; refusal is a failure.
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          import pytest
+          from harness.infrastructure.provider import cli_profiles
+          original_probe = cli_profiles._run_probe
+          def observe_probe(argv, spec):
+              result = original_probe(argv, spec)
+              if result.returncode:
+                  text = result.stderr.decode("utf-8", "replace").lower()
+                  categories = {
+                      "MOUNT_PRIVATE_DENIED": "could not make mounts private",
+                      "MOUNT_BIND_DENIED": "could not bind writable mount",
+                      "NAMESPACE_DENIED": "operation not permitted",
+                      "RUNTIME_LIBRARY_LOAD_FAILED": "shared libraries",
+                      "PYTHON_STDLIB_UNAVAILABLE": "encodings",
+                      "READ_OR_EXECUTE_DENIED": "permission denied",
+                  }
+                  print(json.dumps({
+                      "event": "synthetic_cli_preflight_failure",
+                      "returncode": result.returncode,
+                      "causes": [name for name, marker in categories.items() if marker in text],
+                      "python_in_system_tree": sys.base_prefix.startswith("/usr/"),
+                  }), flush=True)
+              return result
+          cli_profiles._run_probe = observe_probe
+          raise SystemExit(pytest.main([
+              "tests/integration/workbench/test_workbench_service.py::test_launch_spec_carries_the_pre_execution_restrictions",
+              "tests/integration/workbench/test_generation_enablement.py::test_gemini_management_settings_are_readable_but_not_writable_in_boundary",
+              "-q",
+          ]))
+          PY
+
       - name: unit-property-schema
         if: ${{ hashFiles('src/harness/**/*.py') != '' }}
         env:
@@ -382,7 +464,7 @@ jobs:
           echo "pytest suites: ${suites[*]}"
           pytest "${suites[@]}" \
             --cov=src/harness --cov-report=term-missing \
-            --cov-fail-under=90 -q
+            --cov-fail-under=90 --cov-precision=2 -q
 
       - name: integration
         if: ${{ hashFiles('src/harness/**/*.py') != '' }}
@@ -431,8 +513,8 @@ jobs:
       - name: install-hash-locked-runtime-and-dev-tools
         if: steps.scope.outputs.skip != 'true'
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
       - name: dependency-audit (pip-audit / cyclonedx-py)
         if: steps.scope.outputs.skip != 'true'
         # 一つの固定Commit/LockにLicense・脆弱性・SBOMの結果を束縛する。
@@ -482,8 +564,8 @@ jobs:
       - name: install-hash-locked-runtime-and-dev-tools
         if: steps.scope.outputs.skip != 'true'
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
       - name: deep-suites
         # 2 つの条件を 1 つの Key へまとめる。`if:` を 2 度書くと YAML が
         # 後を採り、範囲判定の Guard が黙って捨てられる。

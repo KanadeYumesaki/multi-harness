@@ -1,5 +1,6 @@
 """Providerごとの実測診断が必須で、別Providerの結果を流用しない。"""
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -172,7 +173,14 @@ def test_gemini_management_settings_are_readable_but_not_writable_in_boundary(tm
             "else: raise AssertionError('settings writable')\n"
         )
         result = subprocess.run(  # noqa: S603 - fixed launcher and synthetic test paths
-            [*profiles.launcher_argv, json.dumps(policy), "--", "/usr/bin/python3.12", "-c", probe],
+            [
+                *profiles.launcher_argv,
+                json.dumps(policy),
+                "--",
+                str(Path(sys.executable).resolve(strict=True)),
+                "-c",
+                probe,
+            ],
             capture_output=True,
             text=True,
             timeout=20,

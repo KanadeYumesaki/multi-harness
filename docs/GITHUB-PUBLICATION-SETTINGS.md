@@ -66,3 +66,22 @@ GitHubの機能はRepository visibilityや契約で異なります。既存Repos
 この検証のPASSは、観測時点の選択Branchの設定/配布Commit/完全CIについてだけ成立します。他Ref/全履歴の開示とSecret Scan、依存/SBOM監査、README、公開Owner承認は別に必要です。Codeを更新したら配布コピーを再生成し、対象Commitに対する検査を新しく採取します。
 
 一次資料: [Actions permissions](https://docs.github.com/en/rest/actions/permissions)、[Branch protection](https://docs.github.com/en/rest/branches/branch-protection)、[Secret scanningの利用条件](https://docs.github.com/en/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enable-secret-scanning)、[非公開の脆弱性報告](https://docs.github.com/en/code-security/how-tos/report-and-fix-vulnerabilities/configure-vulnerability-reporting/configure-for-a-repository)、[Workflow Run](https://docs.github.com/en/rest/actions/workflow-runs)、[Workflow jobs](https://docs.github.com/en/rest/actions/workflow-jobs)。
+
+
+## 公開後にPRで修正した場合
+
+public-copyは初回の1 Commitコピーだけを検査します。その条件は変更しません。
+公開後の修正にはpublic-updateを使い、初回公開Rootの40桁SHAを明示してください。
+初回Rootと異なる履歴、複数のRoot、現在のmain/Commit/Treeと異なるコピーは拒否します。
+mainの完全CIと全設定の条件は初回と同じです。全Refの開示/Secret Scanは別に必要です。
+
+~~~bash
+python tools/check_github_publication_settings.py \
+  --repo . --repository "$PUBLIC_REPOSITORY" \
+  --repository-id "$PUBLIC_REPOSITORY_ID" --mode public-update \
+  --public-root-commit <初回公開Rootの40桁SHA> \
+  --out /tmp/new-public-update-inspection
+~~~
+
+Rootは初回の公開Receiptから確認してください。非公開の元RepositoryのRootを指定して公開版として扱ってはいけません。
+この入口もGETだけで、Branch保護の解除、force-push、履歴の書換え、検査の省略は行いません。
