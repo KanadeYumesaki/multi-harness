@@ -388,9 +388,10 @@ jobs:
           printf '%s\n' "$ci_py_root/bin" >> "$GITHUB_PATH"
 
       - name: install-hash-locked-runtime-and-dev-tools
+        # Bind pip to the selected interpreter; copied entrypoint shebangs keep their old prefix.
         run: |
-          pip install --require-hashes -r requirements-dev.txt
-          pip install --no-deps -e .
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
 
       - name: format-and-lint
         run: |
