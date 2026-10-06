@@ -50,7 +50,7 @@ def test_scope_step_treats_hostile_branch_and_labels_as_literal_arguments(
     values = {
         "${{ github.event_name }}": "pull_request",
         "${{ github.event.pull_request.draft }}": "false",
-        '${{ join(github.event.pull_request.labels.*.name, ",") }}': hostile,
+        "${{ join(github.event.pull_request.labels.*.name, ',') }}": hostile,
         "${{ github.ref }}": "refs/pull/1/merge",
         "${{ github.head_ref }}": hostile,
     }
@@ -118,3 +118,14 @@ def test_sbom_and_audit_use_the_lock_bound_production_entry(path: Path, tmp_path
     assert artifact["with"]["if-no-files-found"] == "error"
     assert "public-dependency-audit/*.json" in artifact["with"]["path"]
     assert "public-dependency-audit/*.log" in artifact["with"]["path"]
+
+
+@pytest.mark.parametrize("path", WORKFLOWS, ids=lambda path: path.parent.name)
+def test_expression_string_literals_use_github_actions_quoting(path: Path) -> None:
+    # GitHub rejects double-quoted expression strings before it creates any jobs.
+    # Strip valid single-quoted literals; quotes within those literals are legal.
+    expressions = re.findall(r"\$\{\{(.*?)\}\}", path.read_text(), flags=re.DOTALL)
+    assert expressions
+    for expression in expressions:
+        nonliteral = re.sub(r"'(?:[^']|'')*'", "", expression)
+        assert '"' not in nonliteral, f"Invalid expression string quoting: {expression}"

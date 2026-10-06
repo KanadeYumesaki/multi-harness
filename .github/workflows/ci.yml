@@ -92,7 +92,7 @@ jobs:
         env:
           CI_INPUT_0: ${{ github.event_name }}
           CI_INPUT_1: ${{ github.event.pull_request.draft }}
-          CI_INPUT_2: ${{ join(github.event.pull_request.labels.*.name, ",") }}
+          CI_INPUT_2: ${{ join(github.event.pull_request.labels.*.name, ',') }}
           CI_INPUT_3: ${{ github.ref }}
           CI_INPUT_4: ${{ github.head_ref }}
         run: |

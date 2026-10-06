@@ -2,7 +2,8 @@
 """GitHub.comの設定をGETで実測する。設定変更・公開・Actions起動はしない。
 
 source-surveyは非公開元Repositoryの観測で、成功終了しない。public-copyだけが
-新しい1 Commit配布コピー/公開先ID/Branch/完全CIを照合する。Secret Alert本文や
+新しい1 Commit配布コピー/公開先ID/Branch/完全CIを照合する。public-updateは明示した
+初回公開Rootだけを持つ保守履歴を照合する。Secret Alert本文や
 認証/外部stderrを保存しない。保存済み出力の再利用やoffline合格入口は無い。
 """
 
@@ -56,7 +57,7 @@ def _git(repo: Path, *args: str) -> str:
     return result.stdout.decode("utf-8").strip()
 
 
-def source_binding(repo: Path) -> dict[str, Any]:
+def source_binding(repo: Path, public_root_commit: str | None = None) -> dict[str, Any]:
     if _git(repo, "status", "--porcelain", "--untracked-files=all"):
         raise InspectionFailed("SOURCE_NOT_CLEAN")
     names = [
@@ -65,12 +66,21 @@ def source_binding(repo: Path) -> dict[str, Any]:
         "ci/github-publication-policy.json",
         "tools/check_github_publication_settings.py",
     ]
-    return {
+    binding = {
         "commit": _git(repo, "rev-parse", "HEAD"),
         "tree": _git(repo, "rev-parse", "HEAD^{tree}"),
         "history_commits": int(_git(repo, "rev-list", "--count", "HEAD")),
         "files": [{"path": n, "sha256": _digest(repo / n)} for n in names],
     }
+    if public_root_commit is not None:
+        if not re.fullmatch(r"[0-9a-f]{40}", public_root_commit):
+            raise InspectionFailed("PUBLIC_ROOT_COMMIT_INVALID")
+        roots = _git(repo, "rev-list", "--max-parents=0", "HEAD").splitlines()
+        if roots != [public_root_commit]:
+            raise InspectionFailed("PUBLIC_HISTORY_ROOT_MISMATCH")
+        binding["public_root_commit"] = public_root_commit
+        binding["public_root_tree"] = _git(repo, "rev-parse", f"{public_root_commit}^{{tree}}")
+    return binding
 
 
 def workflow_contract(repo: Path) -> dict[str, Any]:
@@ -680,8 +690,15 @@ def evaluate(
     branch = data("branch") or {}
     commit = data("commit") or {}
     copy_bound = (
-        mode == "public-copy"
-        and source["history_commits"] == 1
+        (
+            (mode == "public-copy" and source["history_commits"] == 1)
+            or (
+                mode == "public-update"
+                and source["history_commits"] >= 1
+                and re.fullmatch(r"[0-9a-f]{40}", source.get("public_root_commit", "")) is not None
+                and re.fullmatch(r"[0-9a-f]{40}", source.get("public_root_tree", "")) is not None
+            )
+        )
         and branch.get("commit", {}).get("sha") == source["commit"]
         and commit.get("sha") == source["commit"]
         and commit.get("commit", {}).get("tree", {}).get("sha") == source["tree"]
@@ -738,7 +755,7 @@ def evaluate(
     )
     return {
         "status": "PASS"
-        if mode == "public-copy" and all(r["status"] == "PASS" for r in rows)
+        if mode in {"public-copy", "public-update"} and all(r["status"] == "PASS" for r in rows)
         else "BLOCKED",
         "rows": rows,
         "facts": {
@@ -802,8 +819,19 @@ def proposed_payloads(contract: dict[str, Any], app_id: int | None) -> dict[str,
 
 
 def run_inspection(
-    repo: Path, repository: str, repository_id: int, mode: str, gh: Path, out: Path
+    repo: Path,
+    repository: str,
+    repository_id: int,
+    mode: str,
+    gh: Path,
+    out: Path,
+    *,
+    public_root_commit: str | None = None,
 ) -> dict[str, Any]:
+    if mode not in {"source-survey", "public-copy", "public-update"} or (
+        (mode == "public-update") != (public_root_commit is not None)
+    ):
+        raise InspectionFailed("PUBLIC_ROOT_REQUIRED_ONLY_FOR_UPDATE")
     if (
         not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9_.-]{1,100}", repository)
         or repository_id <= 0
@@ -815,7 +843,7 @@ def run_inspection(
         raise InspectionFailed("OUTPUT_MUST_BE_NEW_AND_OUTSIDE_REPOSITORY")
     if any(str(p).startswith("/mnt/") for p in [repo, out.resolve()]):
         raise InspectionFailed("WINDOWS_FILESYSTEM_OUTPUT_DENIED")
-    before = source_binding(repo)
+    before = source_binding(repo, public_root_commit)
     contract = workflow_contract(repo)
     if _digest(repo / "tools/check_github_publication_settings.py") != _digest(Path(__file__)):
         raise InspectionFailed("INSPECTOR_SOURCE_MISMATCH")
@@ -850,7 +878,10 @@ def run_inspection(
             or result != second
         ):
             raise InspectionFailed("REMOTE_OBSERVATIONS_CHANGED")
-        if source_binding(repo) != before or _digest(executable) != executable_hash:
+        if (
+            source_binding(repo, public_root_commit) != before
+            or _digest(executable) != executable_hash
+        ):
             raise InspectionFailed("LOCAL_SOURCE_OR_TOOL_CHANGED")
         app = observations.get("app")
         app_id = (
@@ -892,13 +923,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--repository-id", type=int, required=True, help="actual stable GitHub numeric ID"
     )
-    parser.add_argument("--mode", choices=["source-survey", "public-copy"], required=True)
+    parser.add_argument(
+        "--mode", choices=["source-survey", "public-copy", "public-update"], required=True
+    )
+    parser.add_argument(
+        "--public-root-commit", help="explicit initial public root SHA; update only"
+    )
     parser.add_argument("--gh", type=Path, default=Path(shutil.which("gh") or "/usr/bin/gh"))
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
         receipt = run_inspection(
-            args.repo, args.repository, args.repository_id, args.mode, args.gh, args.out
+            args.repo,
+            args.repository,
+            args.repository_id,
+            args.mode,
+            args.gh,
+            args.out,
+            public_root_commit=args.public_root_commit,
         )
     except (
         InspectionFailed,

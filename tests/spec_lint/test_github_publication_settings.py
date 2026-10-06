@@ -708,3 +708,106 @@ def test_actual_policy_drift_is_detected_even_when_both_samples_pass() -> None:
         == "PASS"
     )
     assert inspection.configuration_snapshot(before) != inspection.configuration_snapshot(after)
+
+
+def test_public_update_requires_an_explicit_single_initial_root(tmp_path: Path) -> None:
+    repo = synthetic_repo(tmp_path)
+    initial = inspection.source_binding(repo)["commit"]
+    subprocess.run(  # noqa: S603 — fixed executable; synthetic Git fixture arguments.
+        [
+            "/usr/bin/git",
+            "-c",
+            "user.name=Synthetic",
+            "-c",
+            "user.email=synthetic@example.invalid",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "synthetic public maintenance",
+        ],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=10,
+    )
+    binding = inspection.source_binding(repo, initial)
+    assert binding["public_root_commit"] == initial
+    assert binding["history_commits"] == 2
+    contract = inspection.workflow_contract(ROOT)
+    observations = good_observations(contract, binding)
+    assert (
+        inspection.evaluate(
+            observations, contract, REPOSITORY, REPOSITORY_ID, binding, "public-update"
+        )["status"]
+        == "PASS"
+    )
+    # The initial-copy contract still rejects multi-commit input.
+    assert (
+        inspection.evaluate(
+            observations, contract, REPOSITORY, REPOSITORY_ID, binding, "public-copy"
+        )["status"]
+        == "BLOCKED"
+    )
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_HISTORY_ROOT_MISMATCH"):
+        inspection.source_binding(repo, binding["commit"])
+
+
+@pytest.mark.parametrize("invalid", ["main", "HEAD", "a" * 39, "a" * 41, "A" * 40, "--all"])
+def test_public_root_requires_a_full_literal_sha(tmp_path: Path, invalid: str) -> None:
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_ROOT_COMMIT_INVALID"):
+        inspection.source_binding(synthetic_repo(tmp_path), invalid)
+
+
+def test_public_update_rejects_a_second_root_from_unrelated_history(tmp_path: Path) -> None:
+    repo = synthetic_repo(tmp_path)
+    initial = inspection.source_binding(repo)["commit"]
+    git = [
+        "/usr/bin/git",
+        "-c",
+        "user.name=Synthetic",
+        "-c",
+        "user.email=synthetic@example.invalid",
+    ]
+    # A second root can share the exact same tree; bytes alone are insufficient.
+    tree = inspection.source_binding(repo)["tree"]
+    second = subprocess.run(  # noqa: S603 — fixed executable; synthetic Git fixture arguments.
+        [*git, "commit-tree", tree],
+        input="unrelated root\n",
+        text=True,
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=10,
+    ).stdout.strip()
+    subprocess.run(  # noqa: S603 — fixed executable; synthetic Git fixture arguments.
+        [*git, "merge", "--allow-unrelated-histories", "--no-edit", second],
+        cwd=repo,
+        check=True,
+        capture_output=True,
+        timeout=10,
+    )
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_HISTORY_ROOT_MISMATCH"):
+        inspection.source_binding(repo, initial)
+
+
+@pytest.mark.parametrize(
+    ("mode", "root"),
+    [("public-update", None), ("public-copy", "a" * 40), ("source-survey", "a" * 40)],
+)
+def test_root_mode_mismatch_is_rejected_before_any_github_get(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str, root: str | None
+) -> None:
+    def no_network(*args: object, **kwargs: object) -> object:
+        raise AssertionError("GitHub GET must not happen for invalid mode/root input")
+
+    monkeypatch.setattr(inspection, "GithubReader", no_network)
+    with pytest.raises(inspection.InspectionFailed, match="PUBLIC_ROOT_REQUIRED_ONLY_FOR_UPDATE"):
+        inspection.run_inspection(
+            ROOT,
+            REPOSITORY,
+            REPOSITORY_ID,
+            mode,
+            Path("/usr/bin/gh"),
+            tmp_path / "out",
+            public_root_commit=root,
+        )
