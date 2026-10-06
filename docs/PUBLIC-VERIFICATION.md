@@ -55,3 +55,17 @@
 未追跡のCacheや作業木のFileを含めません。これはSource配布の検査で、Release Manifestを作りません。
 正式Release Packagerの受理・拒否条件は、既存の合成Fixture試験を継続して実行します。
 元所有者の実装Reportを公開版へコピーしたり、存在しないRelease Reportを作ってGateを通したりしません。
+
+
+## CIのLinux隔離試験
+
+実ProcessのMount／PID Namespaceを使うquality Jobは、Runnerを ubuntu-22.04 に固定します。
+全Suiteの前に、既存の正経路試験でCLIの実行前制限が成立することを確認します。
+必要な隔離が成立しないRunnerでは、そのJobが失敗します。全Suiteの件数や期待値は変更しません。
+
+Ubuntu 24.04以降の標準AppArmor Policyは、非特権User Namespace内のCapabilityを制限します。
+今回のGitHub標準Runnerでは、LauncherのMount操作が拒否されました。
+根拠は [UbuntuのRelease Notes](https://documentation.ubuntu.com/release-notes/24.04/) と実CIの失敗Logです。
+利用可能なRunnerと移行情報は [GitHubのRunner Images](https://github.com/actions/runner-images) で確認します。
+固定したRunnerの廃止時は、隔離操作が実測で成立する環境へ移行してから全検査を採り直します。
+Productionの起動Gate、Landlock、Namespace、Approvalは引き続き適用されます。

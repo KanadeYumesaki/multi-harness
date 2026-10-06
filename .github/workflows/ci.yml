@@ -409,7 +409,8 @@ jobs:
   quality:
     name: quality (py${{ matrix.python }})
     needs: [plan]
-    runs-on: ubuntu-latest
+    # The real rootless mount/PID tests require an image permitting namespace capabilities.
+    runs-on: ubuntu-22.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -471,6 +472,11 @@ jobs:
       - name: forbidden-patterns
         # §16.2の機械強制。散文規約をCIで実行可能にする
         run: python tools/check_forbidden_patterns.py src/
+
+      - name: rootless-cli-sandbox-preflight
+        if: ${{ hashFiles('src/harness/**/*.py') != '' }}
+        # Exercise a positive real-process path before the full suite; refusal is a failure.
+        run: python -m pytest tests/integration/workbench/test_workbench_service.py::test_launch_spec_carries_the_pre_execution_restrictions -q
 
       - name: tests-and-coverage
         if: ${{ hashFiles('src/harness/**/*.py') != '' }}
