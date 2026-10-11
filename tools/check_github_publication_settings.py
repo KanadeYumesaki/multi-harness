@@ -89,10 +89,11 @@ def source_binding(repo: Path, public_root_commit: str | None = None) -> dict[st
 def workflow_contract(repo: Path) -> dict[str, Any]:
     policy = json.loads((repo / "ci/github-publication-policy.json").read_bytes())
     if (
-        policy.get("contract") != "github-publication-policy/1"
+        policy.get("contract") != "github-publication-policy/2"
         or policy.get("workflow_path") != ".github/workflows/ci.yml"
         or policy.get("scope_path") != "tools/ci_scope.py"
         or policy.get("default_branch") != "main"
+        or policy.get("workflow_event") != "workflow_dispatch"
         or policy.get("api_version") != "2022-11-28"
         or policy.get("actions_app_slug") != "github-actions"
         or policy.get("required_approving_reviews") != 0
@@ -102,12 +103,8 @@ def workflow_contract(repo: Path) -> dict[str, Any]:
     document = yaml.safe_load((repo / policy["workflow_path"]).read_text())
     jobs = document["jobs"]
     events = document.get("on", document.get(True))
-    if (
-        document.get("permissions") != {"contents": "read"}
-        or "pull_request_target" in events
-        or events.get("push", {}).get("branches") != [policy["default_branch"]]
-    ):
-        raise InspectionFailed("WORKFLOW_SECURITY_OR_MAIN_TRIGGER_MISMATCH")
+    if document.get("permissions") != {"contents": "read"} or events != {"workflow_dispatch": None}:
+        raise InspectionFailed("WORKFLOW_SECURITY_OR_MANUAL_TRIGGER_MISMATCH")
     # 他のcheckoutのPythonを実行しない。正本の単純な定数だけをASTから読む。
     versions: dict[str, list[str]] = {}
     for node in ast.parse((repo / policy["scope_path"]).read_text()).body:
@@ -387,7 +384,7 @@ def collect(
             for r in candidates["workflow_runs"]
             if isinstance(r, dict)
             and r.get("path") == ".github/workflows/ci.yml"
-            and r.get("event") == "push"
+            and r.get("event") == "workflow_dispatch"
             and r.get("head_branch") == branch
             and r.get("head_sha") == commit
             and type(r.get("run_number")) is int
@@ -722,7 +719,7 @@ def evaluate(
         and run.get("head_sha") == source["commit"]
         and run.get("head_branch") == policy["default_branch"]
         and run.get("path") == policy["workflow_path"]
-        and run.get("event") == "push"
+        and run.get("event") == policy["workflow_event"]
         and type(run.get("run_attempt")) is int
         and run["run_attempt"] > 0
         and type(run.get("id")) is int
