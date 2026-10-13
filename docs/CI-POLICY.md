@@ -1,146 +1,46 @@
-# CI 方針：ローカル優先の 3 層
+# CIを必要なときだけ実行する
 
-GitHub Actions の月枠を使い切ったことを受けて、**通常開発はローカル検証を基本**とし、
-Actions は「安全性に直結する最小 PR チェック」と「Release 時の完全検査」に限定する。
+更新: 2026-10-13 / Codex（GPT-6系）
 
-**この方針は検査を消すものではない。** どこで走らせるかを決めるものである。
+毎日の実行、通常BranchのPush、PRの作成・更新ではGitHub Actionsを起動しません。検査・必須Check・実行権限は維持します。
 
----
+## 通常の検査
 
-## 1. ローカル検証（通常開発の基本）
+GitHubの「Actions」→「ci」→「Run workflow」で検査するBranchを選びます。clone内のGitHub CLIなら次を使えます。
 
-```bash
-./run-checks.sh          # 全部
-./run-checks.sh fast     # 型・lint・test だけ
-```
+~~~bash
+gh workflow run ci.yml --ref main
+~~~
 
-必ず通すもの。
+これは指定したCommitの完全検査です。ローカル検査やRuntime GOとは別の判定です。
 
-| 検査 | 中身 |
-|---|---|
-| `lint_spec` | 設計書・Registry・Snapshot・spec の整合 |
-| generation contract | 設計 Hash・snapshot・spec-manifest・README の同時整合 |
-| design mirror / reference currency | 英語正本と同期ミラー、旧名参照 |
-| 生成物の `--check` | Registry codegen、Chat Context Policy、Core Schema、期待値 Hash |
-| schema contract / blocked records / case coverage | 契約と Block Record と Case 網羅 |
-| `ruff format --check .` / `ruff check .` | 整形と lint |
-| `mypy --strict` | `domain`／`ports`／`infrastructure`／`application` |
-| `pytest -q` | 全 Suite |
+## 保護されたPRを検査する
 
-### ローカルの PASS が意味しないこと
+GitHubは workflow_dispatch のCheckをPR必須Checkへ評価しません。このため、PRをMergeする検査には、利用者が明示作成する codex/ci-run/ 以下のBranchだけを使います。Jobは全検査のままで、権限を増やしたりBranch保護を外したりしません。
 
-* **GitHub CI の PASS ではない。** Runner で走らせた結果ではない
-* **Release Evidence ではない。** Runtime GO は WSL2 実機の Release Gate だけが生成する
-  （不変条件#19）
-* Log の文言も `LOCAL_OK` にしてある。緑と書かない
+対象Repositoryのcloneで、PRのBranchを取得してから、その同じCommitをCI専用Branchへ送ります。
 
----
+~~~bash
+git fetch origin YOUR_WORK_BRANCH
+git push origin FETCH_HEAD:refs/heads/codex/ci-run/YOUR_UNIQUE_REQUEST
+~~~
 
-## 2. PR チェック層
+YOUR_WORK_BRANCHとYOUR_UNIQUE_REQUESTを対象に合わせて変更してください。必ず対象Repositoryのcloneで実行し、CIが調べたCommitがPRの最新Headと同じか確認します。CI Branchは既存のCommitを指すだけで、別Commitへ成功結果をコピーしません。
 
-判定は `tools/ci_scope.py` が行い、`scope-plan` Job が出力する。
-**YAML の式で判定しない。** 判定は試験できる場所に置く。
+PRを更新した後は、新しい検査要求用のBranchを作ります。同じCommitを再検査する場合は、元のPush Runの「Re-run all jobs」を使えます。PRをMergeするまでCI Branchを削除・更新しないでください。削除もPushイベントになるため、不要な実行を避けるにはそのまま保持してください。
 
-### Draft PR
+専用Branchを作る操作が、CIを実行したいという明示指示になります。通常の開発Branchやmainへ送るだけでは起動しません。
 
-| 実行するもの |
-|---|
-| policy gate（許可 Path・禁止パターン・Secret 走査） |
-| 変更範囲の判定 |
-| 変更範囲の最小テスト |
-| Python 1 版のみ |
-| 正本が動いていれば spec・reference も回す |
+## 保持する安全条件
 
-**正本の壊れは Ready まで持ち越さない。** `design-source/`／`schemas/`／`spec/`／
-`ci/`／`registry-snapshot.json`／設計書が動いたら Draft でも spec を回す。
+- Workflow正本 ci/github-actions-ci.yml と実定義 .github/workflows/ci.yml を同時変更します。
+- contents:read、ActionのCommit固定、checkoutの認証情報非保持、timeout、concurrency、必須Check名を維持します。
+- CI専用BranchとRun workflowはいずれもPython全版・全pytest・Spec・License/SBOM・deepを実行します。
+- 検査Skip、偽のCommit status、管理者によるBranch保護の迂回を使いません。
+- 公開設定監査は、default branchの同じCommitの workflow_dispatch Runを引き続き要求します。PR用Push Runをdefault branchの公開実績へ読み替えません。
 
-### Ready for Review
+通常開発は ./run-checks.sh を使います。LOCAL_OK、GitHub CI、実Provider、Runtime GO、Human Releaseは別の判定です。
 
-| 実行するもの |
-|---|
-| Draft の全検査 |
-| spec / generation / reference currency |
-| 変更対象に対応する Integration test |
-| 安全境界テスト |
-| 全 pytest |
+起動条件を戻す際は、方針・Workflow・監査Tool・試験を同時にレビューしたPRで変更します。
 
-### Full 検査
-
-次のときだけ走る。
-
-| 条件 |
-|---|
-| `ci:full` ラベル |
-| `workflow_dispatch` |
-| main への push |
-| Release tag |
-| Release 候補 Branch（`release/`・`hotfix/`） |
-| **影響範囲が不明なとき（Fail-Closed）** |
-
-内容は Python 全版・全 pytest・license／SBOM・deep 検査。
-
----
-
-## 3. Path 判定
-
-| 分類 | 対象 | 効果 |
-|---|---|---|
-| `safety` | `src/`・`tests/`・`tools/`・`.github/` | 最小テストの対象 |
-| `canon` | `design-source/`・`schemas/`・`spec/`・`ci/`・`registry-snapshot.json`・設計書 | spec・generation・reference を回す |
-| `dependency` | `requirements*.txt`・`pyproject.toml`・`constraints.txt` | license／SBOM を回す |
-| `docs` | `docs/`・`runtime-evidence/`・`blocked/`・`release/`・`tasks/`・README 等 | 最小のまま |
-| `unknown` | 上のどれでもない | **完全検査へ回す** |
-
-### Fail-Closed
-
-* 分類できない Path が 1 つでもあれば完全検査
-* 差分を読めなければ完全検査
-* 変更が 0 件でも完全検査（**読めていないことを「影響なし」と書かない**）
-
-新しい置き場所が増えたら、`tools/ci_scope.py` の分類表を更新するまで重い側へ倒れる。
-**推測で検査を省略しない。**
-
----
-
-## 4. Workflow の制約
-
-| 制約 | 実装 |
-|---|---|
-| required check 名を維持 | Job 名を変えない。**Job を skip しない** |
-| 対象外の Job | 短い not-applicable の成功で終える |
-| Workflow 全体の `paths-ignore` | 使わない。check ごと消えるため |
-| PR 単位の concurrency | 新しい Run が古い Run を置き換える。main と Tag は止めない |
-| feature branch の重複起動 | `push` を main と Tag に限定。PR 側だけが走る |
-| `pull_request_target` | **追加しない** |
-| API Key・Keyring・Provider 通信 | 行わない |
-| 安全検査そのもの | 削除しない |
-
-### check 名
-
-| Job | check 名 |
-|---|---|
-| `plan` | `scope-plan` |
-| `spec` | `spec-foundation` |
-| `quality` | `quality (py…)` |
-| `supply-chain` | `license-and-sbom` |
-| `nightly` | `nightly-deep` |
-| `release-tag` | `release-tag-signature` |
-
-`scope-plan` は**足しただけ**である。既存の名前は 1 つも消していない。
-
-### Job を skip しない理由
-
-skip された Job は check として現れない。required にしている名前が消えると、
-**その検査が無いまま Merge できる状態**になる。だから Job は必ず走らせ、
-対象外なら先頭の判定 step で `not applicable` と述べて成功で終える。
-
----
-
-## 5. 何が試験で守られているか
-
-| File | 測っていること |
-|---|---|
-| `tests/spec_lint/test_ci_scope.py` | 判定そのもの。Fail-Closed を含む 30 件 |
-| `tests/spec_lint/test_workflow_minutes_guard.py` | Workflow の形。check 名・concurrency・timeout・not-applicable・安全検査の残存 |
-
-どちらも壊すと落ちる。**設定は消しても静かに壊れる**ので、試験で固定している。
+一次資料: [GitHub公式の手動実行](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)、[必須Checkの制約](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks)。

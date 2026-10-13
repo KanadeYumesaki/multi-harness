@@ -6,24 +6,12 @@
 name: ci
 
 on:
-  # push は main と Tag だけにする。Feature Branch の push は、同じ Commit に対して
-  # pull_request が必ず走るので**二重実行**になる。実測で 42 組が二重に走っていた。
-  # 検査を減らしたのではなく、同じ入力への二度目をやめただけである。
+  # 通常Push・PR・毎日の自動起動はしない。
+  # PR必須Checkには、利用者が明示作成する専用BranchのPushを使う。
   push:
-    branches: [main]
-    tags: ['v*']
-  # ready_for_review を足す。Draft の間は軽い検査で回し、Ready にした時点で
-  # 完全検査へ戻すために要る（既定の types には入っていない）。
-  pull_request:
-    # labeled を足す。`ci:full` を付けた時点で完全検査へ上げるために要る。
-    types: [opened, synchronize, reopened, ready_for_review, labeled]
-  schedule:
-    - cron: '0 17 * * *'   # nightly（JST 02:00）
-  # nightly／deep を手で起動できるようにする。schedule を待たずに確かめられる。
+    branches: ["codex/ci-run/**"]
   workflow_dispatch:
 
-# 同じ PR で新しい Run が始まったら、古い Run を止める。
-# main と Tag は止めない。Release の検証を途中で消さないためである。
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/') }}

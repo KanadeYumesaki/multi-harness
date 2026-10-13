@@ -10,8 +10,8 @@ Workflow が動き続けるので、次に枠が尽きるまで誰も気付か�
 * 2 つの Workflow（実物と正本）が同じ抑制設定を持つ
 * PR 単位の `concurrency` があり、古い Run を止める
 * main と Tag では止めない（Release の検証を消さない）
-* push が main と Tag だけに絞られ、Feature Branch の二重実行が消えている
-* `ready_for_review` が types にある（Draft から戻したとき完全検査へ戻る）
+* workflow_dispatch または明示作成したCI専用Branch以外は起動しない
+* Draft/Readyの状態にかかわらず、手動起動で完全検査する
 * 全 Job に `timeout-minutes` がある
 * `setup-python` が依存 Cache を使う
 * **安全検査の工程が 1 つも消えていない**
@@ -115,28 +115,42 @@ def test_concurrency_cancels_superseded_runs(path: Path) -> None:
 
 
 @pytest.mark.parametrize("path", WORKFLOWS, ids=lambda p: p.name)
-def test_push_does_not_duplicate_pull_request(path: Path) -> None:
-    """push が main と Tag だけであること。
-
-    Feature Branch の push は、同じ Commit へ pull_request が走るので二重になる。
-    """
+def test_normal_push_pull_request_and_schedule_cannot_start_automatically(path: Path) -> None:
+    """Ordinary push, PR and schedule events cannot consume the allowance."""
     triggers = _triggers(_document(path))
-    push = triggers["push"]
-    assert push["branches"] == ["main"], f"{path.name}: push が main 以外にも開いている"
-    assert push["tags"], f"{path.name}: Tag の push が閉じている"
+    assert set(triggers) == {"workflow_dispatch", "push"}, path.name
+    assert triggers["push"] == {"branches": ["codex/ci-run/**"]}, path.name
+    assert triggers["workflow_dispatch"] is None, path.name
 
 
 @pytest.mark.parametrize("path", WORKFLOWS, ids=lambda p: p.name)
-def test_ready_for_review_restores_full_checks(path: Path) -> None:
-    """Draft から Ready へ戻したとき、完全検査が走ること。
+def test_ready_or_draft_state_requires_manual_full_checks(path: Path) -> None:
+    """Draft/Ready events cannot start CI; a manual run still invokes the full plan."""
+    from ci_scope import decide
 
-    既定の types に `ready_for_review` は入っていない。足さないと、Draft の間の
-    軽い検査だけで Ready になってしまう。
-    """
-    types = _triggers(_document(path))["pull_request"]["types"]
-    assert "ready_for_review" in types, path.name
-    for required in ("opened", "synchronize", "reopened"):
-        assert required in types, f"{path.name}: {required} が外れている"
+    assert "pull_request" not in _triggers(_document(path))
+    for is_draft in (False, True):
+        plan = decide(
+            changed=["README.md"],
+            event="workflow_dispatch",
+            is_draft=is_draft,
+            labels=[],
+            ref="refs/heads/main",
+            head_ref="",
+            diff_ok=True,
+        )
+        assert plan["tier"] == "full"
+        assert all(
+            plan[name]
+            for name in (
+                "run_spec",
+                "run_reference",
+                "run_supply",
+                "run_integration",
+                "run_deep",
+                "run_full_tests",
+            )
+        )
 
 
 @pytest.mark.parametrize("path", WORKFLOWS, ids=lambda p: p.name)

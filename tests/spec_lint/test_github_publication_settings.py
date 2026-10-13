@@ -35,7 +35,7 @@ def good_observations(
         "head_sha": source["commit"],
         "head_branch": "main",
         "path": ".github/workflows/ci.yml",
-        "event": "push",
+        "event": "workflow_dispatch",
     }
     jobs = [
         {
@@ -195,6 +195,8 @@ MUTATIONS = [
     ("latest_run", ("head_sha",), "c" * 40),
     ("latest_run", ("run_attempt",), 3),
     ("latest_run", ("event",), "schedule"),
+    ("latest_run", ("event",), "push"),
+    ("latest_run", ("event",), "pull_request"),
     ("latest_run", ("path",), ".github/workflows/other.yml"),
     ("latest_run", ("head_branch",), "other"),
     ("jobs", ("jobs",), []),
@@ -890,3 +892,45 @@ def test_source_binding_reads_original_tree_despite_local_object_replacement(
     assert _synthetic_git(repo, "--no-replace-objects", "status", "--porcelain") == ""
     assert inspection.source_binding(repo) == original
     assert inspection.source_binding(repo, original["commit"])["tree"] == original["tree"]
+
+
+@pytest.mark.parametrize("event", ["push", "pull_request", "schedule", "pull_request_target"])
+def test_unrequested_automatic_trigger_is_rejected(tmp_path: Path, event: str) -> None:
+    import shutil
+
+    for name in (
+        ".github/workflows/ci.yml",
+        "ci/github-publication-policy.json",
+        "tools/ci_scope.py",
+    ):
+        target = tmp_path / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / name, target)
+    path = tmp_path / ".github/workflows/ci.yml"
+    document = yaml.safe_load(path.read_text())
+    events = document.get("on", document.get(True))
+    events[event] = {}
+    path.write_text(yaml.safe_dump(document, sort_keys=False))
+    with pytest.raises(inspection.InspectionFailed, match="MANUAL_TRIGGER_MISMATCH"):
+        inspection.workflow_contract(tmp_path)
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        {"branches": ["main"]},
+        {"branches": ["**"]},
+        {"branches": ["codex/**"]},
+        {"tags": ["**"]},
+        {"branches": ["codex/ci-run/**"], "tags": ["**"]},
+    ],
+)
+def test_only_explicit_ci_branch_push_selector_is_permitted(tmp_path: Path, selector: dict) -> None:
+    root = synthetic_repo(tmp_path)
+    path = root / ".github/workflows/ci.yml"
+    document = yaml.safe_load(path.read_text())
+    events = document.get("on", document.get(True))
+    events["push"] = selector
+    path.write_text(yaml.safe_dump(document, sort_keys=False))
+    with pytest.raises(inspection.InspectionFailed, match="MANUAL_TRIGGER_MISMATCH"):
+        inspection.workflow_contract(root)

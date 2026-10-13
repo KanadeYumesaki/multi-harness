@@ -95,6 +95,7 @@ def test_empty_change_set_forces_the_full_tier() -> None:
     ("label", "overrides"),
     [
         ("workflow_dispatch", {"event": "workflow_dispatch"}),
+        ("explicit CI branch", {"event": "push", "ref": "refs/heads/codex/ci-run/pr-2"}),
         ("main push", {"event": "push", "ref": "refs/heads/main"}),
         ("Release tag", {"event": "push", "ref": "refs/tags/v1.0.0"}),
         ("ci:full ラベル", {"labels": ["ci:full"]}),
