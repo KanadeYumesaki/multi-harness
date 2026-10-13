@@ -14,8 +14,10 @@
 name: ci
 
 on:
-  # 利用者が Actions の Run workflow を押した時だけ実行する。
-  # 毎日・Push・PRによる自動起動は行わない。
+  # 通常Push・PR・毎日の自動起動はしない。
+  # PR必須Checkには、利用者が明示作成する専用BranchのPushを使う。
+  push:
+    branches: ["codex/ci-run/**"]
   workflow_dispatch:
 
 concurrency:

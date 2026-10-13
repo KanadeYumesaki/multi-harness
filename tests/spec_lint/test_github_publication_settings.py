@@ -913,3 +913,24 @@ def test_unrequested_automatic_trigger_is_rejected(tmp_path: Path, event: str) -
     path.write_text(yaml.safe_dump(document, sort_keys=False))
     with pytest.raises(inspection.InspectionFailed, match="MANUAL_TRIGGER_MISMATCH"):
         inspection.workflow_contract(tmp_path)
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        {"branches": ["main"]},
+        {"branches": ["**"]},
+        {"branches": ["codex/**"]},
+        {"tags": ["**"]},
+        {"branches": ["codex/ci-run/**"], "tags": ["**"]},
+    ],
+)
+def test_only_explicit_ci_branch_push_selector_is_permitted(tmp_path: Path, selector: dict) -> None:
+    root = synthetic_repo(tmp_path)
+    path = root / ".github/workflows/ci.yml"
+    document = yaml.safe_load(path.read_text())
+    events = document.get("on", document.get(True))
+    events["push"] = selector
+    path.write_text(yaml.safe_dump(document, sort_keys=False))
+    with pytest.raises(inspection.InspectionFailed, match="MANUAL_TRIGGER_MISMATCH"):
+        inspection.workflow_contract(root)

@@ -1,5 +1,5 @@
 {
-  "contract": "github-publication-policy/2",
+  "contract": "github-publication-policy/3",
   "required_jobs": [
     "plan",
     "spec",
@@ -15,5 +15,6 @@
   "actions_app_slug": "github-actions",
   "required_approving_reviews": 0,
   "scope": "Separate Source Preview. Single operator; no organizational separation of duties. No Runtime GO or publication approval.",
-  "workflow_event": "workflow_dispatch"
+  "workflow_event": "workflow_dispatch",
+  "manual_pr_branch_pattern": "codex/ci-run/**"
 }

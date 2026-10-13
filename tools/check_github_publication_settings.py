@@ -89,11 +89,12 @@ def source_binding(repo: Path, public_root_commit: str | None = None) -> dict[st
 def workflow_contract(repo: Path) -> dict[str, Any]:
     policy = json.loads((repo / "ci/github-publication-policy.json").read_bytes())
     if (
-        policy.get("contract") != "github-publication-policy/2"
+        policy.get("contract") != "github-publication-policy/3"
         or policy.get("workflow_path") != ".github/workflows/ci.yml"
         or policy.get("scope_path") != "tools/ci_scope.py"
         or policy.get("default_branch") != "main"
         or policy.get("workflow_event") != "workflow_dispatch"
+        or policy.get("manual_pr_branch_pattern") != "codex/ci-run/**"
         or policy.get("api_version") != "2022-11-28"
         or policy.get("actions_app_slug") != "github-actions"
         or policy.get("required_approving_reviews") != 0
@@ -103,7 +104,11 @@ def workflow_contract(repo: Path) -> dict[str, Any]:
     document = yaml.safe_load((repo / policy["workflow_path"]).read_text())
     jobs = document["jobs"]
     events = document.get("on", document.get(True))
-    if document.get("permissions") != {"contents": "read"} or events != {"workflow_dispatch": None}:
+    expected_events = {
+        "workflow_dispatch": None,
+        "push": {"branches": [policy["manual_pr_branch_pattern"]]},
+    }
+    if document.get("permissions") != {"contents": "read"} or events != expected_events:
         raise InspectionFailed("WORKFLOW_SECURITY_OR_MANUAL_TRIGGER_MISMATCH")
     # 他のcheckoutのPythonを実行しない。正本の単純な定数だけをASTから読む。
     versions: dict[str, list[str]] = {}

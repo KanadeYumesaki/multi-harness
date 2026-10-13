@@ -102,6 +102,8 @@ def decide(
     forced_full = False
     if event == "workflow_dispatch":
         forced_full, reason = True, "workflow_dispatch は完全検査である"
+    elif event == "push" and ref.startswith("refs/heads/codex/ci-run/"):
+        forced_full, reason = True, "明示作成したPR検査専用Branchは完全検査である"
     elif event == "push" and ref == "refs/heads/main":
         forced_full, reason = True, "main への push は完全検査である"
     elif ref.startswith("refs/tags/"):

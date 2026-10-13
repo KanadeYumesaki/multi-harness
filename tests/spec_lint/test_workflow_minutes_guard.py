@@ -10,7 +10,7 @@ Workflow が動き続けるので、次に枠が尽きるまで誰も気付か�
 * 2 つの Workflow（実物と正本）が同じ抑制設定を持つ
 * PR 単位の `concurrency` があり、古い Run を止める
 * main と Tag では止めない（Release の検証を消さない）
-* 明示した workflow_dispatch 以外は起動しない
+* workflow_dispatch または明示作成したCI専用Branch以外は起動しない
 * Draft/Readyの状態にかかわらず、手動起動で完全検査する
 * 全 Job に `timeout-minutes` がある
 * `setup-python` が依存 Cache を使う
@@ -115,10 +115,11 @@ def test_concurrency_cancels_superseded_runs(path: Path) -> None:
 
 
 @pytest.mark.parametrize("path", WORKFLOWS, ids=lambda p: p.name)
-def test_push_and_pull_request_cannot_start_automatically(path: Path) -> None:
-    """No push, PR or scheduled workflow can silently consume the monthly allowance."""
+def test_normal_push_pull_request_and_schedule_cannot_start_automatically(path: Path) -> None:
+    """Ordinary push, PR and schedule events cannot consume the allowance."""
     triggers = _triggers(_document(path))
-    assert set(triggers) == {"workflow_dispatch"}, path.name
+    assert set(triggers) == {"workflow_dispatch", "push"}, path.name
+    assert triggers["push"] == {"branches": ["codex/ci-run/**"]}, path.name
     assert triggers["workflow_dispatch"] is None, path.name
 
 
