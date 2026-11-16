@@ -218,7 +218,8 @@ def test_failed_dependency_audit_stays_failed_and_keeps_its_diagnostics(
     )
     assert audit.get("id") == "dependency_audit"
     assert audit.get("continue-on-error", False) is False
-    assert " ".join(artifact["if"].strip().split()) == expected
+    expression = artifact["if"].strip().removeprefix("${{").removesuffix("}}").strip()
+    assert " ".join(expression.split()) == expected
 
     executable = tmp_path / "python"
     executable.write_text(

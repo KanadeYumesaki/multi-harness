@@ -30,3 +30,9 @@ cyclonedx-bom>=4.6.1
 # PUBLIC-05: HTTPS proxy TLS and streaming resource exhaustion fixes (2.8.0).
 # Existing transitive dependency; do not resolve an affected older version.
 urllib3>=2.8.0
+
+# Fixed-version security floors for existing transitive audit dependencies.
+# Recheck all findings through the normal pip-audit gate; do not suppress advisories.
+certifi>=2026.10.19
+filelock>=4.2.1
+msgpack>=1.2.3
