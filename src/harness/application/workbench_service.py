@@ -1118,9 +1118,25 @@ class WorkbenchService:
     # -- Session の読み出し -------------------------------------------------
 
     def inspect(self, session_id: str) -> dict[str, Any]:
-        record = self.sessions.get(session_id)
-        if record is None:
-            raise HarnessError(ErrorCode.RUNTIME_SPEC_MISMATCH, "workbench session was not found")
+        # The worker owns a different connection. Read its committed projection and
+        # Ledger head together; a valid worker commit must not look like tampering.
+        # Immutable CAS reads and plan reproduction run after this short owned UoW.
+        with nullcontext() if self.uow.in_transaction() else self.uow.begin_immediate():
+            record = self.sessions.get(session_id)
+            if record is None:
+                raise HarnessError(
+                    ErrorCode.RUNTIME_SPEC_MISMATCH, "workbench session was not found"
+                )
+            stream = self.ledger.load_stream(session_id)
+            if (
+                not stream
+                or stream[-1].payload_hash != record.document_hash
+                or not self.ledger.verify_chain(session_id).valid
+            ):
+                raise HarnessError(
+                    ErrorCode.EVENT_ORDER_VIOLATION,
+                    "session projection is not bound to ledger head",
+                )
         document = self._load_artifact(record.document_hash)
         if (document.get("session_id"), document.get("state"), document.get("version")) != (
             record.session_id,
@@ -1134,15 +1150,6 @@ class WorkbenchService:
         if document.get("contract") not in (SESSION_CONTRACT_VERSION, TEXT_SESSION_CONTRACT):
             raise HarnessError(
                 ErrorCode.SCHEMA_CONDITIONAL_VIOLATION, "stored session contract is not supported"
-            )
-        stream = self.ledger.load_stream(session_id)
-        if (
-            not self.ledger.verify_chain(session_id).valid
-            or not stream
-            or stream[-1].payload_hash != record.document_hash
-        ):
-            raise HarnessError(
-                ErrorCode.EVENT_ORDER_VIOLATION, "session projection is not bound to ledger head"
             )
         plan = self.builder.build(canonicalize(document["frozen_request"]))
         if (
