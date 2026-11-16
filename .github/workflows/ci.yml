@@ -584,6 +584,7 @@ jobs:
           python -m pip install --require-hashes -r requirements-dev.txt
           python -m pip install --no-deps -e .
       - name: dependency-audit (pip-audit / cyclonedx-py)
+        id: dependency_audit
         if: steps.scope.outputs.skip != 'true'
         # 一つの固定Commit/LockにLicense・脆弱性・SBOMの結果を束縛する。
         # Provider認証を渡さず、依存再解決・自動修正・脆弱性除外をしない。
@@ -591,7 +592,11 @@ jobs:
           python tools/run_public_dependency_audit.py --repo . \
             --out "$RUNNER_TEMP/public-dependency-audit"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: steps.scope.outputs.skip != 'true'
+        # Keep failed audit evidence without changing the job's failure result.
+        if: >-
+          ${{ !cancelled() && steps.scope.outputs.skip != 'true' &&
+          (steps.dependency_audit.outcome == 'success' ||
+          steps.dependency_audit.outcome == 'failure') }}
         with:
           name: python-dependency-audit
           path: |

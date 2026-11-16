@@ -201,3 +201,49 @@ def test_source_archive_preserves_all_committed_bytes_without_private_release_re
     )
     assert rejected.returncode != 0
     assert "SOURCE_ARCHIVE_BYTES_MISMATCH" in rejected.stderr
+
+
+@pytest.mark.parametrize("path", WORKFLOWS, ids=lambda path: path.parent.name)
+def test_failed_dependency_audit_stays_failed_and_keeps_its_diagnostics(
+    path: Path, tmp_path: Path
+) -> None:
+    document = yaml.safe_load(path.read_text())
+    steps = document["jobs"]["supply-chain"]["steps"]
+    audit = next(s for s in steps if s.get("name") == "dependency-audit (pip-audit / cyclonedx-py)")
+    artifact = next(s for s in steps if s.get("uses", "").startswith("actions/upload-artifact@"))
+    expected = (
+        "!cancelled() && steps.scope.outputs.skip != 'true' && "
+        "(steps.dependency_audit.outcome == 'success' || "
+        "steps.dependency_audit.outcome == 'failure')"
+    )
+    assert audit.get("id") == "dependency_audit"
+    assert audit.get("continue-on-error", False) is False
+    expression = artifact["if"].strip().removeprefix("${{").removesuffix("}}").strip()
+    assert " ".join(expression.split()) == expected
+
+    executable = tmp_path / "python"
+    executable.write_text(
+        f"#!{sys.executable}\nimport json,os,sys\nfrom pathlib import Path\n"
+        "out=Path(sys.argv[sys.argv.index('--out')+1]);out.mkdir(parents=True)\n"
+        "(out/'receipt.json').write_text(json.dumps({'status':'FAIL','reason':'synthetic'}))\n"
+        "(out/'development-vulnerabilities.log').write_text('synthetic failure\\n')\n"
+        "sys.exit(1)\n"
+    )
+    executable.chmod(0o700)
+    runner = tmp_path / "runner temp"
+    result = subprocess.run(  # noqa: S603 — fixed workflow script and synthetic tool.
+        ["/bin/bash", "-eu", "-c", audit["run"]],
+        cwd=tmp_path,
+        env={
+            "PATH": str(tmp_path) + ":/usr/bin:/bin",
+            "RUNNER_TEMP": str(runner),
+            "HOME": str(tmp_path),
+        },
+        capture_output=True,
+        timeout=10,
+    )
+    assert result.returncode == 1
+    out = runner / "public-dependency-audit"
+    assert json.loads((out / "receipt.json").read_text())["status"] == "FAIL"
+    assert (out / "development-vulnerabilities.log").read_text() == "synthetic failure\n"
+    assert artifact["with"]["if-no-files-found"] == "error"
